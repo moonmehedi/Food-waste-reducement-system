@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.1.0/remixicon.css">
+    <link href='https://fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Alex Brush' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway Dots' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://www.flaticon.com/free-icons/waste"/>
+    <link rel="stylesheet" href="style.css">
+    <title>Food Distribution</title>
+</head>
+<body>
+<header class="header">
+    <div class="header-1">
+        <a href="index.html" class="logo"><img src="Images/waste.png" class="icon"> Admin Panel</a>
+        <div class="icons">
+            <a href="#" id="profile-icon" class="ri-user-line"></a>
+        </div>
+    </div>
+    <div class="header-2">
+        <nav class="navbar">
+            <a href="Admin_home.html">Home</a>
+            <a href="Request.html">All Requests</a>
+            <a href="pending_request.html">Pending Requests</a>
+            <a href="Volunteers.html">Volunteers</a>
+            <a href="Verified_Donor.html">Verified Donors</a>
+            <a href="Verified_Recipient.html">Verified Recipients</a>
+            <a href="Verified_food.html">Verified Donations</a>
+            <a href="Food_distribution.html">Food Distribution</a>
+            <a href="Donation_history.html">Donation History</a>
+        </nav>
+    </div>
+</header>
+<div class="heading1">
+    <h4>All Donations</h4>
+    <p> <a href="Admin_home.html">Home</a> /Food Distribution</p>
+</div>
+<div class="container">
+    <div class="intro">
+        <h4>Distribution of Donation is below: </h4>
+    </div>
+    <button type="button" class="collapsible">Food Assignment</button>
+    <div class="content">
+        <table>
+            <tr>
+                <th>Donation No</th>
+                <th>Donor Name</th>
+                <th>Food Name</th>
+                <th>Food Image</th>
+                <th>Food Quantity</th>
+                <th>Expiration Date</th>
+                <th>Date</th>
+                <th>Distribute</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>John's Diner</td>
+                <td>Biryani</td>
+                <td><img src="Images/img6.jpg" alt="Food Image" width="50"></td>
+                <td>50 Box</td>
+                <td>2024-06-30</td>
+                <td>2024-06-01</td>
+                <td><button class="btn-assign" data-donation="1">Distribute</button></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Jane's Mart</td>
+                <td>Pasta</td>
+                <td><img src="Images/img7.jpg" alt="Food Image" width="50"></td>
+                <td>20 Box</td>
+                <td>2024-06-28</td>
+                <td>2024-06-10</td>
+                <td><button class="btn-assign" data-donation="2">Distribute</button></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Help Hands</td>
+                <td>Vegetables</td>
+                <td><img src="Images/img8.jpg" alt="Food Image" width="50"></td>
+                <td>5 Bags</td>
+                <td>2024-06-25</td>
+                <td>2024-06-15</td>
+                <td><button class="btn-assign" data-donation="3">Distribute</button></td>
+            </tr>
+            <!-- Add more food distribution entries as needed -->
+        </table>
+    </div>
+</div>
+
+<div class="volunteer-modal" id="volunteer-modal">
+    <div class="volunteer-modal-content">
+        <span class="close" id="close-volunteer-modal">&times;</span> <!-- Close button -->
+        <h4>Available Volunteers</h4>
+        <table>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Institution Name</th>
+                <th>Institution Type</th>
+                <th>Number of People</th>
+                <th>Address</th>
+                <th>Date</th>
+                <th>Choose</th>
+            </tr>
+            <tr>
+                <td>John Doe</td>
+                <td>john.doe@example.com</td>
+                <td>John's Diner</td>
+                <td>Restaurant</td>
+                <td>50</td>
+                <td>1234 Street, City, District, Division</td>
+                <td>2024-06-01</td>
+                <td><button class="btn-assign" data-volunteer="1">Choose</button></td>
+            </tr>
+            <tr>
+                <td>Jane Smith</td>
+                <td>jane.smith@example.com</td>
+                <td>Jane's Mart</td>
+                <td>Supermarket</td>
+                <td>100</td>
+                <td>5678 Street, City, District, Division</td>
+                <td>2024-06-10</td>
+                <td><button class="btn-assign" data-volunteer="2">Choose</button></td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </table>
+    </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="profile-modal" id="profile-modal">
+    <p>Username: <span>Maisha</span></p>
+    <p>Email: <span>maisha99@gmail.com</span></p>
+    <a href="#" class="btn">Log Out</a>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

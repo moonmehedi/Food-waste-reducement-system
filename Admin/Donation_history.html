@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.1.0/remixicon.css">
+    <link href='https://fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Alex Brush' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway Dots' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://www.flaticon.com/free-icons/waste"/>
+    <link rel="stylesheet" href="style.css">
+    <title>Donation History</title>
+</head>
+<body>
+<header class="header">
+    <div class="header-1">
+        <a href="index.html" class="logo"><img src="Images/waste.png" class="icon"> Admin Panel</a>
+        <div class="icons">
+            <a href="#" id="profile-icon" class="ri-user-line"></a>
+        </div>
+    </div>
+    <div class="header-2">
+        <nav class="navbar">
+            <a href="Admin_home.html">Home</a>
+            <a href="Request.html">All Requests</a>
+            <a href="pending_request.html">Pending Requests</a>
+            <a href="Volunteers.html">Volunteers</a>
+            <a href="Verified_Donor.html">Verified Donors</a>
+            <a href="Verified_Recipient.html">Verified Recipients</a>
+            <a href="Verified_food.html">Verified Donations</a>
+            <a href="Food_distribution.html">Food Distribution</a>
+            <a href="Donation_history.html">Donation History</a>
+        </nav>
+    </div>
+</header>
+<div class="heading1">
+    <h4>All Donations</h4>
+    <p> <a href="Admin_home.html">Home</a> /Donations</p>
+</div>
+<div class="container">
+    <div class="intro">
+        <h4>See your donation history below:</h4>
+    </div>
+    <button type="button" class="collapsible">Donation History</button>
+    <div class="content">
+        <table>
+            <tr>
+                <th>No</th>
+                <th>Donor Name</th>
+                <th>Food Name</th>
+                <th>Food Image</th>
+                <th>Food Quantity</th>
+                <th>Exp. Date</th>
+                <th>Recipient Name</th>
+                <th>Institution Type</th>
+                <th>Number of People</th>
+                <th>Date</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>John's Food Bank</td>
+                <td>Apples</td>
+                <td><img src="Images/egg.jpg" alt="Apples" class="food-image"></td>
+                <td>200kg</td>
+                <td>2024-06-01</td>
+                <td>Hope Shelter</td>
+                <td>Non-Profit</td>
+                <td>150</td>
+                <td>2024-06-01</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Jane's Pantry</td>
+                <td>Bread</td>
+                <td><img src="Images/img6.jpg" alt="Bread" class="food-image"></td>
+                <td>150kg</td>
+                <td>2024-06-10</td>
+                <td>Helping Hands</td>
+                <td>Non-Profit</td>
+                <td>200</td>
+                <td>2024-06-10</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Sam's Soup Kitchen</td>
+                <td>Soup</td>
+                <td><img src="Images/img7.jpg" alt="Soup" class="food-image"></td>
+                <td>300kg</td>
+                <td>2024-06-15</td>
+                <td>Goodwill Center</td>
+                <td>Charity</td>
+                <td>250</td>
+                <td>2024-06-15</td>
+            </tr>
+            <!-- Add more donation entries as needed -->
+        </table>
+    </div>
+</div>
+<div class="profile-modal" id="profile-modal">
+    <p>Username: <span>Maisha</span></p>
+    <p>Email: <span>maisha99@gmail.com</span></p>
+    <a href="#" class="btn">Log Out</a>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+<script src="admin.js"></script>
+</body>
+</html>

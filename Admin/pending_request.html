@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.1.0/remixicon.css">
+    <link href='https://fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Alex Brush' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway Dots' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="https://www.flaticon.com/free-icons/waste"/>
+    <link rel="stylesheet" href="style.css">
+    <title>Pending Requests</title>
+</head>
+<body>
+<header class="header">
+    <div class="header-1">
+        <a href="index.html" class="logo"><img src="Images/waste.png" class="icon"> Admin Panel</a>
+        <div class="icons">
+            <a href="#" id="profile-icon" class="ri-user-line"></a>
+        </div>
+    </div>
+    <div class="header-2">
+        <nav class="navbar">
+            <a href="Admin_home.html">Home</a>
+            <a href="Request.html">All Requests</a>
+            <a href="pending_request.html">Pending Requests</a>
+            <a href="Volunteers.html">Volunteers</a>
+            <a href="Verified_Donor.html">Verified Donors</a>
+            <a href="Verified_Recipient.html">Verified Recipients</a>
+            <a href="Verified_food.html">Verified Donations</a>
+            <a href="Food_distribution.html">Food Distribution</a>
+            <a href="Donation_history.html">Donation History</a>
+        </nav>
+    </div>
+</header>
+<div class="heading1">
+    <h4>Pending Requests</h4>
+    <p><a href="Admin_home.html">Home</a> /Pending Requests</p>
+</div>
+<div class="container"  style="max-width: 1400px;">
+    <div class="intro">
+        <h4>List of Pending Sign Up Requests: </h4>
+    </div>
+    <button type="button" class="collapsible">Request List</button>
+    <div class="content">
+        <table>
+            <tr>
+                <th>Request No</th>
+                <th>Request Type</th>
+                <th>Username</th>
+                <th>Email Address</th>
+                <th>Request Address</th>
+                <th>Phone</th>
+                <th>Institution Type</th>
+                <th>Institution Name</th>
+                <th>Request Date</th>
+                <th>Authenticity</th>
+                <th>Accept</th>
+                <th>Reject</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Donor</td>
+                <td>abedin34</td>
+                <td>abedin34@gmail.com</td>
+                <td>Mirpur-12, Dhaka, Dhaka, Street 1</td>
+                <td>0123456789</td>
+                <td>School</td>
+                <td>ABC School</td>
+                <td>24 June, 2024</td>
+                <td>Pending</td>
+                <td><button class="btn-assign" data-request="1">Accept</button></td>
+                <td><button class="btn-reject" data-request="1">Reject</button></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Recipient</td>
+                <td>abedin34</td>
+                <td>abedin34@gmail.com</td>
+                <td>Mirpur-12, Dhaka, Dhaka, Street 1</td>
+                <td>0123456789</td>
+                <td>School</td>
+                <td>ABC School</td>
+                <td>24 June, 2024</td>
+                <td>Pending</td>
+                <td><button class="btn-assign" data-request="2">Accept</button></td>
+                <td><button class="btn-reject" data-request="2">Reject</button></td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </table>
+    </div>
+</div>
+
+<div class="container">
+    <div class="intro">
+        <h4>List of Pending Food Requests: </h4>
+    </div>
+    <button type="button" class="collapsible">Food Request List</button>
+    <div class="content">
+        <table>
+            <tr>
+                <th>Request No</th>
+                <th>Donor Name</th>
+                <th>Food Name</th>
+                <th>Food Image</th>
+                <th>Food Quantity</th>
+                <th>Expiration Date</th>
+                <th>Request Date</th>
+                <th>Authenticity</th>
+                <th>Accept</th>
+                <th>Reject</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>ABC School</td>
+                <td>Bread</td>
+                <td><img src="Images/img6.jpg" alt="Food Image" width="50"></td>
+                <td>100 units</td>
+                <td>30 June, 2024</td>
+                <td>24 June, 2024</td>
+                <td>Pending</td>
+                <td><button class="btn-assign" data-request="1">Accept</button></td>
+                <td><button class="btn-reject" data-request="1">Reject</button></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>ABC School</td>
+                <td>Bread</td>
+                <td><img src="Images/img7.jpg" alt="Food Image" width="50"></td>
+                <td>100 units</td>
+                <td>30 June, 2024</td>
+                <td>24 June, 2024</td>
+                <td>Pending</td>
+                <td><button class="btn-assign" data-request="2">Accept</button></td>
+                <td><button class="btn-reject" data-request="2">Reject</button></td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </table>
+    </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="profile-modal" id="profile-modal">
+    <p>Username: <span>Maisha</span></p>
+    <p>Email: <span>maisha99@gmail.com</span></p>
+    <a href="#" class="btn">Log Out</a>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
