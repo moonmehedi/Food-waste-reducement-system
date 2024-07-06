@@ -40,7 +40,6 @@ async function handleSubmit(event) {
       points: 0, // Example value for points field
       volunteer_id: null, // Example value for volunteer_id field
     };
-    console.log("frontend", user);
 
     try {
       const response = await fetch("http://localhost:5000/user/signup", {

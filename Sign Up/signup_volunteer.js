@@ -1,19 +1,18 @@
 // Retrieve form elements by their IDs
 const Username = document.getElementById("name");
 const Email = document.getElementById("email");
+const Dob = document.getElementById("dob");
+const Phone = document.getElementById("phone");
 const City = document.getElementById("city");
 const District = document.getElementById("district");
 const Division = document.getElementById("division");
 const StreetNo = document.getElementById("street_no");
-const Phone = document.getElementById("phone");
-const InstitutionName = document.getElementById("institution_name");
-const InstitutionType = document.getElementById("institution_type");
 const Password = document.getElementById("password");
 const PasswordConfirmation = document.getElementById("confirm_password");
-const signinBtn = document.getElementById("submit");
+const submitBtn = document.getElementById("submit");
 
 // Attach event listener to submit button
-signinBtn.addEventListener("click", handleSubmit);
+submitBtn.addEventListener("click", handleSubmit);
 
 // Handle form submission
 async function handleSubmit(event) {
@@ -21,9 +20,10 @@ async function handleSubmit(event) {
 
   // Validate form inputs
   if (validateForm()) {
-    const user = {
+    const volunteer = {
       name: Username.value,
       email: Email.value,
+      dob: Dob.value,
       address: {
         city: City.value,
         district: District.value,
@@ -31,24 +31,20 @@ async function handleSubmit(event) {
         streetNo: StreetNo.value,
         phone: Phone.value,
       },
-      institution: {
-        name: InstitutionName.value,
-        type: InstitutionType.value,
-      },
+      phone: Phone.value,
       password: Password.value,
-      verified: null, // Example value for verified field
-      points: 0, // Example value for points field
       volunteer_id: null, // Example value for volunteer_id field
     };
-    console.log("frontend", user);
+
+    console.log("front end ", volunteer);
 
     try {
-      const response = await fetch("http://localhost:5000/user/signup", {
+      const response = await fetch("http://localhost:5000/user/signup_vol", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify(volunteer),
       });
 
       const result = await response.json();
@@ -67,13 +63,8 @@ function validateForm() {
   if (
     Username.value.trim() === "" ||
     Email.value.trim() === "" ||
-    City.value.trim() === "" ||
-    District.value.trim() === "" ||
-    Division.value.trim() === "" ||
-    StreetNo.value.trim() === "" ||
+    Dob.value.trim() === "" ||
     Phone.value.trim() === "" ||
-    InstitutionName.value.trim() === "" ||
-    InstitutionType.value === "" ||
     Password.value.trim() === "" ||
     PasswordConfirmation.value.trim() === ""
   ) {
@@ -88,3 +79,6 @@ function validateForm() {
 
   return true;
 }
+
+//limit
+//volunteer should have  a phone number
