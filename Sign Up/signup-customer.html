@@ -1,56 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.1.0/remixicon.css">
-    <link href='https://fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
-    <link href='https://fonts.googleapis.com/css?family=Alex Brush' rel='stylesheet'>
-    <link href='https://fonts.googleapis.com/css?family=Raleway Dots' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.1.0/remixicon.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Libre Baskerville"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Alex Brush"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway Dots"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
     <title>Sign Up</title>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="register-form-container" id="register-content">
-        <a id="close-register-btn" href="index.html" class="fas fa-times"></a>
-        <form action="" method="post">
-            <h3>Sign Up</h3>
-            <span>Username</span>
-            <input type="text" name="name" class="box" placeholder="Enter Your Username" required>
-            <span>NID</span>
-            <input type="text" name="nid" class="box" placeholder="Enter Your NID" required>
-            <span>Date of Birth</span>
-            <input type="date" name="dob" class="box" required>
-            <span>Phone</span>
-            <input type="tel" name="phone" class="box" placeholder="Enter Your Phone Number" required>
-            <div class="box" id="address-dropdown">Enter Address</div>
-            <div class="address-fields">
-                <span>City</span>
-                <input type="text" name="city" class="box" placeholder="Enter Your City" required>
-                <span>District</span>
-                <input type="text" name="district" class="box" placeholder="Enter Your District" required>
-                <span>Division</span>
-                <input type="text" name="division" class="box" placeholder="Enter Your Division" required>
-                <span>Street No.</span>
-                <input type="text" name="street_no" class="box" placeholder="Enter Your Street No." required>
-            </div>
-            
-            <span>Password</span>
-            <input type="password" name="password" class="box" placeholder="Enter Your Password" required>
-            <span>Confirm Password</span>
-            <input type="password" name="confirm_password" class="box" placeholder="Confirm Your Password" required>
-            <input type="submit" name="submit" value="Register Now" class="btn">
-            <p>Or</p>
-            <button class="icon-btn" id="google-signin-btn"><img src="images_signup/google.png" class="icon">Sign in with Google</button>
-            <p>Already have an account? <a href="#">Log In</a></p>
-        </form>
+      <a id="close-register-btn" href="index.html" class="fas fa-times"></a>
+      <form id="register-form" action="" method="post">
+        <h3>Sign Up</h3>
+        <span>Username</span>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="box"
+          placeholder="Enter Your Username"
+          required
+        />
+        <span>NID</span>
+        <input
+          type="text"
+          id="nid"
+          name="nid"
+          class="box"
+          placeholder="Enter Your NID"
+          required
+        />
+        <span>Date of Birth</span>
+        <input type="date" id="dob" name="dob" class="box" required />
+        <span>Phone</span>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          class="box"
+          placeholder="Enter Your Phone Number"
+          required
+        />
+        <div class="box" id="address-dropdown">Enter Address</div>
+        <div class="address-fields">
+          <span>City</span>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            class="box"
+            placeholder="Enter Your City"
+            required
+          />
+          <span>District</span>
+          <input
+            type="text"
+            id="district"
+            name="district"
+            class="box"
+            placeholder="Enter Your District"
+            required
+          />
+          <span>Division</span>
+          <input
+            type="text"
+            id="division"
+            name="division"
+            class="box"
+            placeholder="Enter Your Division"
+            required
+          />
+          <span>Street No.</span>
+          <input
+            type="text"
+            id="street_no"
+            name="street_no"
+            class="box"
+            placeholder="Enter Your Street No."
+            required
+          />
+        </div>
+
+        <span>Password</span>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="box"
+          placeholder="Enter Your Password"
+          required
+        />
+        <span>Confirm Password</span>
+        <input
+          type="password"
+          id="confirm_password"
+          name="confirm_password"
+          class="box"
+          placeholder="Confirm Your Password"
+          required
+        />
+        <input
+          type="submit"
+          id="submit"
+          name="submit"
+          value="Register Now"
+          class="btn"
+        />
+        <p>Or</p>
+        <button class="icon-btn" id="google-signin-btn">
+          <img src="images_signup/google.png" class="icon" />Sign in with Google
+        </button>
+        <p>Already have an account? <a href="#">Log In</a></p>
+      </form>
     </div>
 
     <script src="images/scrollreveal.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="signup.js"></script>
-</body>
+    <script src="/Sign Up/signup.js"></script>
+    <script src="/Sign Up/signup_volunteer.js"></script>
+  </body>
 </html>
