@@ -114,3 +114,21 @@ app.post("/user/signup_vol", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
+
+// Add to your existing server.js
+app.get("/admin/dashboard-info", async (req, res) => {
+  try {
+    const query = "SELECT * FROM FETCH_INFO";
+    const result = await run_query(query, {});
+    console.log(result);
+    res.status(200).json(result[0]); // Assuming FETCH_INFO returns a single row
+  } catch (err) {
+    console.error("Error while fetching dashboard info:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+//this is some new code to test git
+//this is erver js
