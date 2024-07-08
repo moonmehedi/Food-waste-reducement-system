@@ -130,5 +130,39 @@ app.get("/admin/dashboard-info", async (req, res) => {
   }
 });
 
-//this is some new code to test git
-//this is erver js
+
+//get rows of donor whom are verifyed
+app.get("/admin/verified-donors", async (req, res) => {
+  try {
+    const query = "SELECT * FROM VERIFIED_DONOR";
+    const result = await run_query(query, {});
+    res.status(200).json(result);
+  } catch (err) {
+    console.error("Error while fetching verified donors:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+app.get('/admin/volunteers', async (req, res) => {
+  try {
+      const query = 'SELECT * FROM VOLUNTEER_INFO';
+      const result = await run_query(query, {});
+      res.json(result);
+  } catch (error) {
+      console.error('Error fetching volunteers:', error);
+      res.status(500).send('Server error');
+  }
+});
+
+
+app.get('/admin/recipients', async (req, res) => {
+  try {
+      const query = 'SELECT * from recipient_INFO';
+      const result = await run_query(query, {});
+      res.json(result);
+  } catch (error) {
+      console.error('Error fetching recipient:', error);
+      res.status(500).send('Server error');
+  }
+});
