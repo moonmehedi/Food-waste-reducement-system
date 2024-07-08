@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Volunteer Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0e5de; /* Earthy beige */
+      color: #4a3f36; /* Earthy brown */
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff; /* White background for contrast */
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      color: #8c6d5c; /* Earthy brown */
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: space-around;
+      list-style: none;
+      padding: 0;
+      background-color: #d2bba8; /* Earthy tan */
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #4a3f36;
+      padding: 10px 20px;
+      display: block;
+    }
+
+    nav ul li a:hover {
+      background-color: #a59c8e; /* Darker earthy tan */
+      border-radius: 8px;
+    }
+
+    .task-options {
+      margin-bottom: 20px;
+    }
+
+    #task-select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #fff;
+      color: #4a3f36;
+      font-size: 16px;
+    }
+
+    #task-select option {
+      background-color: #f0e5de; /* Earthy beige */
+      color: #4a3f36; /* Earthy brown */
+    }
+
+    #task-list {
+      margin-bottom: 20px;
+    }
+
+    .notify-admin {
+      background-color: #8c6d5c; /* Earthy brown */
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .notify-admin:hover {
+      background-color: #6a4c3c; /* Darker earthy brown */
+    }
+
+    .tables {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .table-container {
+      flex: 1;
+      margin-right: 10px;
+    }
+
+    .table-container:last-child {
+      margin-right: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table th,
+    table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    table th {
+      background-color: #d2bba8; /* Earthy tan */
+      color: #4a3f36;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    form textarea {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    form button {
+      background-color: #8c6d5c; /* Earthy brown */
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    form button:hover {
+      background-color: #6a4c3c; /* Darker earthy brown */
+    }
+  </style>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Food Waste Reduction Volunteer Panel</h1>
+        <p>
+          Welcome to the volunteer dashboard. Here you can manage tasks, view
+          verification history, and contact the admin.
+        </p>
+        <p>
+          <strong>Mission:</strong> Our mission is to reduce food waste and help
+          those in need through effective verification processes and community
+          support.
+        </p>
+        <p>
+          <strong>Rewards:</strong> Earn rewards for your dedicated work and
+          contributions to our cause!
+        </p>
+      </header>
+
+      <nav>
+        <ul>
+          <li><a href="#" onclick="showSection('task')">Task Management</a></li>
+          <li>
+            <a href="#" onclick="showSection('verification-history')"
+              >Verification History</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="showSection('contact-admin')">Contact Admin</a>
+          </li>
+        </ul>
+      </nav>
+
+      <section id="task" style="display: none">
+        <h2>Task Management</h2>
+        <div class="task-options">
+          <select id="task-select" onchange="showTaskList(this.value)">
+            <option value="">Select a task</option>
+            <option value="donor">Donor Verification</option>
+            <option value="recipient">Recipient Verification</option>
+            <option value="food">Food Verification</option>
+          </select>
+        </div>
+        <div id="task-list">
+          <!-- Content will be loaded dynamically based on the selected task option -->
+        </div>
+        <button class="notify-admin">Notify Admin of Pending Task</button>
+      </section>
+
+      <section id="verification-history" style="display: none">
+        <h2>Verification History</h2>
+        <div class="tables">
+          <div class="table-container">
+            <h3>Donor Verification</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Donor data here -->
+              </tbody>
+            </table>
+          </div>
+          <div class="table-container">
+            <h3>Recipient Verification</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Recipient data here -->
+              </tbody>
+            </table>
+          </div>
+          <div class="table-container">
+            <h3>Food Verification</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Food Item</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Food verification data here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact-admin" style="display: none">
+        <h2>Contact Admin</h2>
+        <form>
+          <label for="issue">Describe your issue or concern:</label>
+          <textarea id="issue" name="issue" rows="4" required></textarea>
+          <button type="submit">Submit</button>
+        </form>
+      </section>
+    </div>
+
+    <script>
+      function showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll("section").forEach((section) => {
+          section.style.display = "none";
+        });
+
+        // Show the selected section
+        document.getElementById(sectionId).style.display = "block";
+      }
+
+      function showTaskList(type) {
+        // Placeholder function for dynamically loading task list based on type
+        document.getElementById("task-list").innerHTML = (
+          <p>Showing ${type} verification tasks...</p>
+        );
+      }
+
+      document
+        .querySelector(".notify-admin")
+        .addEventListener("click", function () {
+          alert("Task status updated. Admin notified of pending task.");
+        });
+    </script>
+  </body>
+</html>

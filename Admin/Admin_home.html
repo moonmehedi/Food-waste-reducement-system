@@ -1,85 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.1.0/remixicon.css">
-    <link href='https://fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
-    <link href='https://fonts.googleapis.com/css?family=Alex Brush' rel='stylesheet'>
-    <link href='https://fonts.googleapis.com/css?family=Raleway Dots' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-    <link rel="stylesheet" href="https://www.flaticon.com/free-icons/waste"/>
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.1.0/remixicon.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Libre Baskerville"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Alex Brush"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Raleway Dots"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="https://www.flaticon.com/free-icons/waste" />
+    <link rel="stylesheet" href="style.css" />
     <title>Admin Dashboard</title>
-</head>
-<body>
-<header class="header">
-    <div class="header-1">
-        <a href="index.html" class="logo"><img src="Images/waste.png" class="icon"> Admin Panel</a>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-1">
+        <a href="index.html" class="logo"
+          ><img src="/Images/waste.png" class="icon" /> Admin Panel</a
+        >
         <div class="icons">
-            <a href="#" id="profile-icon" class="ri-user-line"></a>
+          <a href="#" id="profile-icon" class="ri-user-line"></a>
         </div>
-    </div>
-    <div class="header-2">
+      </div>
+      <div class="header-2">
         <nav class="navbar">
-            <a href="Admin_home.html">Home</a>
-            <a href="Request.html">All Requests</a>
-            <a href="pending_request.html">Pending Requests</a>
-            <a href="Volunteers.html">Volunteers</a>
-            <a href="Verified_Donor.html">Verified Donors</a>
-            <a href="Verified_Recipient.html">Verified Recipients</a>
-            <a href="Verified_food.html">Verified Donations</a>
-            <a href="Food_distribution.html">Food Distribution</a>
-            <a href="Donation_history.html">Donation History</a>
+          <a href="Admin_home.html">Home</a>
+          <a href="Request.html">All Requests</a>
+          <a href="pending_request.html">Pending Requests</a>
+          <a href="Volunteers.html">Volunteers</a>
+          <a href="Verified_Donor.html">Verified Donors</a>
+          <a href="Verified_Recipient.html">Verified Recipients</a>
+          <a href="Verified_food.html">Verified Donations</a>
+          <a href="Food_distribution.html">Food Distribution</a>
+          <a href="Donation_history.html">Donation History</a>
         </nav>
+      </div>
+    </header>
+
+    <section class="dashboard">
+      <h2 class="title">Dashboard</h2>
+
+      <div class="box-container">
+        <div class="box">
+          <h4>60</h4>
+          <p>Total Requests</p>
+        </div>
+
+        <div class="box">
+          <h4>40</h4>
+          <p>Present Volunteers</p>
+        </div>
+
+        <div class="box">
+          <h4>80</h4>
+          <p>Total Verified Donors</p>
+        </div>
+
+        <div class="box">
+          <h4>120</h4>
+          <p>Total Verified Recipients</p>
+        </div>
+
+        <div class="box">
+          <h4>150</h4>
+          <p>Number of Available Foods</p>
+        </div>
+        <div class="box">
+          <h4>50</h4>
+          <p>Number of Pending Requests</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile Modal -->
+    <div class="profile-modal" id="profile-modal">
+      <p>Username: <span>Maisha</span></p>
+      <p>Email: <span>maisha99@gmail.com</span></p>
+      <a href="#" class="btn">Log Out</a>
     </div>
-</header>
 
-<section class="dashboard">
-    <h2 class="title">Dashboard</h2>
-
-    <div class="box-container">
-        <div class="box">
-            <h4>60</h4>
-            <p>Total Requests</p>
-        </div>
-
-        <div class="box">
-            <h4>40</h4>
-            <p>Present Volunteers</p>
-        </div>
-
-        <div class="box">
-            <h4>80</h4>
-            <p>Total Verified Donors</p>
-        </div>
-
-        <div class="box">
-            <h4>120</h4>
-            <p>Total Verified Recipients</p>
-        </div>
-
-        <div class="box">
-            <h4>150</h4>
-            <p>Number of Available Foods</p>
-        </div>
-        <div class="box">
-            <h4>50</h4>
-            <p>Number of Pending Requests</p>
-        </div>
-    </div>
-</section>
-
-<!-- Profile Modal -->
-<div class="profile-modal" id="profile-modal">
-    <p>Username: <span>Maisha</span></p>
-    <p>Email: <span>maisha99@gmail.com</span></p>
-    <a href="#" class="btn">Log Out</a>
-</div>
-
-<!-- Overlay -->
-<div class="overlay" id="overlay"></div>
-<script src="admin.js"></script>
-</body>
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+    <script src="admin.js"></script>
+  </body>
 </html>
