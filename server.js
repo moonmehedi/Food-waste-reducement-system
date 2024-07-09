@@ -123,7 +123,7 @@ app.get("/admin/dashboard-info", async (req, res) => {
     const query = "SELECT * FROM FETCH_INFO";
     const result = await run_query(query, {});
     console.log(result);
-    res.status(200).json(result[0]); // Assuming FETCH_INFO returns a single row
+    res.status(200).json(result[0]); 
   } catch (err) {
     console.error("Error while fetching dashboard info:", err);
     res.status(500).json({ message: "Internal server error" });
@@ -188,7 +188,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 
-
+//donor/donation
 // Endpoint to handle file upload and data insertion
 app.post('/donor/donation', upload.single('food-image'), async (req, res) => {
 
@@ -214,5 +214,55 @@ app.post('/donor/donation', upload.single('food-image'), async (req, res) => {
   } catch (error) {
       console.error('Error:', error);
       res.status(500).json({ message: 'Failed to donate food.' });
+  }
+});
+
+
+//donation//sells
+
+app.post('/sell/food', upload.single('food-photo'), async (req, res) => {
+  const { 'food-name': foodName, quantity, 'exp-date': expDate, 'original-price': originalPrice, 'discounted-price': discountedPrice } = req.body;
+  const photo = req.file.buffer;
+  const verified = 'N';
+  const volunteerId = null; // Adjust as needed
+  const donorId = 1; // Adjust as needed
+  const dateF = new Date().toISOString().split('T')[0];
+  const sellOrDonate = 'SELL';
+  const nid = 1; // Adjust as needed 
+  const dateS = new Date().toISOString().split('T')[0];
+
+  const query = `
+      BEGIN
+          InsertFoodAndSell(
+              :name, :quantity, TO_DATE(:expDate, 'YYYY-MM-DD'), :photo, :verified, :volunteerId, :donorId, TO_DATE(:dateF, 'YYYY-MM-DD'), :sellOrDonate,
+              :nid, :originalPrice, :discountedPrice, TO_DATE(:dateS, 'YYYY-MM-DD')
+          );
+      END;
+  `;
+
+  const params = {
+      name: foodName,
+      quantity: parseInt(quantity, 10),
+      expDate: expDate,
+      photo: photo,
+      verified: verified,
+      volunteerId: volunteerId,
+      donorId: donorId,
+      dateF: dateF,
+      sellOrDonate: sellOrDonate,
+      nid: nid,
+      originalPrice: parseFloat(originalPrice),
+      discountedPrice: parseFloat(discountedPrice),
+      dateS: dateS
+  };
+  console.log(params);
+
+  try {
+      await run_query(query, params);
+      
+      res.status(200).json({ message: 'Food sell recorded successfully!' });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ message: 'Failed to sell food.' });
   }
 });
