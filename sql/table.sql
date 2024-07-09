@@ -34,6 +34,10 @@ CREATE TABLE ASSIGN (
     FOREIGN KEY (MANAGER_ID) REFERENCES MANAGER(MANAGER_ID),
     FOREIGN KEY (VOLUNTEER_ID) REFERENCES VOLUNTEER(VOLUNTEER_ID)
 );
+--adding task to the assign table 
+ALTER TABLE ASSIGN
+ADD task VARCHAR(255); -- Adjust the VARCHAR size as per your requirements
+
 
 -- Create Donor table
 CREATE TABLE DONOR (
@@ -69,6 +73,9 @@ CREATE TABLE FOOD (
     FOREIGN KEY (DONOR_ID) REFERENCES DONOR(DONOR_ID)
 );
 
+-- do you want to donate or sell 
+ALTER TABLE FOOD
+ADD SELL_OR_DONATE VARCHAR2(20);
 -- Create Get_point table
 CREATE TABLE GET_POINT (
     DONOR_ID NUMBER,

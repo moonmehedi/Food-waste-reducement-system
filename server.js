@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { run_query } from "./connection.js";
-
+import multer from "multer";
 dotenv.config();
 
 const app = express();
@@ -164,5 +164,55 @@ app.get('/admin/recipients', async (req, res) => {
   } catch (error) {
       console.error('Error fetching recipient:', error);
       res.status(500).send('Server error');
+  }
+});
+
+
+app.get('/admin/donation', async (req, res) => {
+  try {
+
+      const query = 'SELECT * FROM DONOR_FOOD_VIEW';
+      const donations = await run_query(query, {});
+      console.log(donations);
+      res.json(donations);
+  } catch (error) {
+      console.error('Error fetching donations:', error);
+      res.status(500).json({ error: 'Failed to fetch donations' });
+  }
+});
+
+
+
+// Multer setup for handling file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+
+
+// Endpoint to handle file upload and data insertion
+app.post('/donor/donation', upload.single('food-image'), async (req, res) => {
+
+  console.log('listing');
+  const { originalname, buffer } = req.file;
+  const { 'food-name': foodName, quantity, 'exp-date': expDate } = req.body;
+
+  try {
+      const query = `
+          INSERT INTO FOOD (NAME, QUANTITY, EXP_DATE, PHOTO, VERIFIED, VOLUNTEER_ID, DONOR_ID, DATE_F, SELL_OR_DONATE)
+          VALUES (:name, :quantity, TO_DATE(:expDate, 'YYYY-MM-DD'), :photo, 'N', null, null, SYSDATE, 'DONATE')
+      `;
+      const params = {
+          name: foodName,
+          quantity: parseInt(quantity, 10),
+          expDate: expDate,
+          photo: buffer
+      };
+
+      await run_query(query, params);
+
+      res.status(200).json({ message: 'Food donation recorded successfully!' });
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ message: 'Failed to donate food.' });
   }
 });

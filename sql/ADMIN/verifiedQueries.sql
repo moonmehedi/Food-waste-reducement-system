@@ -39,3 +39,23 @@ WHERE
     R.VERIFIED = 'Y';
 
 SELECT * from RECIPIENT_INFO;
+
+
+-- donations
+CREATE OR REPLACE VIEW DONOR_FOOD_VIEW AS
+
+SELECT
+    F.FOOD_ID AS "Donation No",
+    D.INSTITUTION_NAME AS "Donor Name",
+    F.NAME AS "Food Name",
+    F.PHOTO AS "Food Image",
+    F.QUANTITY AS "Food Quantity",
+    F.EXP_DATE AS "Expiration Date",
+    F.DATE_F AS "Date"
+FROM
+    DONOR D,FOOD F
+WHERE
+    F.donor_id=D.donor_id and
+    F.VERIFIED = 'Y' AND D.VERIFIED = 'Y';
+
+select * from DONOR_FOOD_VIEW;
