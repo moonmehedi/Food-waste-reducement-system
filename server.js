@@ -168,18 +168,6 @@ app.get('/admin/recipients', async (req, res) => {
 });
 
 
-app.get('/admin/donation', async (req, res) => {
-  try {
-
-      const query = 'SELECT * FROM DONOR_FOOD_VIEW';
-      const donations = await run_query(query, {});
-      console.log(donations);
-      res.json(donations);
-  } catch (error) {
-      console.error('Error fetching donations:', error);
-      res.status(500).json({ error: 'Failed to fetch donations' });
-  }
-});
 
 
 
@@ -338,3 +326,42 @@ const blobToBase64 = (blob) => {
     });
   });
 };
+
+
+
+
+app.get('/admin/verified-food', async (req, res) => {
+  let conn;
+  try {
+    conn = await connection();
+    const query = 'SELECT * FROM donor_food_view';
+    const result = await conn.execute(query);
+    console(result);
+    // Process the result to handle BLOBs
+    const donations = await Promise.all(result.rows.map(async row => {
+      const foodImage = row[2]; // Assuming BLOB is at index 2
+      const base64Image = await blobToBase64(foodImage);
+      return [
+        row[0], // Donor_Name
+        row[1], // Food_Name
+        base64Image, // Food_Image as Base64
+        row[3], // Food_Quantity
+        row[4], // Exp_Date
+        row[8]  // Food_Date
+      ];
+    }));
+    console.log(donations)
+    res.json(donations);
+  } catch (error) {
+    console.error('Error fetching donation history:', error);
+    res.status(500).send('Server error');
+  } finally {
+    if (conn) {
+      try {
+        await conn.close();
+      } catch (err) {
+        console.error('Failed to close connection:', err);
+      }
+    }
+  }
+});

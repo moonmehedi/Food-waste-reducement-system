@@ -41,7 +41,7 @@ WHERE
 SELECT * from RECIPIENT_INFO;
 
 
--- donations
+-- available food or verified food
 CREATE OR REPLACE VIEW DONOR_FOOD_VIEW AS
 
 SELECT
