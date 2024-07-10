@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { run_query } from "./connection.js";
+import { connection, run_query } from './connection.js';
 import multer from "multer";
 dotenv.config();
 
@@ -266,3 +266,75 @@ app.post('/sell/food', upload.single('food-photo'), async (req, res) => {
       res.status(500).json({ message: 'Failed to sell food.' });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+app.get('/admin/donation-history', async (req, res) => {
+  let conn;
+  try {
+    conn = await connection();
+    const query = 'SELECT * FROM donation_history';
+    const result = await conn.execute(query);
+
+    // Process the result to handle BLOBs
+    const donations = await Promise.all(result.rows.map(async row => {
+      const foodImage = row[2]; // Assuming BLOB is at index 2
+      const base64Image = await blobToBase64(foodImage);
+      return [
+        row[0], // Donor_Name
+        row[1], // Food_Name
+        base64Image, // Food_Image as Base64
+        row[3], // Food_Quantity
+        row[4], // Exp_Date
+        row[5], // Recipient_Name
+        row[6], // Institution_Type
+        row[7], // Number_Of_People
+        row[8]  // Food_Date
+      ];
+    }));
+    console.log(donations)
+    res.json(donations);
+  } catch (error) {
+    console.error('Error fetching donation history:', error);
+    res.status(500).send('Server error');
+  } finally {
+    if (conn) {
+      try {
+        await conn.close();
+      } catch (err) {
+        console.error('Failed to close connection:', err);
+      }
+    }
+  }
+});
+
+// Function to convert BLOB to Base64
+const blobToBase64 = (blob) => {
+  return new Promise((resolve, reject) => {
+    if (blob === null) {
+      resolve(null);
+      return;
+    }
+
+    const chunks = [];
+    blob.on('data', (chunk) => {
+      chunks.push(chunk);
+    });
+    blob.on('end', () => {
+      const buffer = Buffer.concat(chunks);
+      resolve(buffer.toString('base64'));
+    });
+    blob.on('error', (err) => {
+      reject(err);
+    });
+  });
+};
