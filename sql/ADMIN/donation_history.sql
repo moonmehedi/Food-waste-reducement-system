@@ -1,5 +1,5 @@
-CREATE OR REPLACE FORCE EDITIONABLE VIEW "ADMIN"."DONATION_HISTORY" ("DONOR_NAME", "FOOD_NAME", "FOOD_IMAGE", "FOOD_QUANTITY", "EXP_DATE", "RECIPIENT_NAME", "INSTITUTION_TYPE", "NUMBER_OF_PEOPLE", "FOOD_DATE") AS 
-  SELECT
+CREATE OR REPLACE  VIEW DONATION_HISTORY as
+SELECT
     D.INSTITUTION_NAME AS Donor_Name,
     F.NAME AS Food_Name,
     F.PHOTO AS Food_Image,
@@ -12,10 +12,13 @@ CREATE OR REPLACE FORCE EDITIONABLE VIEW "ADMIN"."DONATION_HISTORY" ("DONOR_NAME
 
 FROM
     FOOD F,donor D,recipient R,receives Rec
-    where f.food_id=rec.food_id
+    where rec.food_id=f.food_id
     and 
     rec.recipient_id=R.recipient_id
     and 
     f.donor_id=d.donor_id
 ORDER BY
     F.DATE_F;
+
+
+SELECT * FROM DONATION_HISTORY;

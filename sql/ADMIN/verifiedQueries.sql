@@ -32,6 +32,7 @@ SELECT
     R.INSTITUTION_NAME,
     R.INSTITUTION_TYPE,
     R.NUMBER_OF_PEOPLE AS "Number Of People",
+    "DIVISION" || ', ' || "DISTRICT" || ', ' || "CITY" || ', ' || "STREETNO" AS "ADDRESS",
     R.DATE_R AS "Date"
 FROM
     RECIPIENT R
@@ -44,7 +45,6 @@ SELECT * from RECIPIENT_INFO;
 -- available food or verified sub-query
 CREATE OR REPLACE VIEW DONOR_FOOD_VIEW AS
 SELECT
-    F.FOOD_ID AS "Donation No",
     D.INSTITUTION_NAME AS "Donor Name",
     F.NAME AS "Food Name",
     F.PHOTO AS "Food Image",

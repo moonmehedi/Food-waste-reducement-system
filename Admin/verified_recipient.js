@@ -17,7 +17,8 @@ document.getElementById('collapsible-button').addEventListener('click', async ()
             row.insertCell(2).innerText = recipient[2]; // Institution Name
             row.insertCell(3).innerText = recipient[3]; // Institution Type
             row.insertCell(4).innerText = recipient[4]; // Number of People
-            row.insertCell(5).innerText = recipient[5] ? new Date(recipient[5]).toLocaleDateString() : ""; // Date
+            row.insertCell(5).innerText = recipient[5];
+            row.insertCell(6).innerText = recipient[6] ? new Date(recipient[6]).toLocaleDateString() : ""; // Date
         });
     } catch (error) {
         console.error('Error loading recipients:', error);

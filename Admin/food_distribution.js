@@ -2,72 +2,48 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchDonations();
     fetchRecipients();
 
-    document.querySelectorAll('.btn-assign').forEach(button => {
-        button.addEventListener('click', function() {
-            const donationId = this.getAttribute('data-donation');
-            showRecipientModal(donationId);
-        });
-    });
 
-    document.getElementById('close-volunteer-modal').addEventListener('click', function() {
-        closeRecipientModal();
-    });
 });
 
 function fetchDonations() {
-    fetch('/admin/food_dist_donation')
+    fetch('http://localhost:5000/admin/verified-food')
         .then(response => response.json())
         .then(data => {
             const table = document.getElementById('donation-table');
-            data.forEach(donation => {
+            data.forEach((donation, index) => {
                 const row = table.insertRow();
-                row.insertCell(0).innerText = donation['Donation No'];
-                row.insertCell(1).innerText = donation['Donor Name'];
-                row.insertCell(2).innerText = donation['Food Name'];
-                row.insertCell(3).innerHTML = `<img src="${donation['Food Image']}" alt="Food Image" width="50">`;
-                row.insertCell(4).innerText = donation['Food Quantity'];
-                row.insertCell(5).innerText = donation['Expiration Date'];
-                row.insertCell(6).innerText = donation['Date'];
-                row.insertCell(7).innerHTML = `<button class="btn-assign" data-donation="${donation['Donation No']}">Distribute</button>`;
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${donation[0]}</td>
+                    <td>${donation[1]}</td>
+                    <td><img src="data:image/jpeg;base64,${donation[2]}" alt="${donation[1]}" class="food-image" width="50"></td>
+                    <td>${donation[3]}</td>
+                    <td>${new Date(donation[4]).toLocaleDateString()}</td>
+                    <td>${new Date(donation[5]).toLocaleDateString()}</td>
+                    <td><button class="btn-assign" data-donation="${index + 1}">Distribute</button></td>
+                `;
             });
         })
         .catch(error => console.error('Error fetching donations:', error));
 }
 
 function fetchRecipients() {
-    fetch('/admin/food_dist_recipient')
+    fetch('http://localhost:5000/admin/recipients')
         .then(response => response.json())
         .then(data => {
             const table = document.querySelector('#volunteer-modal table');
             data.forEach(recipient => {
                 const row = table.insertRow();
-                row.insertCell(0).innerText = recipient['Institution Name'];
-                row.insertCell(1).innerText = recipient['Institution Type'];
-                row.insertCell(2).innerText = recipient['Email'];
-                row.insertCell(3).innerText = recipient['Number of People'];
-                row.insertCell(4).innerText = recipient['Address'];
-                row.insertCell(5).innerText = recipient['Date'];
+                row.insertCell(0).innerText = recipient[0];
+                row.insertCell(1).innerText = recipient[2];
+                row.insertCell(2).innerText = recipient[3];
+                row.insertCell(3).innerText = recipient[4];
+                row.insertCell(4).innerText = recipient[5];
+                row.insertCell(5).innerText = recipient[6] ? new Date(recipient[6]).toLocaleDateString() : ""; // Date
                 row.insertCell(6).innerHTML = `<button class="btn-choose" data-recipient="${recipient['Recipient ID']}">Choose</button>`;
             });
         })
         .catch(error => console.error('Error fetching recipients:', error));
-}
-
-function showRecipientModal(donationId) {
-    document.getElementById('overlay').style.display = 'block';
-    document.getElementById('volunteer-modal').style.display = 'block';
-
-    document.querySelectorAll('.btn-choose').forEach(button => {
-        button.addEventListener('click', function() {
-            const recipientId = this.getAttribute('data-recipient');
-            assignDonation(donationId, recipientId);
-        });
-    });
-}
-
-function closeRecipientModal() {
-    document.getElementById('overlay').style.display = 'none';
-    document.getElementById('volunteer-modal').style.display = 'none';
 }
 
 function assignDonation(donationId, recipientId) {
@@ -89,4 +65,3 @@ function assignDonation(donationId, recipientId) {
     })
     .catch(error => console.error('Error assigning donation:', error));
 }
-
