@@ -41,9 +41,8 @@ WHERE
 SELECT * from RECIPIENT_INFO;
 
 
--- available food or verified food
+-- available food or verified sub-query
 CREATE OR REPLACE VIEW DONOR_FOOD_VIEW AS
-
 SELECT
     F.FOOD_ID AS "Donation No",
     D.INSTITUTION_NAME AS "Donor Name",
@@ -56,6 +55,5 @@ FROM
     DONOR D,FOOD F
 WHERE
     F.donor_id=D.donor_id and
-    F.VERIFIED = 'Y' AND D.VERIFIED = 'Y';
-
-select * from DONOR_FOOD_VIEW;
+    F.VERIFIED = 'Y' AND D.VERIFIED = 'Y'
+    and f.food_id not in (select food_id from receives); 

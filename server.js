@@ -305,29 +305,6 @@ app.get('/admin/donation-history', async (req, res) => {
   }
 });
 
-// Function to convert BLOB to Base64
-const blobToBase64 = (blob) => {
-  return new Promise((resolve, reject) => {
-    if (blob === null) {
-      resolve(null);
-      return;
-    }
-
-    const chunks = [];
-    blob.on('data', (chunk) => {
-      chunks.push(chunk);
-    });
-    blob.on('end', () => {
-      const buffer = Buffer.concat(chunks);
-      resolve(buffer.toString('base64'));
-    });
-    blob.on('error', (err) => {
-      reject(err);
-    });
-  });
-};
-
-
 
 
 app.get('/admin/verified-food', async (req, res) => {
@@ -336,8 +313,8 @@ app.get('/admin/verified-food', async (req, res) => {
     conn = await connection();
     const query = 'SELECT * FROM donor_food_view';
     const result = await conn.execute(query);
-    console(result);
-    // Process the result to handle BLOBs
+   // console(result);
+   // Process the result to handle BLOBs
     const donations = await Promise.all(result.rows.map(async row => {
       const foodImage = row[2]; // Assuming BLOB is at index 2
       const base64Image = await blobToBase64(foodImage);
@@ -365,3 +342,25 @@ app.get('/admin/verified-food', async (req, res) => {
     }
   }
 });
+      
+      // Function to convert BLOB to Base64
+      const blobToBase64 = (blob) => {
+        return new Promise((resolve, reject) => {
+          if (blob === null) {
+            resolve(null);
+            return;
+          }
+      
+          const chunks = [];
+          blob.on('data', (chunk) => {
+            chunks.push(chunk);
+          });
+          blob.on('end', () => {
+            const buffer = Buffer.concat(chunks);
+            resolve(buffer.toString('base64'));
+          });
+          blob.on('error', (err) => {
+            reject(err);
+          });
+        });
+      };
