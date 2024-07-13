@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.1.0/remixicon.css">
+    <link href='https://fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Alex Brush' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway Dots' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="style.css">
+    <title>Contact Admin</title>
+</head>
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    form textarea {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+
+    form button {
+        background-color: #458e1a;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    form button:hover {
+        background-color:  #458e1a; /* Darker earthy brown */
+    }
+    label {
+    font-size: 15px; 
+}
+
+
+</style>
+<body>
+<header class="header">
+    <div class="header-1">
+        <a href="index.html" class="logo"><img src="Images/waste.png" class="icon"> Volunteer Panel</a>
+        <div class="icons">
+            <a href="#" id="profile-icon" class="ri-user-line"></a>
+        </div>
+    </div>
+    <div class="header-2">
+        <nav class="navbar">
+            <a href="task_management.html">Task Management</a>
+            <a href="verification_history.html">Verification History</a>
+            <a href="contact_admin.html">Contact Admin</a>
+        </nav>
+    </div>
+</header>
+<div class="heading1">
+    <h4>Contact Admin</h4>
+</div>
+<div class="container" style="max-width: 1400px;">
+    <form>
+        <label for="issue">Describe your issue or concern:</label>
+        <textarea id="issue" name="issue" rows="10" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        alert('Your issue has been submitted successfully!');
+        this.reset();
+    });
+</script>
+</body>
+</html>

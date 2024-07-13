@@ -1,0 +1,44 @@
+CREATE OR REPLACE VIEW Assigned_task AS
+SELECT 
+    'Donor' AS Request_Type,
+    D.EMAIL AS Email_Address,
+    D.STREETNO AS Request_Address,
+    D.PHONE,
+    D.INSTITUTION_TYPE,
+    D.INSTITUTION_NAME,
+    D.DATE_D AS Request_Date,
+    D.VOLUNTEER_ID
+FROM 
+    DONOR D
+WHERE 
+    D.VOLUNTEER_ID IS NOT NULL AND D.VERIFIED IS NULL
+UNION ALL
+SELECT 
+    'Recipient' AS Request_Type,
+    R.EMAIL AS Email_Address,
+    R.STREETNO AS Request_Address,
+    R.PHONE,
+    R.INSTITUTION_TYPE,
+    R.INSTITUTION_NAME,
+    R.DATE_R AS Request_Date,
+    R.VOLUNTEER_ID
+FROM 
+    RECIPIENT R
+WHERE
+    R.VOLUNTEER_ID IS NOT NULL AND R.VERIFIED IS NULL
+UNION ALL
+SELECT 
+    'Food' AS Request_Type,
+    F.EMAIL AS Email_Address,
+    F.STREETNO AS Request_Address,
+    F.PHONE,
+    D.INSTITUTION_TYPE,
+    D.INSTITUTION_NAME,
+    F.DATE_F AS Request_Date,
+    F.VOLUNTEER_ID
+FROM 
+    FOOD F
+JOIN 
+    DONOR D ON F.DONOR_ID = D.DONOR_ID
+WHERE 
+    F.VOLUNTEER_ID IS NOT NULL AND F.VERIFIED IS NULL;
