@@ -16,13 +16,13 @@
 <body>
 <header class="header">
     <div class="header-1">
-        <a href="index.html" class="logo"><img src="Images/waste.png" class="icon"> Admin Panel</a>
+        <a href="index.html" class="logo"><img src="Images/waste.png" class="icon" id="logo-icon"> Admin Panel</a>
         <div class="icons">
             <a href="#" id="profile-icon" class="ri-user-line"></a>
         </div>
     </div>
     <div class="header-2">
-        <nav class="navbar">
+        <nav class="navbar" id="navbar">
             <a href="Admin_home.html">Home</a>
             <a href="Request.html">All Requests</a>
             <a href="pending_request.html">Pending Requests</a>
@@ -35,23 +35,24 @@
         </nav>
     </div>
 </header>
-<div class="heading1">
+<div class="heading1" id="heading1">
     <h4>Verified Recipients</h4>
     <p> <a href="Admin_home.html">Home</a> /Verified Recipients</p>
 </div>
-<div class="container">
-    <div class="intro">
+<div class="container" id="container">
+    <div class="intro" id="intro">
         <h4>List of Verified Recipients: </h4>
     </div>
-    <button type="button" class="collapsible">Recipient List</button>
-    <div class="content">
-        <table>
+    <button type="button" class="collapsible" id="collapsible-button">Recipient List</button>
+    <div class="content" id="content">
+        <table id="recipient-table">
             <tr>
                 <th>No</th>
                 <th>Email</th>
                 <th>Institution Name</th>
                 <th>Institution Type</th>
                 <th>Number of People</th>
+                <th>Address</th>
                 <th>Date</th>
             </tr>
             <tr>
@@ -91,6 +92,7 @@
 
 <!-- Overlay -->
 <div class="overlay" id="overlay"></div>
-<script src="admin.js"></script>
+<script src="/Admin/admin.js"></script>
+<script src="/Admin/verified_recipient.js"></script>
 </body>
 </html>

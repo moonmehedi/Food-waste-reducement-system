@@ -45,48 +45,22 @@
     </div>
     <button type="button" class="collapsible">Donor List</button>
     <div class="content">
-        <table>
-            <tr>
-                <th>No</th>
-                <th>Email</th>
-                <th>Institution Type</th>
-                <th>Institution Name</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>Date</th>
-                <th>Consider for Distribution</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>johndoe@example.com</td>
-                <td>Restaurant</td>
-                <td>John's Diner</td>
-                <td>(123) 456-7890</td>
-                <td>123 Main St</td>
-                <td>2024-06-01</td>
-                <td><button class="btn-assign">Distribute</button></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>janesmith@example.com</td>
-                <td>Supermarket</td>
-                <td>Jane's Mart</td>
-                <td>(987) 654-3210</td>
-                <td>456 Elm St</td>
-                <td>2024-06-10</td>
-                <td><button class="btn-assign">Distribute</button></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>samwilson@example.com</td>
-                <td>NGO</td>
-                <td>Help Hands</td>
-                <td>(555) 123-4567</td>
-                <td>789 Pine St</td>
-                <td>2024-06-15</td>
-                <td><button class="btn-assign">Distribute</button></td>
-            </tr>
-            <!-- Add more verified donors entries as needed -->
+        <table id="donor-table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Email</th>
+                    <th>Institution Type</th>
+                    <th>Institution Name</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Date</th>
+                    <th>Consider for Distribution</th>
+                </tr>
+            </thead>
+            <tbody id="donor-table-body">
+                <!-- Rows will be populated by JavaScript -->
+            </tbody>
         </table>
     </div>
 </div>
@@ -99,6 +73,7 @@
 
 <!-- Overlay -->
 <div class="overlay" id="overlay"></div>
-<script src="admin.js"></script>
+<script src="/Admin/verified_donor.js"></script>
+<script src="/Admin/admin.js"></script>
 </body>
 </html>

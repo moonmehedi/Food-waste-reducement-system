@@ -43,9 +43,9 @@
     <div class="intro">
         <h4>List of Volunteers: </h4>
     </div>
-    <button type="button" class="collapsible">Volunteers</button>
-    <div class="content">
-        <table>
+    <button type="button" class="collapsible" id="load-volunteers">Volunteers</button>
+    <div class="content" id="volunteer-list">
+        <table id="volunteer-table">
             <tr>
                 <th>No</th>
                 <th>Name</th>
@@ -53,40 +53,11 @@
                 <th>Date of Birth</th>
                 <th>Address</th>
                 <th>Phone</th>
-               
             </tr>
-            <tr>
-                <td>1</td>
-                <td>John Doe</td>
-                <td>johndoe@example.com</td>
-                <td>1990-01-01</td>
-                <td>123 Main St</td>
-                <td>(123) 456-7890</td>
-                
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Jane Smith</td>
-                <td>janesmith@example.com</td>
-                <td>1985-02-15</td>
-                <td>456 Elm St</td>
-                <td>(987) 654-3210</td>
-               
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Sam Wilson</td>
-                <td>samwilson@example.com</td>
-                <td>1992-07-30</td>
-                <td>789 Pine St</td>
-                <td>(555) 123-4567</td>
-                
-            </tr>
-            <!-- Add more volunteers entries as needed -->
+            <!-- Volunteer rows will be dynamically inserted here -->
         </table>
     </div>
 </div>
-</section>
 <div class="profile-modal" id="profile-modal">
     <p>Username: <span>Maisha</span></p>
     <p>Email: <span>maisha99@gmail.com</span></p>
@@ -95,6 +66,7 @@
 
 <!-- Overlay -->
 <div class="overlay" id="overlay"></div>
-<script src="admin.js"></script>
+<script src="/Admin/admin.js"></script>
+<script src="/Admin/volunteers.js"></script>
 </body>
 </html>

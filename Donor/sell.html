@@ -49,38 +49,17 @@
 <div class="sell-container">
     <h2>Sell Your Food</h2>
     <form class="sell-form">
-        <label for="food-name">Food Name</label>
-        <input type="text" id="food-name" name="food-name" placeholder="Enter the name of the food" required>
-
+        
         <label for="food-photo">Food Photo</label>
         <input type="file" id="food-photo" name="food-photo" accept="image/*" placeholder="Upload a photo of the food" required>
-
-        <label for="institution-type">Institution Type</label>
-        <select id="institution-type" name="institution-type" required>
-            <option value="restaurant">Restaurant</option>
-            <option value="grocery">Grocery</option>
-            <option value="bakery">Bakery</option>
-            <option value="catering">Catering</option>
-        </select>
-
-        <label for="institution-name">Institution Name</label>
-        <input type="text" id="institution-name" name="institution-name" placeholder="Enter the name of your institution" required>
+        
+        <label for="food-name">Food Name</label>
+        <input type="text" id="food-name" name="food-name" placeholder="Enter the name of the food" required>
 
         <label for="quantity">Quantity</label>
         <input type="number" id="quantity" name="quantity" placeholder="Enter the quantity" required>
 
-        <label for="address">Address</label>
-        <div class="box" id="address-dropdown">Enter Address</div>
-        <div class="address-fields">
-            <span>City</span>
-            <input type="text" name="city" class="box" placeholder="Enter your city" required>
-            <span>District</span>
-            <input type="text" name="district" class="box" placeholder="Enter your district" required>
-            <span>Division</span>
-            <input type="text" name="division" class="box" placeholder="Enter your division" required>
-            <span>Street No.</span>
-            <input type="text" name="street_no" class="box" placeholder="Enter your street number" required>
-        </div>
+
 
         <label for="original-price">Original Price</label>
         <input type="text" id="original-price" name="original-price" placeholder="Enter the original price" required>
@@ -140,6 +119,7 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="donor.js"></script>
+<script src="/Donor/donor.js"></script>
+<script src="/Donor/sell.js"></script>
 </body>
 </html>

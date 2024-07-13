@@ -77,6 +77,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+
+
+
+
+
+
 });
 
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 45baad8aadaa86f97837e416656704d9f2ae8c5c

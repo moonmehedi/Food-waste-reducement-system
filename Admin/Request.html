@@ -43,13 +43,12 @@
     <div class="intro">
         <h4>List of Sign Up Requests: </h4>
     </div>
-    <button type="button" class="collapsible">Request List</button>
-    <div class="content">
-        <table>
+    <button type="button" class="collapsible" id="signup-collapsible">Request List</button>
+    <div class="content" id="signup-content">
+        <table class="combined-requests-table" id="combined-requests-table">
             <tr>
                 <th>Request No</th>
                 <th>Request Type</th>
-                <th>Username</th>
                 <th>Email Address</th>
                 <th>Request Address</th>
                 <th>Phone</th>
@@ -61,7 +60,6 @@
             <tr>
                 <td>1</td>
                 <td>Donor</td>
-                <td>abedin34</td>
                 <td>abedin34@gmail.com</td>
                 <td>Mirpur-12, Dhaka, Dhaka, Street 1</td>
                 <td>0123456789</td>
@@ -73,14 +71,13 @@
             <tr>
                 <td>2</td>
                 <td>Recipient</td>
-                <td>abedin34</td>
                 <td>abedin34@gmail.com</td>
                 <td>Mirpur-12, Dhaka, Dhaka, Street 1</td>
                 <td>0123456789</td>
                 <td>School</td>
                 <td>ABC School</td>
                 <td>24 June, 2024</td>
-                <td><button class="btn-assign" data-request="1">Assign</button></td>
+                <td><button class="btn-assign" data-request="2">Assign</button></td>
             </tr>
             <!-- Add more rows as needed -->
         </table>
@@ -91,9 +88,9 @@
     <div class="intro">
         <h4>List of Food Requests: </h4>
     </div>
-    <button type="button" class="collapsible">Food Request List</button>
-    <div class="content">
-        <table>
+    <button type="button" class="collapsible" id="food-collapsible">Food Request List</button>
+    <div class="content" id="food-content">
+        <table class="food-requests-table" id="food-requests-table">
             <tr>
                 <th>Request No</th>
                 <th>Donor Name</th>
@@ -122,7 +119,7 @@
                 <td>100 units</td>
                 <td>30 June, 2024</td>
                 <td>24 June, 2024</td>
-                <td><button class="btn-assign" data-request="1">Assign</button></td>
+                <td><button class="btn-assign" data-request="2">Assign</button></td>
             </tr>
             <!-- Add more rows as needed -->
         </table>
@@ -133,7 +130,7 @@
     <div class="volunteer-modal-content">
         <span class="close" id="close-volunteer-modal">&times;</span> <!-- Close button -->
         <h4>Available Volunteers</h4>
-        <table>
+        <table class="volunteers-table" id="volunteers-table">
             <tr>
                 <th>No</th>
                 <th>Name</th>
@@ -150,7 +147,7 @@
                 <td>1990-01-01</td>
                 <td>1234 Street, City, District, Division</td>
                 <td>0123456789</td>
-                <td><button class="btn-assign" data-volunteer="1">Choose</button></td>
+                <td><button class="btn-choose" data-volunteer="1">Choose</button></td>
             </tr>
             <tr>
                 <td>2</td>
@@ -159,7 +156,7 @@
                 <td>1992-05-15</td>
                 <td>5678 Street, City, District, Division</td>
                 <td>0987654321</td>
-                <td><button class="btn-assign" data-volunteer="2">Choose</button></td>
+                <td><button class="btn-choose" data-volunteer="2">Choose</button></td>
             </tr>
             <!-- Add more rows as needed -->
         </table>
@@ -174,8 +171,6 @@
     <a href="#" class="btn">Log Out</a>
 </div>
 
-<!-- Overlay -->
-<div class="overlay" id="overlay"></div>
-<script src="admin.js"></script>
+<script src="/Admin/request.js"></script>
 </body>
 </html>
