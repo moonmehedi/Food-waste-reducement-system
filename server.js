@@ -441,3 +441,41 @@ app.get('/admin/donor-food-donation-requests', async (req, res) => {
 
 
 
+
+
+
+//zishan volunteer
+
+app.get("/assigned_tasks/:volunteer_id", async (req, res) => {
+  const volunteerId = req.params.volunteer_id;
+
+  const query = `
+    BEGIN
+        get_assigned_tasks(:volunteer_id, :p_results);
+    END;
+  `;
+
+  let params = {
+    volunteer_id: { dir: oracledb.BIND_IN, val: volunteerId, type: oracledb.NUMBER },
+    p_results: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR }
+  };
+
+  try {
+    const result = await run_query(query, params);
+    console.log(result);
+    const resultSet = result.outBinds.p_results;
+
+    let rows = [];
+    let row;
+    while ((row = await resultSet.getRow())) {
+      rows.push(row);
+    }
+
+    await resultSet.close();
+    res.json(rows);
+  } catch (err) {
+    console.error("Error fetching assigned tasks:", err);
+    res.status(500).json({ error: "Failed to fetch assigned tasks" });
+  }
+});
+
