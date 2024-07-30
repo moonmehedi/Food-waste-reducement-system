@@ -18,7 +18,7 @@ FROM
     and 
     f.donor_id=d.donor_id
 ORDER BY
-    F.DATE_F;
+    F.DATE_F ASC;
 
 
 SELECT * FROM DONATION_HISTORY;

@@ -1,67 +1,134 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetchDonations();
-    fetchRecipients();
+    // Handle collapsible elements
+    var coll = document.getElementsByClassName('collapsible');
+    for (var i = 0; i < coll.length; i++) {
+        coll[i].addEventListener('click', function() {
+            this.classList.toggle('active');
+            var content = this.nextElementSibling;
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                content.style.display = 'block';
+            }
+        });
+    }
 
+    // Handle profile modal
+    var profileIcon = document.getElementById('profile-icon');
+    if (profileIcon) {
+        profileIcon.addEventListener('click', function() {
+            var modal = document.getElementById('profile-modal');
+            var overlay = document.getElementById('overlay');
+            if (modal.style.display === 'none' || modal.style.display === '') {
+                modal.style.display = 'block';
+                overlay.style.display = 'block';
+            } else {
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
+            }
+        });
+    }
 
 });
 
-function fetchDonations() {
-    fetch('http://localhost:5000/admin/verified-food')
-        .then(response => response.json())
-        .then(data => {
-            const table = document.getElementById('donation-table');
-            data.forEach((donation, index) => {
-                const row = table.insertRow();
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${donation[0]}</td>
-                    <td>${donation[1]}</td>
-                    <td><img src="data:image/jpeg;base64,${donation[2]}" alt="${donation[1]}" class="food-image" width="50"></td>
-                    <td>${donation[3]}</td>
-                    <td>${new Date(donation[4]).toLocaleDateString()}</td>
-                    <td>${new Date(donation[5]).toLocaleDateString()}</td>
-                    <td><button class="btn-assign" data-donation="${index + 1}">Distribute</button></td>
-                `;
-            });
-        })
-        .catch(error => console.error('Error fetching donations:', error));
-}
+document.addEventListener('DOMContentLoaded', async () => {
+    const combinedRequestsTable = document.getElementById('donation-table');
+    const volunteersTable = document.getElementById('volunteers-table');
 
-function fetchRecipients() {
-    fetch('http://localhost:5000/admin/recipients')
-        .then(response => response.json())
-        .then(data => {
-            const table = document.querySelector('#volunteer-modal table');
-            data.forEach(recipient => {
-                const row = table.insertRow();
-                row.insertCell(0).innerText = recipient[0];
-                row.insertCell(1).innerText = recipient[2];
-                row.insertCell(2).innerText = recipient[3];
-                row.insertCell(3).innerText = recipient[4];
-                row.insertCell(4).innerText = recipient[5];
-                row.insertCell(5).innerText = recipient[6] ? new Date(recipient[6]).toLocaleDateString() : ""; // Date
-                row.insertCell(6).innerHTML = `<button class="btn-choose" data-recipient="${recipient['Recipient ID']}">Choose</button>`;
+    // Function to attach event listeners to all .btn-assign buttons
+    function attachAssignButtonListeners() {
+        document.querySelectorAll('.btn-assign').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var requestId = this.getAttribute('data-request');
+                document.querySelectorAll('.btn-choose').forEach(function(chooseButton) {
+                    chooseButton.setAttribute('data-request', requestId);
+                });
+                document.getElementById('volunteer-modal').style.display = 'flex';
+                document.getElementById('overlay').style.display = 'block';
             });
-        })
-        .catch(error => console.error('Error fetching recipients:', error));
-}
+        });
+    }
 
-function assignDonation(donationId, recipientId) {
-    fetch('/admin/food_dist_rec', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ donationId, recipientId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Donation assigned successfully!');
-            location.reload();
-        } else {
-            alert('Failed to assign donation.');
+    // Fetch and display combined requests
+    try {
+        const response = await fetch('http://localhost:5000/admin/verified-food');
+        const combinedRequests = await response.json();
+        console.log(combinedRequests);
+        combinedRequests.forEach((request, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${request[0]}</td>
+            <td>${request[1]}</td>
+            <td><img src="data:image/jpeg;base64,${request[2]}" alt="${request[1]}" class="food-image" width="50"></td>
+            <td>${request[3]}</td>
+            <td>${new Date(request[4]).toLocaleDateString()}</td>
+            <td>${new Date(request[5]).toLocaleDateString()}</td>
+            <td><button class="btn-assign" data-request="${index + 1}">Distribute</button></td>
+            `;
+            combinedRequestsTable.appendChild(row);
+        });
+        attachAssignButtonListeners(); // Attach listeners after rows are added
+    } catch (error) {
+        console.error('Error fetching combined requests:', error);
+    }
+
+    // Fetch and display available volunteers
+    try {
+        const response = await fetch('http://localhost:5000/admin/recipients');
+        const availableVolunteers = await response.json();
+        availableVolunteers.forEach(recipient => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${recipient[0]}</td>
+            <td>${recipient[2]}</td>
+            <td>${recipient[3]}</td>
+            <td>${recipient[4]}</td>
+            <td>${recipient[5]}</td>
+            <td>${recipient[6] ? new Date(recipient[6]).toLocaleDateString() : ''}</td>
+            <td><button class="btn-choose" data-recipient="${recipient['Recipient ID']}">Choose</button></td>
+            `;
+            volunteersTable.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error fetching available volunteers:', error);
+    }
+
+  
+    // Handle close button in volunteer modal
+    var closeVolunteerModal = document.getElementById('close-volunteer-modal');
+    if (closeVolunteerModal) {
+        closeVolunteerModal.addEventListener('click', function() {
+            var volunteerModal = document.getElementById('volunteer-modal');
+            var overlay = document.getElementById('overlay');
+            if (volunteerModal.style.display === 'flex') {
+                volunteerModal.style.display = 'none';
+                overlay.style.display = 'none';
+            }
+        });
+    }
+
+    // Close the profile modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+        var profileModal = document.getElementById('profile-modal');
+        var overlay = document.getElementById('overlay');
+        if (event.target === overlay) {
+            if (profileModal && profileModal.style.display === 'block') {
+                profileModal.style.display = 'none';
+                overlay.style.display = 'none';
+            }
         }
-    })
-    .catch(error => console.error('Error assigning donation:', error));
-}
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+

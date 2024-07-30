@@ -13,11 +13,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <td>${donation[1]}</td>
                 <td><img src="data:image/jpeg;base64,${donation[2]}" alt="${donation[1]}" class="food-image"></td>
                 <td>${donation[3]}</td>
-                <td>${new Date(donation[5]).toLocaleDateString()}</td>
+                <td>${new Date(donation[4]).toLocaleDateString()}</td>
                 <td>${donation[5]}</td>
                 <td>${donation[6]}</td>
                 <td>${donation[7]}</td>
-                <td>${donation[8]}</td>
+                 <td>${new Date(donation[8]).toLocaleDateString()}</td>
             `;
         });
     } catch (error) {
