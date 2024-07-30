@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.1.0/remixicon.css">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Alex+Brush|Raleway+Dots" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Request History</title>
+    <style>
+      .history-container {
+            width: 80%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: whitesmoke;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            justify-content: center;
+        }
+        .history-section h2 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+        }
+        .swiper {
+            width: 100%;
+            height: 100%;
+        }
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+        }
+        .card-image
+        {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+        }
+        .card-content {
+            width: 100%;
+            text-align: left;
+            line-height: 2rem;
+        }
+        .card-content div {
+            margin-bottom: 10px;
+        }
+        .card-content span {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .card-content .value {
+            font-weight: bold;
+            color: #495057;
+        }
+        .swiper-pagination {
+            bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-3">
+        <div class="upper">
+           <div class="links">
+              <a href="#" class="fab fa-facebook-f"></a>
+              <a href="#" class="fab fa-twitter"></a>
+              <a href="#" class="fab fa-instagram"></a>
+              <a href="#" class="fab fa-linkedin"></a>
+           </div>
+           <div class="pages"><p> new <a href="login.html" id="login-button">login</a>  |  <a href="signup-donor.html" id="register-button">Sign Up</a> </p></div>
+        </div>
+    </div>
+
+    <div class="header-1">
+        <a href="index.html" class="logo"><img src="Images/waste.png" class="icon">Food Waste Reduction System</a>
+        <div class="icons">
+            <a href="#" id="search-btn" class="ri-search-line"></a>
+            <a href="#" class="ri-heart-line"></a>
+            <a href="#" class="ri-user-line"></a>
+        </div>
+    </div>
+    <div class="header-2">
+        <nav class="navbar">
+            <a href="Recipient_home.html">Home</a>
+            <a href="request_history.html">Request History</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="request_food.html">Request Food</a>
+            <a href="food_posts.html">Food Posts</a>
+        </nav>
+    </div>
+</header>
+
+<div class="history-container">
+    <div class="history-section">
+        <h2>Request History</h2>
+        <div class="swiper request-swiper">
+            <div class="swiper-wrapper">
+                <!-- Dynamic content -->
+                <div class="swiper-slide">
+                    <img src="Images/brown.jpg" alt="Food Image" class="card-image">
+                    <div class="card-content">
+                        <div>
+                            <span>Institution Name:</span> <span class="value">Example Institution 1</span><br>
+                            <span>Institution Type:</span> <span class="value">School</span><br>
+                            <span>Number of People:</span> <span class="value">200</span><br>
+                            <span>Date:</span> <span class="value">2024-07-01</span><br>
+                            <span>Status:</span> <span class="value">Pending</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="Images/brown2.jpg" alt="Food Image" class="card-image">
+                    <div class="card-content">
+                        <div>
+                            <span>Institution Name:</span> <span class="value">Example Institution 2</span><br>
+                            <span>Institution Type:</span> <span class="value">Hospital</span><br>
+                            <span>Number of People:</span> <span class="value">300</span><br>
+                            <span>Date:</span> <span class="value">2024-07-02</span><br>
+                            <span>Status:</span> <span class="value">Finished</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more slides as needed -->
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+<section class="footer">
+    <div class="box-container">
+        <div class="box">
+            <h3>
+                Our Locations
+            </h3>
+            <a href="#"><i class="fas fa-map-marker-alt"></i>Dhaka</a>
+            <a href="#"><i class="fas fa-map-marker-alt"></i>Chittagong</a>
+            <a href="#"><i class="fas fa-map-marker-alt"></i>Rajshahi</a>
+            <a href="#"><i class="fas fa-map-marker-alt"></i>Sylhet</a>
+            <a href="#"><i class="fas fa-map-marker-alt"></i>Rangpur</a>
+            <a href="#"><i class="fas fa-map-marker-alt"></i>Barishal</a>
+            <a href="#"><i class="fas fa-map-marker-alt"></i>Khulna</a>
+            <a href="#"><i class="fas fa-map-marker-alt"></i>Mirsharai</a>
+        </div>
+
+        <div class="box">
+            <h3>
+                Quick Links
+            </h3>
+            <a href="Donor_home.html"><i class="fas fa-arrow-right"></i>Home</a>
+            <a href="#"><i class="fas fa-arrow-right"></i>Donation History</a>
+            <a href="#"><i class="fas fa-arrow-right"></i>Contact Us</a>
+        </div>
+        <div class="box">
+            <h3>Extra Links</h3>
+            <a href="#"><i class="fas fa-arrow-right"></i> Account Info</a>
+            <a href="#"><i class="fas fa-arrow-right"></i> Privacy Policy</a>
+            <a href="#"><i class="fas fa-arrow-right"></i> Services</a>
+        </div>
+        <div class="box">
+            <h3>Contact Info</h3>
+            <a href="#"><i class="fas fa-phone"></i> +880-1678-345-901</a>
+            <a href="#"><i class="fas fa-phone"></i> +880-1528-345-704</a>
+            <a href="#"><i class="fas fa-envelope"></i>fwrs23@gmail.com</a>
+        </div>
+    </div>
+    <div class="share">
+        <a href="#" class="fab fa-facebook-f"></a>
+        <a href="#" class="fab fa-twitter"></a>
+        <a href="#" class="fab fa-instagram"></a>
+        <a href="#" class="fab fa-linkedin"></a>
+        <a href="#" class="fab fa-pinterest"></a>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="recipient.js"></script>
+</body>
+</html>
