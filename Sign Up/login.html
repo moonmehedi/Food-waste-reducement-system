@@ -15,27 +15,27 @@
 <body>
     <div class="login1-form-container" id="login-content">
         <a id="close-login-btn" class="fas fa-times" href="#"></a>
-        <form action="/login" method="post">
+        <form id="login-form">
             <h3>Login</h3>
             <span>Username</span>
-            <input type="email" name="email" class="box" placeholder="Enter Your Email" id="">
+            <input type="email" name="email" class="box" placeholder="Enter Your Email" required>
             <span>Password</span>
-            <input type="password" name="password" class="box" placeholder="Enter Your Password" id="">
+            <input type="password" name="password" class="box" placeholder="Enter Your Password" required>
             <span>Role</span>
-            <select name="role" class="box">
+            <select name="role" class="box" required>
                 <option value="volunteer">Volunteer</option>
                 <option value="donor">Donor</option>
                 <option value="recipient">Recipient</option>
                 <option value="manager">Manager</option>
             </select>
             <div class="checkbox">
-                <input type="checkbox" name="" id="remember-me">
+                <input type="checkbox" name="remember-me" id="remember-me">
                 <label for="remember-me">Remember Me</label>
             </div>
-            <input type="submit" name="submit" value="Log in" class="btn">
+            <input type="submit" value="Log in" class="btn">
             <p>Dont have an account? <a href="#">Create One Now!</a></p>
         </form>
     </div>
-
+    <script src="login.js"></script>
 </body>
 </html>

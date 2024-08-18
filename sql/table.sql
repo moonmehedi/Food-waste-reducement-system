@@ -37,7 +37,7 @@ CREATE TABLE ASSIGN (
 );
 --adding task to the assign table 
 ALTER TABLE ASSIGN
-ADD task VARCHAR(255); -- Adjust the VARCHAR size as per your requirements
+ADD task VARCHAR(25); 
 
 
 -- Create Donor table

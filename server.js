@@ -3,13 +3,44 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connection, run_query } from './connection.js';
 import multer from "multer";
-dotenv.config();
+import session from 'express-session';
+dotenv.config(); 
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+
+
+
+
+
+
+
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false, // Change to true to ensure the session is saved back to the store
+  saveUninitialized: false, // Change to false to avoid saving uninitialized sessions
+  cookie: {
+    secure: false, // Set to true if using HTTPS
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60, // 1 hour
+    sameSite: 'Lax'
+  }
+}));
+
+
+
+
+
+// Middleware
+app.use(cors({
+ origin: ['http://localhost:3000','http://127.0.0.1:5502'] ,// Adjust to your frontend URL
+  credentials: true // Allow credentials (cookies) to be sent
+}));
 app.use(express.json());
+
+//app.use(express.urlencoded({ extended: true }));
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
@@ -117,9 +148,68 @@ app.post("/user/signup_vol", async (req, res) => {
 
 
 
+//login mechanism
+
+app.post('/login', async (req, res) => {
+  const { email, password, role } = req.body;
+
+  try {
+      let query;
+      if (role === 'manager') {
+          query = 'SELECT * FROM manager WHERE EMAIL = :email AND PASSWORD = :password';
+      } else if (role === 'volunteer') {
+          query = 'SELECT * FROM VOLUNTEER WHERE EMAIL = :email AND PASSWORD = :password';
+      } else if (role === 'donor') {
+          query = 'SELECT * FROM DONOR WHERE EMAIL = :email AND PASSWORD = :password';
+      } else if (role === 'recipient') {
+          query = 'SELECT * FROM RECIPIENT WHERE EMAIL = :email AND PASSWORD = :password';
+      } else {
+          return res.status(400).json({ message: 'Invalid role' });
+      }
+
+      const params = { email, password };
+      const result = await run_query(query, params);
+
+      if (result.length > 0) {
+          req.session.user = {
+              id: result[0][0],
+              email: result[0][1],
+              name: result[0][3],
+              role: role
+          };
+          req.session.save((err) => {
+              if (err) {
+                  console.error('Error saving session:', err);
+                  return res.status(500).json({ message: 'Internal server error' });
+              }
+              console.log(req.session.user,'\n',req.session.sessionID)
+              res.status(200).json({ message: 'Login successful' });
+          });
+      } else {
+          res.status(401).json({ message: 'Invalid credentials' });
+      }
+  } catch (err) {
+      console.error('Error during login:', err);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+//get user detail
+app.get('/admin/current-user', (req, res) => {
+  console.log('user ingfo :',req.session.user,req.sessionStore,req.sessionID)
+  if (req.session.user) {
+      res.json(req.session.user);
+  } else {
+      res.status(401).json({ message: 'Unauthorized' });
+  }
+});
+
+
+
 // Add to your existing server.js
 app.get("/admin/dashboard-info", async (req, res) => {
   try {
+    console.log(req.session.user)
     const query = "SELECT * FROM FETCH_INFO";
     const result = await run_query(query, {});
     console.log(result);
