@@ -93,7 +93,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('Error fetching available volunteers:', error);
     }
-
   
     // Handle close button in volunteer modal
     var closeVolunteerModal = document.getElementById('close-volunteer-modal');
@@ -119,6 +118,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     });
+
+
+
 });
 
 

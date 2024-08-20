@@ -194,6 +194,20 @@ app.post('/login', async (req, res) => {
   }
 });
 
+
+//logout mechanism
+
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Failed to log out' });
+    }
+    res.status(200).json({ message: 'Logout successful' });
+  });
+});
+
+
+
 //get user detail
 app.get('/admin/current-user', (req, res) => {
   console.log('user ingfo :',req.session.user,req.sessionStore,req.sessionID)
@@ -203,6 +217,11 @@ app.get('/admin/current-user', (req, res) => {
       res.status(401).json({ message: 'Unauthorized' });
   }
 });
+
+
+
+
+
 
 
 
