@@ -114,6 +114,116 @@ app.post("/user/signup_vol", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+app.post("/user/signup_cus", async (req, res) => {
+  const user = req.body;
+  console.log("User:", user);
+
+  try {
+    const query = `
+      INSERT INTO CUSTOMER (NID, NAME, DOB, CITY, DISTRICT, DIVISION, STREETNO, PHONE, PASSWORD)
+      VALUES (:nid, :name , TO_DATE(:dob, 'YYYY-MM-DD'), :city, :district, :division, :streetno, :phone, :password)
+    `;
+
+    const params = {
+      password: user.password,
+      name: user.name,
+      nid: user.nid,
+      dob: user.dob,
+      city: user.address.city,
+      district: user.address.district,
+      division: user.address.division,
+      streetno: user.address.streetNo,
+      phone: user.address.phone,
+    };
+
+    await run_query(query, params);
+    res.status(201).json({ message: "Customer created successfully" });
+  } catch (err) {
+    console.error("Error while handling customer signup:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+//login
+
+
+/*app.post('/user/login', (req, res) => {
+  console.log('Login API hit!');
+  res.status(200).json({ message: 'API hit successfully' });
+});*/
+
+app.post('/user/login', async (req, res) => {
+  try {
+      const user = req.body;
+      console.log("User:", user);
+
+      if (!user.userid || !user.password || !user.role) {
+          return res.status(400).json({ message: 'All fields are required' });
+      }
+
+      let table;
+      switch (user.role) {
+          case 'donor':
+              table = 'DONOR';
+              break;
+          case 'recipient':
+              table = 'RECIPIENT';
+              break;
+          case 'volunteer':
+              table = 'VOLUNTEER';
+              break;
+          case 'manager':
+              table = 'MANAGER';
+              break;
+          case 'customer':
+              table = 'CUSTOMER';
+              break;
+          default:
+              return res.status(400).json({ message: 'Invalid role' });
+      }
+      console.log(table);
+
+      // Fetch user data from the database
+      const query = `SELECT * FROM ${table} WHERE NID = :userid `;
+      const result = await run_query(query, [user.userid ]);
+      console.log("Result: ", result);
+
+      // Check if the user was found
+      if (result.length === 0) {
+          return res.status(401).json({ message: 'User not found' });
+      }
+
+      // Convert the first result to an object with named properties
+      const dbUser = {
+          PASSWORD: result[0][8],
+          NID : result[0][0],
+          NAME: result[0][1]
+
+      };
+
+      console.log("DB User:", dbUser);
+      console.log(dbUser.PASSWORD);
+      console.log(user.password);
+
+      // Compare the provided password with the stored password
+      if (user.password !== dbUser.PASSWORD) {
+          return res.status(401).json({ message: 'Incorrect password' });
+      }
+
+      // Successful login response
+      return res.json({
+        message: 'Login successful',
+        NID: dbUser.NID,
+        Username: dbUser.NAME
+    });
+
+  } catch (error) {
+      console.error('Unexpected server error:', error);
+      return res.status(500).json({ message: 'Unexpected server error' });
+  }
+});
+
+
 
 
 
