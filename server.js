@@ -1,8 +1,14 @@
-import express from "express";
+import express, { response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connection, run_query } from './connection.js';
 import multer from "multer";
+
+import oracledb from 'oracledb';
+
+
+
+
 dotenv.config();
 
 const app = express();
@@ -446,36 +452,187 @@ app.get('/admin/donor-food-donation-requests', async (req, res) => {
 
 //zishan volunteer
 
-app.get("/assigned_tasks/:volunteer_id", async (req, res) => {
-  const volunteerId = req.params.volunteer_id;
+// app.get("/assigned_tasks/:volunteer_id", async (req, res) => {
+//   const volunteerId = req.params.volunteer_id;
 
-  const query = `
-    BEGIN
-        get_assigned_tasks(:volunteer_id, :p_results);
-    END;
-  `;
+//   const query = `
+//     BEGIN
+//         get_assigned_tasks(:volunteer_id, :p_results);
+//     END;
+//   `;
 
-  let params = {
-    volunteer_id: { dir: oracledb.BIND_IN, val: volunteerId, type: oracledb.NUMBER },
-    p_results: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR }
-  };
+//   let params = {
+//     volunteer_id: { dir: oracledb.BIND_IN, val: volunteerId, type: oracledb.NUMBER },
+//     p_results: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR }
+//   };
+
+//   try {
+//     const result = await run_query(query, params);
+//     console.log(result);
+//     const resultSet = result.outBinds.p_results;
+
+//     let rows = [];
+//     let row;
+//     while ((row = await resultSet.getRow())) {
+//       rows.push(row);
+//     }
+
+//     await resultSet.close();
+//     res.json(rows);
+//   } catch (err) {
+//     console.error("Error fetching assigned tasks:", err);
+//     res.status(500).json({ error: "Failed to fetch assigned tasks" });
+//   }
+// });
+
+
+
+//const app1 = express();
+//app.use(cors());
+//app.use(express.json());
+
+//oracledb.initOracleClient({libDir: '/path_to_instantclient'}); // Adjust this path as per your Oracle setup
+
+// Oracle DB connection
+
+// Get assigned tasks for a volunteer
+// Get assigned tasks for a volunteer
+app.get('/assigned_tasks/:volunteerId', async (req, res) => {
+  const volunteerId = req.params.volunteerId;
 
   try {
-    const result = await run_query(query, params);
-    console.log(result);
-    const resultSet = result.outBinds.p_results;
-
-    let rows = [];
-    let row;
-    while ((row = await resultSet.getRow())) {
-      rows.push(row);
-    }
-
-    await resultSet.close();
-    res.json(rows);
-  } catch (err) {
-    console.error("Error fetching assigned tasks:", err);
-    res.status(500).json({ error: "Failed to fetch assigned tasks" });
+    const result = await run_query(
+      `SELECT * FROM TASKS WHERE VOLUNTEER_ID = :volunteerId`,
+      [volunteerId]
+    );
+    res.json(result.map(row => ({
+      TASK_ID: row[0],
+      REQUEST_TYPE: row[1],
+      EMAIL_ADDRESS: row[2],
+      REQUEST_ADDRESS: row[3],
+      PHONE: row[4],
+      INSTITUTION_TYPE: row[5],
+      INSTITUTION_NAME: row[6],
+      REQUEST_DATE: row[7]
+    })));
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ error: "Failed to fetch tasks" });
   }
 });
 
+// Accept task
+app.post('/task/:taskId/accept', async (req, res) => {
+  const taskId = req.params.taskId;
+
+  try {
+    await run_query(
+      `UPDATE TASKS SET STATUS = 'Accepted' WHERE TASK_ID = :taskId`,
+      [taskId]
+    );
+    res.json({ message: 'Task accepted!' });
+  } catch (error) {
+    console.error("Error accepting task:", error);
+    res.status(500).json({ error: "Failed to accept task" });
+  }
+});
+
+// Reject task
+app.post('/task/:taskId/reject', async (req, res) => {
+  const taskId = req.params.taskId;
+
+  try {
+    await run_query(
+      `UPDATE TASKS SET STATUS = 'Rejected' WHERE TASK_ID = :taskId`,
+      [taskId]
+    );
+    res.json({ message: 'Task rejected!' });
+  } catch (error) {
+    console.error("Error rejecting task:", error);
+    res.status(500).json({ error: "Failed to reject task" });
+  }
+});
+
+// Get verification history
+app.get('/verification_history', async (req, res) => {
+  try {
+    const result = await run_query(
+      `SELECT request_type, username, email, request_address, phone, institution_type, institution_name, request_date, authenticity 
+      FROM verification_history`
+    );
+
+
+    console.log(result);
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching verification history:", error);
+    res.status(500).json({ error: 'Failed to fetch data' });
+  }
+});
+
+
+
+
+
+
+
+// server.js
+// server.js
+
+app.get('/volunteer/getTasks', async (req, res) => {
+  console.log('listening');
+  
+  const query = `
+    BEGIN
+      get_assigned_tasks(:volunteer_id, :result);
+    END;
+  `;
+
+  try {
+    const binds = {
+      volunteer_id: 2,  // Replace with actual dynamic volunteer ID
+      result: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }  // SYS_REFCURSOR bind
+    };
+
+    // Execute query and get rows directly
+    const rows = await run_query(query, binds, true);
+
+    // Debugging the fetched rows
+    console.log('Fetched rows:', rows);
+
+    // Process rows and format tasks
+    const tasks = rows.map((row, index) => ({
+      requestNo: index + 1,
+      requestType: row.REQUEST_TYPE,   // Adjust based on actual column names
+      emailAddress: row.EMAIL_ADDRESS,
+      phone: row.PHONE,
+      institutionType: row.INSTITUTION_TYPE,
+      institutionName: row.INSTITUTION_NAME,
+      requestDate: row.REQUEST_DATE
+    }));
+
+    res.json(tasks); // Send the tasks as JSON to the frontend
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    res.status(500).send('Error fetching tasks');
+  }
+});
+
+
+
+
+// Handle accept task
+app.post('/acceptTask/:id', async (req, res) => {
+  const taskId = req.params.id;
+  // Write logic to update the task status to accepted in the database
+  console.log('accepted',taskId);
+  res.send(`Task ${taskId} accepted`);
+});
+
+// Handle reject task
+app.post('/rejectTask/:id', async (req, res) => {
+  const taskId = req.params.id;
+  // Write logic to update the task status to rejected in the database
+  console.log(rejected);
+  res.send(`Task ${taskId} rejected`);
+});

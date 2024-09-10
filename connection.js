@@ -1,3 +1,5 @@
+// connection.js
+
 import oracledb from "oracledb";
 import dotenv from "dotenv";
 
@@ -17,12 +19,29 @@ export const connection = async () => {
     throw new Error("Database connection failed");
   }
 };
-
-export const run_query = async (query, params) => {
+export const run_query = async (query, params, isRefCursor = false) => {
   let conn;
   try {
     conn = await connection();
-    const result = await conn.execute(query, params, { autoCommit: true });
+    const options = isRefCursor
+      ? { outFormat: oracledb.OUT_FORMAT_OBJECT, autoCommit: true }
+      : { autoCommit: true };
+
+    const result = await conn.execute(query, params, options);
+
+    if (isRefCursor) {
+      // Handle ref cursor
+      const refCursor = result.outBinds.result;
+      const rows = [];
+      let row;
+      while ((row = await refCursor.getRow())) {
+        console.log('Row fetched:', row);  // Debugging line
+        rows.push(row);
+      }
+      await refCursor.close();
+      return rows;
+    }
+
     return result.rows;
   } catch (err) {
     console.error("Query execution failed:", err);

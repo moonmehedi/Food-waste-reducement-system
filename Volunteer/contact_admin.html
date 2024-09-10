@@ -26,7 +26,8 @@
                   <a href="#" class="fab fa-instagram"></a>
                   <a href="#" class="fab fa-linkedin"></a>
                </div>
-               <div class="pages"><p> new <a href="login.html" id="login-button">login</a>  |  <a href="signup-donor.html" id="register-button">Sign Up</a> </p></div>
+             <!-- <div class="pages"><p><a href="../Sign Up/role.html" id="login-button"> LogOut </a></p>|  <a href="signup-recipient.html" id="register-button">Sign Up</a> </p></div> 
+            </div>-->
             </div>
         </div>
     
@@ -44,6 +45,7 @@
                 <a href="task_management.html">Task Management</a>
                 <a href="verification_history.html">Verfication History</a>
                 <a href="contact_admin.html">Contact Us</a>
+              <!-- <a href="food_posts.html">Food Posts</a> -->  
             </nav>
         </div>
     </header>
@@ -55,12 +57,13 @@
 
 <section class="contact">
 
-   <form action="" method="post">
+   <form>
       <h3 class=head>Whats Your Query?</h3>
-      <input type="email" name="email" required placeholder="*Email" class="box">
-      <input type="tel" name="number" required placeholder="Phone Number" class="box">
-      <textarea name="message" class="box" placeholder="Comment" id="" cols="30" rows="10"></textarea>
-      <input type="submit" value="send message" name="send" class="btn-assign">
+      <input type="email" name="email" id="email"class="box" placeholder="*Email" required>
+      <input type="tel" name="number" required placeholder="Phone Number" id="phone" class="box">
+      <textarea name="message" class="box" placeholder="Comment" id="comment" cols="30" rows="10"></textarea>
+      <!-- <input type="submit" value="send message" name="send" id="submit" class="btn-assign"> -->
+      <button type="submit" id="submit"  class="btn-assign">send message</button>
    </form>
 
 </section>
@@ -121,5 +124,7 @@
 <script src="images/scrollreveal.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="donor.js"></script>
+<script src="contact.js"></script>
+
 </body>
 </html>
