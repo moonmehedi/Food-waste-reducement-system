@@ -34,7 +34,7 @@ app.use(session({
 
 // Middleware
 app.use(cors({
- origin: ['http://localhost:3000','http://127.0.0.1:5502'] ,// Adjust to your frontend URL
+ origin: ['http://127.0.0.1:5502'] ,// Adjust to your frontend URL
   credentials: true // Allow credentials (cookies) to be sent
 }));
 app.use(express.json());

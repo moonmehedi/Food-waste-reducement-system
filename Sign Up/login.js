@@ -23,7 +23,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
         alert('Login successful');
         // Redirect to the appropriate dashboard based on role
         if (role === 'manager') {
-            window.location.href = '/Admin/Request.html';
+            window.location.href = '/Admin/Admin_home.html';
         } else if (role === 'volunteer') {
             window.location.href = '/Volunteer/Volunteer_home.html';
         } else if (role === 'donor') {
