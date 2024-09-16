@@ -195,6 +195,41 @@ app.post('/login', async (req, res) => {
 });
 
 
+
+
+
+//get user detail
+app.get('/admin/current-user', (req, res) => {
+  console.log('user ingfo :',req.session.user,req.sessionStore,req.sessionID)
+  if (req.session.user) {
+      res.json(req.session.user);
+  } else {
+      res.status(401).json({ message: 'Unauthorized' });
+  }
+});
+
+
+
+
+//get user detail
+app.get('/donor/current-user', (req, res) => {
+  console.log('user ingfo :',req.session.user,req.sessionStore,req.sessionID)
+  if (req.session.user) {
+      res.json(req.session.user);
+  } else {
+      res.status(401).json({ message: 'Unauthorized' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
 //logout mechanism
 
 app.get('/logout', (req, res) => {
@@ -208,15 +243,6 @@ app.get('/logout', (req, res) => {
 
 
 
-//get user detail
-app.get('/admin/current-user', (req, res) => {
-  console.log('user ingfo :',req.session.user,req.sessionStore,req.sessionID)
-  if (req.session.user) {
-      res.json(req.session.user);
-  } else {
-      res.status(401).json({ message: 'Unauthorized' });
-  }
-});
 
 
 
@@ -489,6 +515,58 @@ app.get('/admin/combined-requests', async (req, res) => {
     res.status(500).send("Error fetching combined requests");
   }
 });
+
+
+
+
+
+
+app.post('/admin/assign-volunteer', async (req, res) => {
+  const { managerId, volunteerNumber, task } = req.body;
+
+  if (!managerId || !volunteerNumber || !task) {
+    return res.status(400).json({ success: false, message: 'Missing required fields' });
+  }
+
+  console.log('Received data:', { managerId, volunteerNumber, task });
+  let volunteerId;
+
+  try {
+    const query = `SELECT getVolunteerId(:volunteerNumber) AS volunteerId FROM dual`;
+    const result = await run_query(query, { volunteerNumber });
+    console.log('Function result:', result);
+    volunteerId = result[0][0];  // Adjust according to the result structure
+  } catch (error) {
+    console.error('Error fetching volunteer ID:', error);
+    return res.status(500).send("Error fetching volunteer ID");
+  }
+
+  if (!volunteerId) {
+    return res.status(404).json({ success: false, message: 'Volunteer not found' });
+  }
+
+  try {
+    const query = `
+      BEGIN
+        assign_volunteer(:managerId, :volunteerId, :task);
+      END;
+    `;
+    console.log('Assigning volunteer with data:', { managerId, volunteerId, task });
+    await run_query(query, { managerId, volunteerId, task });
+
+    res.status(200).json({ success: true, message: 'Volunteer assigned successfully' });
+  } catch (error) {
+    console.error('Error assigning volunteer:', error);
+    res.status(500).json({ success: false, message: 'Failed to assign volunteer' });
+  }
+});
+
+
+
+
+
+
+
 
 // Endpoint to get available volunteers
 app.get('/admin/available-volunteers', async (req, res) => {

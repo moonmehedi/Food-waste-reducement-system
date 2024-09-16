@@ -74,3 +74,84 @@ UPDATE donor set verified='Y' WHERE donor_id=4;
 
 
 SELECT * from donor;
+
+
+
+
+
+
+
+
+--update volunteer
+
+create or REPLACE PROCEDURE assign_volunteer(
+    MANAGER_ID in number,
+    VOLUNTEER_ID in number,
+    task in VARCHAR2
+)
+is
+BEGIN
+insert into ASSIGN (manager_id, volunteer_id, task) values (manager_id,volunteer_id,task);
+END assign_volunteer;
+/
+
+
+
+SHOW ERRORS PROCEDURE assign_volunteer;
+
+
+
+
+BEGIN
+    assign_volunteer(1, 2, 'Organize Event');
+END;
+/
+
+
+delete from ASSIGN where MANAGER_ID=1 AND VOLUNTEER_ID=2;
+
+
+
+--volunteer function
+set SERVEROUTput on
+CREATE OR REPLACE FUNCTION getVolunteerId(
+    volunteerNumber NUMBER
+) RETURN NUMBER
+IS
+    Id NUMBER;
+BEGIN
+   
+    SELECT VOLUNTEER_ID INTO Id
+    FROM VOLUNTEER
+    WHERE PHONE = volunteerNumber;
+
+    RETURN Id;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+       
+        RETURN NULL;
+    WHEN OTHERS THEN
+      
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM); 
+        RETURN NULL; 
+END getVolunteerId;
+/
+
+
+show error FUNCTION get_volunteer_Id;
+
+set SERVEROUTput on
+DECLARE
+ID number;
+BEGIN
+ID:=getVolunteerId(1);
+dbms_output.put_line(ID);
+END;
+/
+
+
+
+
+
+delete from ASSIGN where MANAGER_ID=1;

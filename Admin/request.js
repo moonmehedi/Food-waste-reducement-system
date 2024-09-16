@@ -31,6 +31,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+
+
+    // Function to debounce clicks
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     const combinedRequestsTable = document.getElementById('combined-requests-table');
     const volunteersTable = document.getElementById('volunteers-table');
@@ -41,8 +56,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.btn-assign').forEach(function(button) {
             button.addEventListener('click', function() {
                 var requestId = this.getAttribute('data-request');
-                document.querySelectorAll('.btn-choose').forEach(function(chooseButton) {
-                    chooseButton.setAttribute('data-request', requestId);
+                console.log(requestId);
+                const task = this.closest('tr').querySelector('td:nth-child(2)').innerText; // Correct index for "Request Type"
+                document.querySelectorAll('.btn-choose').forEach(function(button) {
+                    button.addEventListener('click', debounce(async function() {
+                        const volunteerNumber = this.closest('tr').querySelector('td:nth-child(6)').innerText;
+                        const managerId = await getSessionManagerId(); // Fetch the manager ID from session
+                        console.log("got", managerId, volunteerNumber, task);
+                        try {
+                            const response = await fetch('http://localhost:5000/admin/assign-volunteer', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ managerId, volunteerNumber, task }),
+                            });
+
+                            const result = await response.json();
+                            if (result.success) {
+                                alert('Volunteer assigned successfully!');
+                            } else {
+                                alert('Failed to assign volunteer.');
+                            }
+                        } catch (error) {
+                            console.error('Error assigning volunteer:', error);
+                        }
+                    }, 300)); // Debounce delay of 300ms
                 });
                 document.getElementById('volunteer-modal').style.display = 'flex';
                 document.getElementById('overlay').style.display = 'block';
@@ -146,6 +185,39 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     });
+    //assign volunteer
+
+
+    // Function to get manager ID from session
+    async function getSessionManagerId() {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/admin/current-user', {
+                method: 'GET',
+                credentials: 'include' // Ensure cookies are sent with the request
+            });
+        
+            if (response.ok) {
+                const user = await response.json();
+                console.log(user)
+                return user.id;
+            } else {
+                console.error('Failed to fetch user info');
+            }
+        } catch (error) {
+            console.error('Error fetching user info:', error);
+        }
+    }
+
+
+
+
+    
+
+
+
+
+
+    
 });
 
 
