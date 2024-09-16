@@ -530,7 +530,7 @@ app.post('/admin/assign-volunteer', async (req, res) => {
 
   console.log('Received data:', { managerId, volunteerNumber, task });
   let volunteerId;
-
+  let assignTask=task+' verification';
   try {
     const query = `SELECT getVolunteerId(:volunteerNumber) AS volunteerId FROM dual`;
     const result = await run_query(query, { volunteerNumber });
@@ -548,11 +548,11 @@ app.post('/admin/assign-volunteer', async (req, res) => {
   try {
     const query = `
       BEGIN
-        assign_volunteer(:managerId, :volunteerId, :task);
+        assign_volunteer(:managerId, :volunteerId, :assignTask);
       END;
     `;
-    console.log('Assigning volunteer with data:', { managerId, volunteerId, task });
-    await run_query(query, { managerId, volunteerId, task });
+    console.log('Assigning volunteer with data:', { managerId, volunteerId, assignTask });
+    await run_query(query, { managerId, volunteerId, assignTask });
 
     res.status(200).json({ success: true, message: 'Volunteer assigned successfully' });
   } catch (error) {

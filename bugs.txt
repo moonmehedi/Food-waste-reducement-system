@@ -1,0 +1,4 @@
+multiple time insertion for clicking request.js button needed to be solved
+add unique constrain for phone number 
+add abstract attribute for address
+add sequence for automatic id generation
