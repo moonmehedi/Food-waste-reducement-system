@@ -1,31 +1,29 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const tableBody = document.querySelector("table tbody");  // Select the <tbody>
-
+  const tableBody = document.getElementById('VHtaskTableBody');
+  
   try {
-    const response = await fetch("http://localhost:5000/verification_history");
-    if (!response.ok) throw new Error("Failed to fetch data");
-    console.log(response);
-    const data = await response.json();
-    tableBody.innerHTML = ""; // Clear previous rows
+    const response = await fetch('http://localhost:5000/volunteer/getHistory');  // Fetch from the correct route
+    const tasks = await response.json();  // Parse response as JSON
 
-    data.forEach((row, index) => {
-      const tableRow = `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${row[0]}</td> <!-- Request Type -->
-          <td>${row[1]}</td> <!-- Username -->
-          <td>${row[2]}</td> <!-- Email Address -->
-          <td>${row[3]}</td> <!-- Request Address -->
-          <td>${row[4]}</td> <!-- Phone -->
-          <td>${row[5]}</td> <!-- Institution Type -->
-          <td>${row[6]}</td> <!-- Institution Name -->
-          <td>${new Date(row[7]).toLocaleDateString()}</td> <!-- Request Date -->
-          <td>${row[8]}</td> <!-- Authenticity -->
-        </tr>
+    // Iterate over the tasks and create table rows dynamically
+    tasks.forEach(task => {
+      const row = document.createElement('tr');
+
+      row.innerHTML = `
+         <td>${task.requestNo}</td>
+                <td>${task.requestType}</td>
+                <td>${task.emailAddress}</td>
+                  <td>${task.requestAddress}</td>
+                <td>${task.phone}</td>
+                <td>${task.institutionType}</td>
+                <td>${task.institutionName}</td>
+                <td>${new Date(task.requestDate).toLocaleDateString()}</td>
+        <td>${task.authenticity}</td>  <!-- authenticity -->
       `;
-      tableBody.innerHTML += tableRow;
+
+      tableBody.appendChild(row);
     });
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error('Error fetching history:', error);
   }
 });

@@ -636,3 +636,50 @@ app.post('/rejectTask/:id', async (req, res) => {
   console.log(rejected);
   res.send(`Task ${taskId} rejected`);
 });
+
+
+
+
+
+
+app.get('/volunteer/getHistory', async (req, res) => {
+  // Example: Fetching volunteer ID from request query or authentication context
+
+  const query = `
+      BEGIN 
+          get_verified_tasks(:volunteer_id, :result);
+      END;
+  `;
+
+  try {
+  const binds = {
+    volunteer_id: 2,
+    result: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }
+  };
+
+    // Execute the query and handle the ref cursor
+    const rows = await run_query(query, binds, true);  // Assuming `true` for ref cursor
+    console.log('Fetched rows:', rows);
+    
+    const tasks= rows.map((row, index) => ({
+      requestNo: index+1 ,   // Ensure these indices match the actual data
+      requestType: row.REQUEST_TYPE,   // Adjust based on actual column names
+      emailAddress: row.EMAIL_ADDRESS,
+      requestAddress: row.REQUEST_ADDRESS,
+      phone: row.PHONE,
+      institutionType: row.INSTITUTION_TYPE,
+      institutionName: row.INSTITUTION_NAME,
+      requestDate: row.REQUEST_DATE,
+      authenticity: row.AUTHENTICITY  // Ensure authenticity field is in the correct index
+    }));
+
+    res.json(tasks);  // Send the task data as JSON to the front-end
+  } catch (error) {
+    console.error('Error fetching verification history:', error);
+    res.status(500).send('Error fetching verification history');
+  }
+});
+
+
+
+
