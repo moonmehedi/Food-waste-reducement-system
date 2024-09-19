@@ -25,7 +25,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
         if (role === 'manager') {
             window.location.href = '/Admin/Admin_home.html';
         } else if (role === 'volunteer') {
-            window.location.href = '/Volunteer/Volunteer_home.html';
+            window.location.href = '/Volunteer/volunteer.html';
         } else if (role === 'donor') {
             window.location.href = '/Donor/Donor_home.html';
         } else if (role === 'recipient') {
