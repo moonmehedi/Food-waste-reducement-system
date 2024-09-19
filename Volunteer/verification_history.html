@@ -10,41 +10,8 @@
     <link href='https://fonts.googleapis.com/css?family=Raleway Dots' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <link rel="stylesheet" href="style.css">
-    <title>Volunteer Dashboard</title>
+    <title>Verification History</title>
 </head>
-<style>
-    .heading1{
-    min-height: 60vh;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    justify-content: center;
-    gap:1rem;
-    background-color: var(--bonewhite);
-    background-size: cover;
-    background-position: center;
-    text-align: center;
- }
- 
- .heading1 h4{
-    font-size: 3.5rem;
-    color:var(--darkgreen);
-    text-transform: uppercase;
- }
- 
- .heading1 p{
-    font-size: 2.5rem;
-    color:var(--brown);
- }
- 
- .heading1 p a{
-    color:var(--black);
- }
- 
- .heading1 p a:hover{
-    text-decoration: underline;
- }
-</style>
 <body>
 <header class="header">
     <div class="header-1">
@@ -62,23 +29,34 @@
     </div>
 </header>
 <div class="heading1">
-    <h4>Volunteer Dashboard</h4>
-    <br>
-    <p>Welcome to the volunteer dashboard. Here you can manage tasks, view verification history, and contact the admin.</p>
-    <br>
-    <p><strong>Mission:</strong> Our mission is to reduce food waste and help those in need through effective verification processes and community support.</p>
-    <br>
-    <p><strong>Rewards:</strong> Earn rewards for your dedicated work and contributions to our cause!</p>
+    <h4>Verification History</h4>
+</div>
+<div class="container" style="max-width: 1500px;"></div>
+<table>
+    <thead>
+      <tr>
+        <th>Request No</th>
+        <th>Request Type</th>
+        <th>Email Address</th>
+        <th>Request Address</th>
+        <th>Phone</th>
+        <th>Institution Type</th>
+        <th>Institution Name</th>
+        <th>Request Date</th>
+        <th>Authenticity</th>
+      </tr>
+    </thead>
+    <tbody id="VHtaskTableBody">
+      <!-- Rows will be inserted here -->
+    </tbody>
+  </table>
 </div>
 
-<div class="overlay" id="overlay"></div>
-
-<div class="profile-modal" id="profile-modal">
-    <p>Username: <span>Zishan</span></p>
-    <p>Email: <span>rubayetkabirz@gmail.com</span></p>
-    <a href="#" class="btn">Log Out</a>
-</div>
-
-<script src="admin.js"></script>
+<script src="images/scrollreveal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="/Volunteer/verification_history.js"></script>
+    <script src="contact_admin.js"></script>
+    <script src="admin.js"></script>
 </body>
 </html>
+

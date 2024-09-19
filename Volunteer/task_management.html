@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.1.0/remixicon.css">
+    <link href='https://fonts.googleapis.com/css?family=Libre Baskerville' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Alex Brush' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway Dots' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="style.css">
+    <title>Task Management</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header-3">
+            <div class="upper">
+               <div class="links">
+                  <a href="#" class="fab fa-facebook-f"></a>
+                  <a href="#" class="fab fa-twitter"></a>
+                  <a href="#" class="fab fa-instagram"></a>
+                  <a href="#" class="fab fa-linkedin"></a>
+               </div>
+               <div class="pages">
+                   <p> new 
+                       <a href="login.html" id="login-button">login</a>  |  
+                       <a href="signup-donor.html" id="register-button">Sign Up</a>
+                   </p>
+               </div>
+            </div>
+        </div>
+    
+        <div class="header-1">
+            <a href="index.html" class="logo">
+                <img src="Images/waste.png" class="icon">Food Waste Reduction System
+            </a>
+            <div class="icons">
+                <a href="#" id="search-btn" class="ri-search-line"></a>
+                <a href="#" class="ri-heart-line"></a>
+                <a href="#" class="ri-user-line"></a>
+            </div>
+        </div>
+        <div class="header-2">
+            <nav class="navbar">
+                <a href="Volunteer.html">Home</a>
+                <a href="task_management.html">Task Management</a>
+                <a href="verification_history.html">Verification History</a>
+                <a href="contact_admin.html">Contact Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="heading1">
+        <h4>Task Management</h4>
+    </div>
+
+    <div class="container" style="max-width: 1500px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Request No</th>
+                    <th>Request Type</th>
+                    <th>Email Address</th>
+                    <th>Phone</th>
+                    <th>Institution Type</th>
+                    <th>Institution Name</th>
+                    <th>Request Date</th>
+                    <th>Accept</th>
+                    <th>Reject</th>
+                </tr>
+            </thead>
+            <tbody id="taskTableBody">
+                <!-- Dynamic rows will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <section class="footer">
+        <div class="box-container">
+            <div class="box">
+                <h3>Our Locations</h3>
+                <a href="#"><i class="fas fa-map-marker-alt"></i>Dhaka</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i>Chittagong</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i>Rajshahi</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i>Sylhet</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i>Rangpur</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i>Barishal</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i>Khulna</a>
+                <a href="#"><i class="fas fa-map-marker-alt"></i>Mirsharai</a>
+            </div>
+
+            <div class="box">
+                <h3>Quick Links</h3>
+                <a href="Donor_home.html"><i class="fas fa-arrow-right"></i>Home</a>
+                <a href="#"><i class="fas fa-arrow-right"></i>Donation History</a>
+                <a href="#"><i class="fas fa-arrow-right"></i>Contact Us</a>
+            </div>
+            <div class="box">
+                <h3>Extra Links</h3>
+                <a href="#"><i class="fas fa-arrow-right"></i> Account Info</a>
+                <a href="#"><i class="fas fa-arrow-right"></i> Privacy Policy</a>
+                <a href="#"><i class="fas fa-arrow-right"></i> Services</a>
+            </div>
+            <div class="box">
+                <h3>Contact Info</h3>
+                <a href="#"><i class="fas fa-phone"></i> +880-1678-345-901</a>
+                <a href="#"><i class="fas fa-phone"></i> +880-1528-345-704</a>
+                <a href="#"><i class="fas fa-envelope"></i>fwrs23@gmail.com</a>
+            </div>
+        </div>
+        <div class="share">
+            <a href="#" class="fab fa-facebook-f"></a>
+            <a href="#" class="fab fa-twitter"></a>
+            <a href="#" class="fab fa-instagram"></a>
+            <a href="#" class="fab fa-linkedin"></a>
+            <a href="#" class="fab fa-pinterest"></a>
+        </div>
+    </section>
+
+    <script src="images/scrollreveal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="/Volunteer/task_management.js"></script>
+    <script src="contact_admin.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
