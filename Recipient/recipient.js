@@ -103,3 +103,16 @@ var swiper = new Swiper(".featured-slider", {
     },
   });
 
+
+  const logout = () => {
+    localStorage.removeItem('userEmail'); 
+    window.location.href = '../Sign Up/role.html'; 
+};
+
+const loginButton = document.getElementById('button');
+
+if (loginButton) {
+    loginButton.addEventListener('click', logout);
+} else {
+    console.error('Element with ID "login-button" not found.');
+}

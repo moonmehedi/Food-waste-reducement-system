@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,8 +37,7 @@
             background-color: #e9ecef;
             border-radius: 10px;
         }
-        .card-image
-        {
+        .card-image {
             width: 100px;
             height: 100px;
             border-radius: 8px;
@@ -63,6 +61,50 @@
         .swiper-pagination {
             bottom: 10px;
         }
+       /* Container for history data */
+       .history-data div {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #e0f7fa, #f1f8e9); 
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.history-data div:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.history-data div div {
+    display: flex;
+    flex-direction: column; /* Align content vertically */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.history-data div div span {
+    font-size: 1.8rem;
+    line-height: 2rem;
+    color: #2e7d32; 
+    font-family: 'Libre Baskerville', serif; 
+}
+
+.history-data div div span.value {
+    font-size: 2.2rem;
+    color: #388e3c; 
+    font-weight: bold;
+    font-family: 'Libre Baskerville', serif; 
+}
+
+
+
+
     </style>
 </head>
 <body>
@@ -76,16 +118,24 @@
               <a href="#" class="fab fa-instagram"></a>
               <a href="#" class="fab fa-linkedin"></a>
            </div>
-           <div class="pages"><p> new <a href="login.html" id="login-button">login</a>  |  <a href="signup-donor.html" id="register-button">Sign Up</a> </p></div>
         </div>
     </div>
 
+    <div class="profile-modal" id="profile-modal">
+        <p>Username: <span class="username">Maisha</span></p>
+        <p>Email: <span class="email">maisha99@gmail.com</span></p>
+        <a href="#" class="btn"  id="logoutButton">Log Out</a>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
     <div class="header-1">
-        <a href="index.html" class="logo"><img src="Images/waste.png" class="icon">Food Waste Reduction System</a>
+        <a href="index.html" class="logo"><img src="../Images/waste.png" class="icon">Food Waste Reduction System</a>
         <div class="icons">
             <a href="#" id="search-btn" class="ri-search-line"></a>
             <a href="#" class="ri-heart-line"></a>
-            <a href="#" class="ri-user-line"></a>
+            <a href="#" id="profile-icon" class="ri-user-line"></a>
         </div>
     </div>
     <div class="header-2">
@@ -94,7 +144,6 @@
             <a href="request_history.html">Request History</a>
             <a href="contact.html">Contact Us</a>
             <a href="request_food.html">Request Food</a>
-            <a href="food_posts.html">Food Posts</a>
         </nav>
     </div>
 </header>
@@ -102,48 +151,16 @@
 <div class="history-container">
     <div class="history-section">
         <h2>Request History</h2>
-        <div class="swiper request-swiper">
-            <div class="swiper-wrapper">
-                <!-- Dynamic content -->
-                <div class="swiper-slide">
-                    <img src="Images/brown.jpg" alt="Food Image" class="card-image">
-                    <div class="card-content">
-                        <div>
-                            <span>Institution Name:</span> <span class="value">Example Institution 1</span><br>
-                            <span>Institution Type:</span> <span class="value">School</span><br>
-                            <span>Number of People:</span> <span class="value">200</span><br>
-                            <span>Date:</span> <span class="value">2024-07-01</span><br>
-                            <span>Status:</span> <span class="value">Pending</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <img src="Images/brown2.jpg" alt="Food Image" class="card-image">
-                    <div class="card-content">
-                        <div>
-                            <span>Institution Name:</span> <span class="value">Example Institution 2</span><br>
-                            <span>Institution Type:</span> <span class="value">Hospital</span><br>
-                            <span>Number of People:</span> <span class="value">300</span><br>
-                            <span>Date:</span> <span class="value">2024-07-02</span><br>
-                            <span>Status:</span> <span class="value">Finished</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add more slides as needed -->
-            </div>
-            
+        <div class="history-data">
+
         </div>
-        
     </div>
-    
 </div>
 
 <section class="footer">
     <div class="box-container">
         <div class="box">
-            <h3>
-                Our Locations
-            </h3>
+            <h3>Our Locations</h3>
             <a href="#"><i class="fas fa-map-marker-alt"></i>Dhaka</a>
             <a href="#"><i class="fas fa-map-marker-alt"></i>Chittagong</a>
             <a href="#"><i class="fas fa-map-marker-alt"></i>Rajshahi</a>
@@ -155,19 +172,19 @@
         </div>
 
         <div class="box">
-            <h3>
-                Quick Links
-            </h3>
+            <h3>Quick Links</h3>
             <a href="Donor_home.html"><i class="fas fa-arrow-right"></i>Home</a>
             <a href="#"><i class="fas fa-arrow-right"></i>Donation History</a>
             <a href="#"><i class="fas fa-arrow-right"></i>Contact Us</a>
         </div>
+
         <div class="box">
             <h3>Extra Links</h3>
             <a href="#"><i class="fas fa-arrow-right"></i> Account Info</a>
             <a href="#"><i class="fas fa-arrow-right"></i> Privacy Policy</a>
             <a href="#"><i class="fas fa-arrow-right"></i> Services</a>
         </div>
+
         <div class="box">
             <h3>Contact Info</h3>
             <a href="#"><i class="fas fa-phone"></i> +880-1678-345-901</a>
@@ -185,6 +202,9 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="recipient.js"></script>
+<script src="request_history.js"></script>
+<script src="recipient.js"></script>          
+<script src="../admin.js"></script> 
+<script src="../session.js"></script>         
 </body>
 </html>

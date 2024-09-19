@@ -9,6 +9,34 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="style.css">
     <title>Recipient Dashboard</title>
+    <style>
+        /* Style for the logout button */
+        #button {
+            background: none;
+            border: none;
+            color: #007bff; /* Adjust color to match your design */
+            cursor: pointer;
+            font-size: 16px; /* Adjust font size to fit your design */
+            text-decoration: none; /* Remove underline */
+            padding: 10px 20px; /* Remove default padding */
+            margin: 0; /* Remove default margin */
+            font-family: Arial, sans-serif; /* Match font family if needed */
+            font-weight: bold; /* Make the text bold */
+    border-radius: 5px; /* Optional: add rounded corners */
+    transition: background-color 0.3s, color 0.3s; 
+        }
+
+        #button:hover {
+    text-decoration: none; /* Remove underline on hover */
+    color: #ffffff; /* Change text color on hover */
+    background-color: #0056b3; /* Change background color on hover */
+}
+
+#button:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* Add custom focus outline */
+}
+    </style>
 </head>
 <body>
     <header class="header">
@@ -20,25 +48,36 @@
                     <a href="#" class="fab fa-instagram"></a>
                     <a href="#" class="fab fa-linkedin"></a>
                 </div>
-                <div class="pages"><p> new <a href="login.html" id="login-button">login</a>  |  <a href="signup-recipient.html" id="register-button">Sign Up</a> </p></div>
-            </div>
+                
+
+                
+                
         </div>
 
         <div class="header-1">
-            <a href="index.html" class="logo"><img src="Images/waste.png" class="icon">Food Waste Reduction System</a>
+            <a href="index.html" class="logo"><img src="../Images/waste.png" class="icon">Food Waste Reduction System</a>
             <div class="icons">
                 <a href="#" id="search-btn" class="ri-search-line"></a>
                 <a href="#" class="ri-heart-line"></a>
-                <a href="#" class="ri-user-line"></a>
+                <a href="#" id="profile-icon" class="ri-user-line"></a>
             </div>
         </div>
+
+        <div class="profile-modal" id="profile-modal">
+            <p>Username: <span class="username">Maisha</span></p>
+            <p>Email: <span class="email">maisha99@gmail.com</span></p>
+            <a href="#" class="btn"  id="logoutButton">Log Out</a>
+        </div>
+        
+        <!-- Overlay -->
+        <div class="overlay" id="overlay"></div>
         <div class="header-2">
             <nav class="navbar">
                 <a href="Recipient_home.html">Home</a>
                 <a href="request_history.html">Request History</a>
                 <a href="contact.html">Contact Us</a>
                 <a href="request_food.html">Request Food</a>
-                <a href="food_posts.html">Food Posts</a>
+               <!--  <a href="food_posts.html">Food Posts</a> -->
             </nav>
         </div>
     </header>
@@ -50,15 +89,15 @@
             <p>Our system aims to reduce food waste by connecting donors with recipients who need it the most.</p>
         </div>
         <div class="intro-images">
-            <img src="Images/img1.jpg" alt="Image 1" class="active">
-            <img src="Images/img2.jpg" alt="Image 2">
-            <img src="Images/img3.jpg" alt="Image 3">
+            <img src="../Images/img1.jpg" alt="Image 1" class="active">
+            <img src="../Images/img2.jpg" alt="Image 2">
+            <img src="../Images/img3.jpg" alt="Image 3">
         </div>
     </section>
 
     <!-- Our Mission Section -->
     <section id="mission">
-        <div class="mission-image"><img src="Images/vertical-shot-line-brown-leafless-trees.jpg" alt="Our Mission"></div>
+        <div class="mission-image"><img src="../Images/vertical-shot-line-brown-leafless-trees.jpg" alt="Our Mission"></div>
         <div class="mission-details">
             <h2>Our Mission</h2>
             <div class="mission-item">
@@ -85,28 +124,28 @@
         <div class="swiper reviews-slider">
             <div class="swiper-wrapper">
                 <div class="swiper-slide box">
-                    <img src="Images/img1.jpg" alt="Marjaan">
+                    <img src="../Images/img1.jpg" alt="Marjaan">
                     <blockquote>
                         <p>"This organization has helped our community in so many ways. Truly remarkable!"</p>
                         <footer>— The Community Times</footer>
                     </blockquote>
                 </div>
                 <div class="swiper-slide box">
-                    <img src="Images/img2.jpg" alt="Hasim">
+                    <img src="../Images/img2.jpg" alt="Hasim">
                     <blockquote>
                         <p>"A fantastic initiative to reduce food waste and support those in need."</p>
                         <footer>— Green Earth News</footer>
                     </blockquote>
                 </div>
                 <div class="swiper-slide box">
-                    <img src="Images/img3.jpg" alt="Ayesha">
+                    <img src="../Images/img3.jpg" alt="Ayesha">
                     <blockquote>
                         <p>"I'm proud to be a part of this organization. The impact on our community is huge."</p>
                         <footer>— The Daily Chronicle</footer>
                     </blockquote>
                 </div>
                 <div class="swiper-slide box">
-                    <img src="Images/brown2.jpg" alt="Anas">
+                    <img src="../Images/brown2.jpg" alt="Anas">
                     <blockquote>
                         <p>"Their efforts in promoting sustainable food practices are commendable."</p>
                         <footer>— Eco Warriors</footer>
@@ -130,7 +169,7 @@
         <div class="swiper-wrapper">
             <div class="swiper-slide box">
                 <div class="card">
-                    <img src="Images/egg.jpg" alt="Fresh Vegetables">
+                    <img src="../Images/egg.jpg" alt="Fresh Vegetables">
                     <div class="card-content">
                         <h3>Fresh Vegetables</h3>
                         <p><strong>Quantity:</strong> 100kg</p>
@@ -141,7 +180,7 @@
             </div>
             <div class="swiper-slide box">
                 <div class="card">
-                    <img src="Images/crepe.jpg.jpg" alt="Canned Goods">
+                    <img src="../Images/crepe.jpg.jpg" alt="Canned Goods">
                     <div class="card-content">
                         <h3>Canned Goods</h3>
                         <p><strong>Quantity:</strong> 50 boxes</p>
@@ -152,7 +191,7 @@
             </div>
             <div class="swiper-slide box">
                 <div class="card">
-                    <img src="Images/img7.jpg" alt="Baked Goods">
+                    <img src="../Images/img7.jpg" alt="Baked Goods">
                     <div class="card-content">
                         <h3>Baked Goods</h3>
                         <p><strong>Quantity:</strong> 200 items</p>
@@ -163,7 +202,7 @@
             </div>
             <div class="swiper-slide box">
                 <div class="card">
-                    <img src="Images/img8.jpg" alt="Dairy Products">
+                    <img src="../Images/img8.jpg" alt="Dairy Products">
                     <div class="card-content">
                         <h3>Dairy Products</h3>
                         <p><strong>Quantity:</strong> 100 liters</p>
@@ -240,7 +279,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="recipient.js"></script>
-
+<script src="../admin.js"></script>
+<script src="../session.js"></script>
 </body>
 </html>
 

@@ -1437,6 +1437,7 @@ th {
     font-size: 1.8rem;
     color:var(--black);
     border-radius: .5rem;
+    text-transform: none;
  }
  
  .contact form textarea{

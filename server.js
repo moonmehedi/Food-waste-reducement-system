@@ -870,3 +870,119 @@ app.get('/volunteer/getHistory', async (req, res) => {
 
 
 
+
+
+
+//arif er part
+
+	
+app.post("/users/request_food", async (req, res) => {
+  const { people, date, email } = req.body; 
+  console.log("Received request data:", req.body);
+
+  // Log the individual fields for debugging
+  console.log("People:", people);
+  console.log("Date:", date);
+  console.log("Email:", email);
+
+  if (!people || !date || !email) {
+      return res.status(400).json({ error: "All fields are required" });
+  }
+
+  try {
+      const updateQuery = `
+          UPDATE RECIPIENT
+          SET NUMBER_OF_PEOPLE = :people_param, DATE_R = TO_DATE(:date_param, 'yyyy-mm-dd')
+          WHERE EMAIL = :email_param
+      `;
+
+      const params = {
+          people_param: people,
+          date_param: date, 
+          email_param: email
+      };
+
+      await run_query(updateQuery, params);
+      res.status(200).json({ message: "Request updated successfully" });
+  } catch (err) {
+      console.error("Error while updating recipient:", err);
+      res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+
+
+app.get('/users/request_history', async (req, res) => {
+  const email = req.query.email;
+  console.log(email);
+  if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+  }
+
+  try {
+      const query = `
+          SELECT
+              INSTITUTION_NAME AS "institutionName",
+              INSTITUTION_TYPE AS "institutionType",
+              NUMBER_OF_PEOPLE AS "numberOfPeople",
+              TO_CHAR(DATE_R, 'YYYY-MM-DD') AS "date"
+          FROM
+              RECIPIENT
+          WHERE
+              email = :email
+          ORDER BY
+              DATE_R DESC
+      `;
+      const result = await run_query(query, {email});
+      console.log(result);
+    res.status(200).send(result[0]);
+  } catch (err) {
+      console.error('Error fetching request history:', err);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+//contact information
+
+
+
+
+
+app.post("/users/contact", async (req, res) => {
+  const user = req.body;
+  console.log("Received user message:", user);
+  if (user.phone.length !== 11) {
+      res.status(400).json({ error: "Phone number must be 11 digits" });
+      return;
+  }
+
+  try {
+      const query = `
+        INSERT INTO CONTACT (EMAIL,PHONE,MESSAGE)
+        VALUES (:email, :phone, :message)
+      `;
+
+      const params = {
+        email: user.email,
+        phone: user.phone,
+        message: user.comment 
+      };
+      
+
+      await run_query(query, params);
+      res.status(201).json({ message: "Your Query has been sent to the Admin" });
+  } catch (err) {
+      console.error("Error while handling signup:", err);
+  }
+});
+
+
+
+
+
+
+
+
+
+
