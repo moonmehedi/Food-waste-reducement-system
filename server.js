@@ -528,13 +528,13 @@ app.get('/admin/combined-requests', async (req, res) => {
 
 
 app.post('/admin/assign-volunteer', async (req, res) => {
-  const { managerId, volunteerNumber, task } = req.body;
+  const { managerId, volunteerNumber, task, phone} = req.body;
 
-  if (!managerId || !volunteerNumber || !task) {
+  if (!managerId || !volunteerNumber || !task || !phone) {
     return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
 
-  console.log('Received data:', { managerId, volunteerNumber, task });
+  console.log('Received data:', { managerId, volunteerNumber, task,phone });
   let volunteerId;
   let assignTask=task+' verification';
   try {
@@ -554,11 +554,11 @@ app.post('/admin/assign-volunteer', async (req, res) => {
   try {
     const query = `
       BEGIN
-        assign_volunteer(:managerId, :volunteerId, :assignTask);
+        assign_volunteer(:managerId, :volunteerId, :assignTask,:phone);
       END;
     `;
-    console.log('Assigning volunteer with data:', { managerId, volunteerId, assignTask });
-    await run_query(query, { managerId, volunteerId, assignTask });
+    console.log('Assigning volunteer with data:', { managerId, volunteerId, assignTask,phone});
+    await run_query(query, { managerId, volunteerId, assignTask ,phone});
 
     res.status(200).json({ success: true, message: 'Volunteer assigned successfully' });
   } catch (error) {
@@ -597,6 +597,7 @@ app.get('/admin/available-volunteers', async (req, res) => {
 // Endpoint to get donor food donation requests
 app.get('/admin/donor-food-donation-requests', async (req, res) => {
   let conn;
+  console.log('trying')
   try {
     conn = await connection();
     const query = "SELECT * FROM DONOR_FOOD_DONATION_REQUEST";
@@ -604,21 +605,22 @@ app.get('/admin/donor-food-donation-requests', async (req, res) => {
    // console(result);
    // Process the result to handle BLOBs
     const donations = await Promise.all(result.rows.map(async row => {
-      const foodImage = row[2]; // Assuming BLOB is at index 2
+      const foodImage = row[3]; // Assuming BLOB is at index 2
       const base64Image = await blobToBase64(foodImage);
       return [
-        row[0], // Donor_Name
-        row[1], // Food_Name
+        row[0], //id
+        row[1], // d_Name
+        row[2], // food ma,e
         base64Image, // Food_Image as Base64
-        row[3], // Food_Quantity
-        row[4], // Exp_Date
-        row[5]  // Food_Date
+        row[4], // quantitty
+        row[5],  //  Exp_Date
+        row[5] , // donation date
       ];
     }));
     console.log(donations)
     res.json(donations);
   } catch (error) {
-    console.error('Error fetching donation history:', error);
+    console.error('Error fetching food:', error);
     res.status(500).send('Server error');
   } finally {
     if (conn) {

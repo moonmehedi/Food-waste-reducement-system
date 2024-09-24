@@ -1,6 +1,7 @@
 let count = 0;
 let task; // Declare task globally
-
+let phone;
+let food_id;
 document.addEventListener('DOMContentLoaded', async function() {
     // Handle collapsible elements
     var coll = document.getElementsByClassName('collapsible');
@@ -43,7 +44,21 @@ document.addEventListener('DOMContentLoaded', async function() {
             button.addEventListener('click', function() {
                 var requestId = this.getAttribute('data-request');
                 console.log(requestId);
-                task = this.closest('tr').querySelector('td:nth-child(2)').innerText; // Set task variable
+                const table = this.closest('table');
+
+                if (table.id === 'combined-requests-table') {
+                    // If the button is in the combined requests table, get the request type
+                    task = this.closest('tr').querySelector('td:nth-child(2)').innerText; // Request Type
+                    phone = this.closest('tr').querySelector('td:nth-child(5)').innerText; // Request Type
+                    
+                } else if (table.id === 'food-requests-table') {
+                    // If the button is in the food requests table, get the food name
+                    task = 'food';
+                    phone=get_food_id();
+                }
+    
+                console.log("Task: ", task);
+                //event listener
                 document.querySelectorAll('.btn-choose').forEach(function(button) {
                     button.removeEventListener('click', chooseButtonHandler); // Remove old listeners
                     button.addEventListener('click', chooseButtonHandler); // Add new listener
@@ -59,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const volunteerNumber = this.closest('tr').querySelector('td:nth-child(6)').innerText;
         const managerId = await getSessionManagerId(); // Fetch the manager ID from session
 
-        console.log("got", managerId, volunteerNumber, task, count++);
+        console.log("got", managerId, volunteerNumber, task, phone);
 
         try {
             const response = await fetch('http://localhost:5000/admin/assign-volunteer', {
@@ -67,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ managerId, volunteerNumber, task }),
+                body: JSON.stringify({ managerId, volunteerNumber, task ,phone}),
             });
 
             const result = await response.json();
@@ -128,6 +143,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         const response = await fetch('http://localhost:5000/admin/donor-food-donation-requests');
         const foodRequests = await response.json();
+       // console.log(foodRequests[0][0]); 
+       food_id=foodRequests[0][0];
         foodRequests.forEach((request, index) => {
             const row = document.createElement('tr');
             row.innerHTML =
@@ -185,3 +202,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 });
+
+
+
+function get_food_id(){
+return food_id;
+}

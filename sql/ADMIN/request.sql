@@ -11,6 +11,7 @@ SELECT
     DONOR.DATE_D AS Request_Date
 FROM 
     DONOR
+    where VERIFIED='N'
 UNION ALL
 SELECT 
     'Recipient' AS Request_Type,
@@ -21,7 +22,8 @@ SELECT
     RECIPIENT.INSTITUTION_NAME,
     RECIPIENT.DATE_R AS Request_Date
 FROM 
-    RECIPIENT;
+    RECIPIENT
+    where VERIFIED='N';
 
 
 --tells about availabel volunteer
@@ -49,6 +51,7 @@ update VOLUNTEER set AVAILABILITY='Free' where VOLUNTEER_ID IN (1,2,3,4,5);
 -- available food or verified sub-query
 CREATE OR REPLACE VIEW DONOR_FOOD_DONATION_REQUEST AS
 SELECT
+    F.FOOD_ID AS "FOOD ID",
     D.INSTITUTION_NAME AS "Donor Name",
     F.NAME AS "Food Name",
     F.PHOTO AS "Food Image",
@@ -87,11 +90,12 @@ SELECT * from donor;
 create or REPLACE PROCEDURE assign_volunteer(
     MANAGER_ID in number,
     VOLUNTEER_ID in number,
-    task in VARCHAR2
+    task in VARCHAR2,
+    PHONE in VARCHAR2
 )
 is
 BEGIN
-insert into ASSIGN (manager_id, volunteer_id, task) values (manager_id,volunteer_id,task);
+insert into ASSIGN (manager_id, volunteer_id, task,phone) values (manager_id,volunteer_id,task,phone);
 END assign_volunteer;
 /
 
@@ -103,7 +107,7 @@ SHOW ERRORS PROCEDURE assign_volunteer;
 
 
 BEGIN
-    assign_volunteer(1, 2, 'Organize Event');
+    assign_volunteer(1, 2, 'Organize Event',4);
 END;
 /
 
@@ -119,6 +123,7 @@ CREATE OR REPLACE FUNCTION getVolunteerId(
 ) RETURN NUMBER
 IS
     Id NUMBER;
+    hi varchar(20);
 BEGIN
    
     SELECT VOLUNTEER_ID INTO Id
@@ -145,7 +150,7 @@ set SERVEROUTput on
 DECLARE
 ID number;
 BEGIN
-ID:=getVolunteerId(1112223333);
+ID:=getVolunteerId(6667778888);
 dbms_output.put_line(ID);
 END;
 /
@@ -154,4 +159,32 @@ END;
 
 
 
-delete from ASSIGN where MANAGER_ID=1;
+
+
+
+
+CREATE OR REPLACE TRIGGER update_volunteer_on_task
+AFTER INSERT ON ASSIGN
+FOR EACH ROW
+BEGIN
+    -- Case 1: If task is 'Donor verification' and phone is provided
+    IF :NEW.TASK = 'Donor verification' AND :NEW.PHONE IS NOT NULL THEN
+        UPDATE DONOR
+        SET VOLUNTEER_ID = :NEW.VOLUNTEER_ID
+        WHERE PHONE = :NEW.PHONE;
+        
+    -- Case 2: If task is 'Recipient verification' and phone is provided
+    ELSIF :NEW.TASK = 'Recipient verification' AND :NEW.PHONE IS NOT NULL THEN
+        UPDATE RECIPIENT
+        SET VOLUNTEER_ID = :NEW.VOLUNTEER_ID
+        WHERE PHONE = :NEW.PHONE;
+        
+    -- Case 3: If task is 'Food verification' and food ID is given in the phone field
+    ELSIF :NEW.TASK = 'food verification' AND :NEW.PHONE IS NOT NULL THEN
+        UPDATE FOOD
+        SET VOLUNTEER_ID = :NEW.VOLUNTEER_ID
+        WHERE FOOD_ID = TO_NUMBER(:NEW.PHONE); -- Assuming PHONE field is used to pass FOOD_ID
+    END IF;
+END;
+/
+
