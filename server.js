@@ -527,45 +527,66 @@ app.get('/admin/combined-requests', async (req, res) => {
 
 
 
+
+
+
+
+
+
 app.post('/admin/assign-volunteer', async (req, res) => {
-  const { managerId, volunteerNumber, task, phone} = req.body;
+  const { managerId, volunteerNumber, task, phone } = req.body;
 
   if (!managerId || !volunteerNumber || !task || !phone) {
-    return res.status(400).json({ success: false, message: 'Missing required fields' });
+      return res.status(400).json({ success: false, message: 'Missing required fields' });
   }
 
-  console.log('Received data:', { managerId, volunteerNumber, task,phone });
+  console.log('Received data:', { managerId, volunteerNumber, task, phone });
   let volunteerId;
-  let assignTask=task+' verification';
+  let assignTask = task + ' verification';
+
   try {
-    const query = `SELECT getVolunteerId(:volunteerNumber) AS volunteerId FROM dual`;
-    const result = await run_query(query, { volunteerNumber });
-    console.log('Function result:', result);
-    volunteerId = result[0][0];  // Adjust according to the result structure
+      const query = `SELECT getVolunteerId(:volunteerNumber) AS volunteerId FROM dual`;
+      const result = await run_query(query, { volunteerNumber });
+      console.log('Function result:', result);
+      volunteerId = result[0][0];  // Adjust according to the result structure
   } catch (error) {
-    console.error('Error fetching volunteer ID:', error);
-    return res.status(500).send("Error fetching volunteer ID");
+      console.error('Error fetching volunteer ID:', error);
+      return res.status(500).json({ success: false, message: 'Error fetching volunteer ID' });
   }
 
   if (!volunteerId) {
-    return res.status(404).json({ success: false, message: 'Volunteer not found' });
+      return res.status(404).json({ success: false, message: 'Volunteer not found' });
   }
 
   try {
-    const query = `
-      BEGIN
-        assign_volunteer(:managerId, :volunteerId, :assignTask,:phone);
-      END;
-    `;
-    console.log('Assigning volunteer with data:', { managerId, volunteerId, assignTask,phone});
-    await run_query(query, { managerId, volunteerId, assignTask ,phone});
+      const query = `
+          BEGIN
+              assign_volunteer(:managerId, :volunteerId, :assignTask, :phone);
+          END;
+      `;
+      console.log('Assigning volunteer with data:', { managerId, volunteerId, assignTask, phone });
+      await run_query(query, { managerId, volunteerId, assignTask, phone });
 
-    res.status(200).json({ success: true, message: 'Volunteer assigned successfully' });
+      res.status(200).json({ success: true, message: 'Volunteer assigned successfully' });
   } catch (error) {
-    console.error('Error assigning volunteer:', error);
-    res.status(500).json({ success: false, message: 'Failed to assign volunteer' });
+      // Log the entire error object to understand its structure
+      console.error('Error assigning volunteer (full error object):', error);
+
+      // Check if the error object contains Oracle-specific properties
+      const oraError = error.errorNum || error.code || (error.message && error.message.includes('ORA-20002'));
+
+      if (oraError) {
+          if (oraError === 20002 || error.code === 'ORA-20002') {
+              res.status(400).json({ success: false, err: 1, message: 'Volunteer has exceeded the maximum task limit of 5' });
+          } else {
+              res.status(500).json({ success: false, err: 2, message: 'Failed to assign volunteer' });
+          }
+      } else {
+          res.status(500).json({ success: false, err: 2, message: 'Failed to assign volunteer' });
+      }
   }
 });
+
 
 
 
