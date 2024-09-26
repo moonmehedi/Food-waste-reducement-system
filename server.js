@@ -224,7 +224,376 @@ app.post('/user/login', async (req, res) => {
 });
 
 
+// Endpoint to get discounted food items
+app.get('/customer/discounted-food', async (req, res) => {
+  let conn;
+  try {
+    conn = await connection();
 
+    const searchTerm = req.query.search; // Get the search term from query params
+
+    let query = 'SELECT * FROM Discounted_Food';
+    let binds = {}; // Initialize an object to hold bind parameters
+
+    // If a search term is provided, modify the query to filter results
+    if (searchTerm) {
+      query += ` WHERE LOWER("Food Name") LIKE '%' || LOWER(:searchTerm) || '%'`;
+      binds.searchTerm = searchTerm; // Only add to binds if searchTerm is present
+    }
+
+    const result = await conn.execute(query, binds); // Use binds for parameters
+
+    // Process the result to handle BLOBs if necessary
+    const foods = await Promise.all(result.rows.map(async row => {
+      const foodImage = row[4]; // "Food Image"
+      const base64Image = await blobToBase64(foodImage); // Convert BLOB to Base64 if necessary
+      return {
+        foodId: row[0],
+        foodName: row[1],            // "Food Name"
+        quantity: row[2],            // "Quantity"
+        expDate: row[3],             // "Expiration Date"
+        foodImage: base64Image,      // Converted BLOB to Base64 Image
+        originalPrice: row[5],       // "Original Price"
+        discountedPrice: row[6],     // "Discounted Price"
+        sellerName: row[7]           // "Seller Name"
+      };
+    }));
+
+    res.json(foods);
+  } catch (error) {
+    console.error('Error fetching discounted food:', error);
+    res.status(500).send('Server error');
+  } finally {
+    if (conn) {
+      try {
+        await conn.close();
+      } catch (err) {
+        console.error('Failed to close connection:', err);
+      }
+    }
+  }
+});
+
+
+app.post('/customer/add-to-cart', async (req, res) => {
+  const { foodId, customerId } = req.body; // Now customerId comes from the request body
+
+  console.log('Received foodId:', foodId); // Debugging: Log foodId
+  console.log('Received customerId:', customerId); // Debugging: Log customerId
+
+  let conn;
+  try {
+      conn = await connection();
+
+      // Insert into SELLS table, set NID to customerId
+      const updateQuery = `UPDATE SELLS SET NID = :customerId WHERE FOOD_ID = :foodId AND NID IS NULL`;
+
+      console.log('Executing query:', updateQuery); // Log the query being executed
+
+      await conn.execute(updateQuery, { customerId, foodId });
+      await conn.commit();
+
+      res.json({ message: 'Item added to cart' });
+  } catch (error) {
+      console.error('Error adding to cart:', error); // Show the actual error
+      res.status(500).send('Server error');
+  } finally {
+      if (conn) {
+          try {
+              await conn.close();
+          } catch (err) {
+              console.error('Failed to close connection:', err);
+          }
+      }
+  }
+});
+
+app.post('/customer/cart', async (req, res) => {
+  const { customerId } = req.body; // Extract customerId from the request body
+
+  let conn;
+
+  try {
+      console.log('Received customerId:', customerId); // Log the customer ID received
+      conn = await connection();
+
+      const query = `
+         SELECT * FROM Cart_View 
+         WHERE "Customer ID" = :customerId
+      `;
+
+      console.log('Executing query:', query); // Log the query being executed
+
+      const result = await conn.execute(query, [customerId]);
+
+      console.log('Query result:', result.rows); // Log the result from the query
+
+      if (result.rows.length === 0) {
+          console.log('No items in the cart for this customer.');
+          return res.status(404).json([]); // Return an empty array if no items
+      }
+
+      // Convert BLOBs to Base64
+      const cartItems = await Promise.all(result.rows.map(async row => {
+        const foodImage = row[4];
+        const base64Image = await blobToBase64(foodImage); // Convert BLOB to Base64 if necessary
+        return {
+            foodId: row[1],
+            sellerName: row[2],
+            foodName: row[3],
+            foodImage: base64Image, 
+            originalPrice: row[5],
+            discountedPrice: row[6],
+            discountAmount: row[7]
+        };
+      }));
+
+      res.json(cartItems); // Send the cart items as JSON
+  } catch (error) {
+      console.error('Error fetching cart data:', error); // Log any error that occurs
+      res.status(500).json({ error: 'An error occurred while retrieving the cart data.' });
+  } finally {
+      if (conn) {
+          await conn.close();
+      }
+  }
+});
+
+// for confirming orders of Customer
+app.post('/customer/checkout', async (req, res) => {
+  const { customerId, cartItems } = req.body;
+
+  console.log('Checkout initiated');
+  console.log('Customer ID:', customerId);
+  console.log('Cart Items:', cartItems);
+
+  let conn;
+  try {
+      conn = await connection();
+      console.log('Database connection established');
+
+      //await conn.execute('BEGIN'); // Ensure transaction begins
+
+      for (const item of cartItems) {
+          const { foodId, quantity, sellerName } = item;
+          console.log('Processing item:', item);
+
+          const updateSellsInitialQuery = `
+              UPDATE SELLS
+              SET ORDER_STATUS = 'YES'
+              WHERE NID = :customerId
+          `;
+          const result1 = await conn.execute(updateSellsInitialQuery, [customerId]);
+          console.log('Step 1 rows affected:', result1.rowsAffected);
+
+          const insertOrderQuery = `
+              INSERT INTO ORDERS (NID, FOOD_ID, DONOR_NAME, QUANTITY, ORDER_STATUS)
+              VALUES (:customerId, :foodId, :sellerName, :quantity, 'PENDING')
+          `;
+          const result2 = await conn.execute(insertOrderQuery, [customerId, foodId, sellerName, quantity]);
+          console.log('Step 2 rows affected:', result2.rowsAffected);
+
+          const query = `SELECT QUANTITY FROM FOOD WHERE FOOD_ID = :foodId`;
+          const result3 = await conn.execute(query, [foodId]);
+          console.log('Step 3 result:', result3.rows);
+
+          if (result3.rows.length === 0) {
+              throw new Error(`Food item not found`);
+          }
+
+          const availableQuantity = result3.rows[0][0];
+          if (quantity > availableQuantity) {
+              throw new Error(`Not enough stock`);
+          }
+
+          const updateQuery = `
+              UPDATE FOOD
+              SET QUANTITY = QUANTITY - :quantity
+              WHERE FOOD_ID = :foodId
+          `;
+          const result4 = await conn.execute(updateQuery, [quantity, foodId]);
+          console.log('Step 4 rows affected:', result4.rowsAffected);
+
+          if (availableQuantity - quantity === 0) {
+              const deleteQuery = `DELETE FROM FOOD WHERE FOOD_ID = :foodId`;
+              const result5 = await conn.execute(deleteQuery, [foodId]);
+              console.log('Step 5 rows affected (FOOD deleted):', result5.rowsAffected);
+          }
+
+          const updateSellsFinalQuery = `
+              UPDATE SELLS
+              SET NID = NULL, ORDER_STATUS = NULL
+              WHERE NID = :customerId
+          `;
+          const result6 = await conn.execute(updateSellsFinalQuery, [customerId]);
+          console.log('Step 6 rows affected:', result6.rowsAffected);
+      }
+
+      await conn.commit(); // Ensure transaction commits
+      console.log('Transaction committed successfully');
+      res.status(200).json({ message: 'Checkout successful!' });
+
+  } catch (error) {
+      console.error('Error during checkout:', error.message);
+
+      if (conn) {
+          console.log('Rolling back transaction');
+          //await conn.rollback();
+      }
+
+      res.status(500).json({ error: 'Checkout failed. Please try again later.' });
+  } finally {
+      if (conn) {
+          await conn.close();
+          console.log('Database connection closed');
+      }
+  }
+});
+
+
+
+app.post('/customer/cart/remove', async (req, res) => {
+  const { customerId, foodId } = req.body;
+
+  console.log('Remove from cart initiated');
+  console.log('Customer ID:', customerId);
+  console.log('Food ID:', foodId);
+
+  let conn;
+  try {
+      conn = await connection(); // Assuming connection() returns a DB connection
+      console.log('Database connection established');
+
+      // Start transaction
+      //await conn.execute('BEGIN');
+
+      // Step 1: Set `NID` and `ORDER_STATUS` to `NULL` in the SELLS table
+      const updateSellsQuery = `
+          UPDATE SELLS
+          SET NID = NULL
+          WHERE NID = :customerId AND FOOD_ID = :foodId
+      `;
+      const result1 = await conn.execute(updateSellsQuery, [customerId, foodId]);
+      console.log('Step 1 rows affected (SELLS updated):', result1.rowsAffected);
+
+      if (result1.rowsAffected === 0) {
+          throw new Error(`No matching item found in cart for customerId: ${customerId}, foodId: ${foodId}`);
+      }
+
+      // Step 2: Optional, if you want to log the removal or do additional tasks after the update.
+
+      // Commit transaction
+      await conn.commit();
+      console.log('Transaction committed successfully');
+
+      // Respond with success
+      res.status(200).json({ success: true, message: 'Item removed from cart successfully' });
+
+  } catch (error) {
+      console.error('Error removing item from cart:', error.message);
+
+      if (conn) {
+          console.log('Rolling back transaction');
+          //await conn.rollback(); // Rollback the transaction in case of error
+      }
+
+      res.status(500).json({ success: false, message: 'Failed to remove item from cart' });
+
+  } finally {
+      if (conn) {
+          await conn.close();
+          console.log('Database connection closed');
+      }
+  }
+});
+
+app.get('/customer/orders', async (req, res) => {
+  let conn;
+  try {
+    conn = await connection();
+    
+    // Query the view instead of manually joining the tables
+    const query = `
+      SELECT * FROM Customer_Order_History
+      WHERE NID = :nid`;
+
+    // Assuming customer NID is sent via query parameter
+    const customerNID = req.query.nid;
+
+    // Execute the query
+    const result = await conn.execute(query, [customerNID]);
+
+    // Map the result to an array of order objects
+    const orders = result.rows.map(row => ({
+      orderId: row[0],
+      customerId: row[1],
+      orderQuantity: row[2],
+      orderStatus: row[3],
+      orderDate: row[4],
+      donorName: row[5],
+      foodName: row[6],
+      foodQuantity: row[7]
+    }));
+
+    // Send the order data as JSON
+    res.json(orders);
+
+  } catch (error) {
+    console.error('Error fetching customer orders:', error);
+    res.status(500).send('Server error');
+  } finally {
+    if (conn) {
+      try {
+        await conn.close();
+      } catch (err) {
+        console.error('Failed to close connection:', err);
+      }
+    }
+  }
+});
+
+
+
+
+
+
+
+
+/*app.get('/customer/cart', async (req, res) => {
+  const customerId = req.session.customerId;
+
+  let conn;
+  try {
+      conn = await connection();
+
+      // Select items in the cart for the current customer
+      const query = `
+          SELECT f.NAME, s.DISCOUNTED_PRICE, s.QUANTITY
+          FROM SELLS s
+          JOIN FOOD f ON s.FOOD_ID = f.FOOD_ID
+          WHERE s.NID = :customerId`;
+      const result = await conn.execute(query, { customerId });
+
+      const cartItems = result.rows.map(row => ({
+          foodName: row[0],
+          discountedPrice: row[1],
+          quantity: row[2]
+      }));
+
+      res.json(cartItems);
+  } catch (error) {
+      console.error('Error fetching cart:', error);
+      res.status(500).send('Server error');
+  } finally {
+      if (conn) {
+          try {
+              await conn.close();
+          } catch (err) {
+              console.error('Failed to close connection:', err);
+          }
+      }
+  }
+});*/
 
 
 // Add to your existing server.js
@@ -323,10 +692,10 @@ app.post('/sell/food', upload.single('food-photo'), async (req, res) => {
   const photo = req.file.buffer;
   const verified = 'N';
   const volunteerId = null; // Adjust as needed
-  const donorId = 1; // Adjust as needed
+  const donorId = 6; // Adjust as needed
   const dateF = new Date().toISOString().split('T')[0];
   const sellOrDonate = 'SELL';
-  const nid = 1; // Adjust as needed 
+  const nid = null; // Adjust as needed 
   const dateS = new Date().toISOString().split('T')[0];
 
   const query = `

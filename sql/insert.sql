@@ -601,8 +601,8 @@ INSERT INTO FOOD (
     TO_DATE('2024-12-31', 'YYYY-MM-DD'),
     EMPTY_BLOB(),
     'Y',
-    1,
-    1,
+    21,
+    26,
     SYSDATE
 );
 
@@ -614,16 +614,18 @@ INSERT INTO FOOD (
     VERIFIED,
     VOLUNTEER_ID,
     DONOR_ID,
-    DATE_F
+    DATE_F,
+    SELL_OR_DONATE
 ) VALUES (
     'Food2',
     200,
     TO_DATE('2024-12-30', 'YYYY-MM-DD'),
     EMPTY_BLOB(),
     'N',
-    2,
-    2,
-    SYSDATE
+    22,
+    27,
+    SYSDATE,
+    'SELL'
 );
 
 INSERT INTO FOOD (
@@ -634,16 +636,18 @@ INSERT INTO FOOD (
     VERIFIED,
     VOLUNTEER_ID,
     DONOR_ID,
-    DATE_F
+    DATE_F,
+    SELL_OR_DONATE
 ) VALUES (
     'Food3',
     300,
     TO_DATE('2024-12-29', 'YYYY-MM-DD'),
     EMPTY_BLOB(),
     'Y',
-    1,
-    3,
-    SYSDATE
+    23,
+    28,
+    SYSDATE,
+    'DONATE'
 );
 
 INSERT INTO FOOD (
@@ -654,16 +658,18 @@ INSERT INTO FOOD (
     VERIFIED,
     VOLUNTEER_ID,
     DONOR_ID,
-    DATE_F
+    DATE_F,
+    SELL_OR_DONATE
 ) VALUES (
     'Food4',
     400,
     TO_DATE('2024-12-28', 'YYYY-MM-DD'),
     EMPTY_BLOB(),
     'N',
-    2,
-    4,
-    SYSDATE
+    24,
+    29,
+    SYSDATE,
+    'SELL'
 );
 
 INSERT INTO FOOD (
@@ -674,16 +680,18 @@ INSERT INTO FOOD (
     VERIFIED,
     VOLUNTEER_ID,
     DONOR_ID,
-    DATE_F
+    DATE_F,
+    SELL_OR_DONATE
 ) VALUES (
     'Food5',
     500,
     TO_DATE('2024-12-27', 'YYYY-MM-DD'),
     EMPTY_BLOB(),
     'Y',
-    1,
-    5,
-    SYSDATE
+    25,
+    30,
+    SYSDATE,
+    'DONATE'
 );
 
 INSERT INTO FOOD (
@@ -694,36 +702,41 @@ INSERT INTO FOOD (
     VERIFIED,
     VOLUNTEER_ID,
     DONOR_ID,
-    DATE_F
+    DATE_F,
+    SELL_OR_DONATE
 ) VALUES (
     'Food6',
     600,
     TO_DATE('2024-12-26', 'YYYY-MM-DD'),
     EMPTY_BLOB(),
     'N',
-    2,
-    6,
-    SYSDATE
+    41,
+    31,
+    SYSDATE,
+    'SELL'
 );
 
 INSERT INTO FOOD (
     NAME,
+   NAME,
     QUANTITY,
     EXP_DATE,
     PHOTO,
     VERIFIED,
     VOLUNTEER_ID,
     DONOR_ID,
-    DATE_F
+    DATE_F,
+    SELL_OR_DONATE
 ) VALUES (
     'Food7',
     700,
     TO_DATE('2024-12-25', 'YYYY-MM-DD'),
     EMPTY_BLOB(),
     'Y',
-    1,
-    7,
-    SYSDATE
+    42,
+    32,
+    SYSDATE,
+    'SELL'
 );
 
 INSERT INTO FOOD (
@@ -1094,9 +1107,9 @@ INSERT INTO SELLS (
     DISCOUNTED_PRICE,
     DATE_S
 ) VALUES (
+    26,
     1,
-    1,
-    1,
+    59,
     100,
     90,
     SYSDATE

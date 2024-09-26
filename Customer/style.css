@@ -96,6 +96,38 @@ section {
     border: var(--border);
 
 }
+.heading2{
+    min-height: 30vh;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    gap:1rem;
+    background-color: var(--bonewhite);
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+ }
+ 
+ .heading2 h3{
+    font-size: 4.6rem;
+    color:var(--deftblue);
+    text-transform: uppercase;
+ }
+ 
+ .heading2 p{
+    font-size: 2.5rem;
+    color:var(--blue);
+ }
+ 
+ .heading2 p a{
+    color:var(--darkBlue);
+ }
+ 
+ .heading2 p a:hover{
+    text-decoration: underline;
+ }
+ 
 /*register form styles*/
 
 .register-form-container
@@ -865,7 +897,7 @@ th {
     margin-top: 2rem;
 }
 .btn-assign:hover {
-    background-color: #8b4513;
+    background-color: var(--alterGreen);
     transform: scale(1.05);
 
 }
@@ -1304,8 +1336,8 @@ th {
 .Featured .featured-slider .box {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    border: 1px solid black; /* Add a border to visualize the box boundaries */
+    /*height: 100%;*/
+    border: 1px solid var(--alterGreen); /* Add a border to visualize the box boundaries */
     margin:2rem 0;
     position: relative;
     overflow: hidden;
@@ -1335,12 +1367,12 @@ th {
 }
 
 .Featured .featured-slider .box .icons a {
-    color: var(--deftblue);
+    color: var(--alterGreen);
     font-size: 2rem;
 }
 
 .Featured .featured-slider .box .icons a:hover {
-    background: var(--splashy);
+    background: var(--weirdgreen);
     color: white;
     cursor: pointer;
 }
@@ -1357,21 +1389,33 @@ th {
 
 .Featured .featured-slider .box .content2 h3 {
     font-size: 2rem;
-    color: var(--black);
+    color: var(--darkgreen);
 }
 
 .Featured .featured-slider .box .content2 p {
-    font-size: 2.2rem;
-    color: var(--black);
-    padding-top: 1rem;
+    font-size: 1.5rem; /* Reduce overall font size for the values */
+    color: var(--green); /* Less dark for the values */
+    padding-top: 0.5rem; /* Adjust spacing between lines */
+    display: flex; /* Ensure inline layout */
+    align-items: center; /* Vertically align values */
+    justify-content: flex-start; /* Align content to the left */
 }
+
+.Featured .featured-slider .box .content2 p span {
+    font-size: 1.8rem; /* Make span text (main labels) bigger */
+    font-weight: bold; /* Make the labels bold for emphasis */
+    color: var(--darkgreen); /* Darker color for the main names */
+    margin-right: 0.5rem; /* Add space between the label and the value */
+    white-space: nowrap; /* Ensure that the label does not wrap to the next line */
+}
+
 
 .swiper-button-next,
 .swiper-button-prev {
     border: var(--border-hover);
     height: 4rem;
     width: 4rem;
-    color: var(--deftblue);
+    color: var(--alterGreen);
     background-color: white;
     transition: border .4s, background-color .4s;
 }
@@ -1383,7 +1427,7 @@ th {
 
 .swiper-button-next:hover,
 .swiper-button-prev:hover {
-    background: var(--blue);
+    background: var(--darkgreen);
     color: white;
 }
 .reviews .reviews-slider .box
@@ -1421,4 +1465,195 @@ th {
 {
     font-size:1.9rem;
     color: var(--blue);
+}
+
+
+/*Caet SEction*/
+.shopping-cart .box-container{
+    max-width: 1200px;
+    margin:0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 30rem);
+    align-items: center;
+    gap:1.7rem;
+    justify-content: center;
+ }
+ .shopping-cart .box-container .box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding:2.2rem;
+    border-radius: .6rem;
+    background-color: var(--white);
+    box-shadow: var(--box-shadow);
+    position: relative;
+    border:var(--border);
+
+ }
+ .shopping-cart .box-container .box .fa-times{
+    position: absolute;
+    top:1rem; right:1rem;
+    height: 4.5rem;
+    width:4.5rem;
+    line-height: 4.5rem;
+    font-size: 2rem;
+    background-color: var(--weirdgreen);
+    color:whitesmoke;
+    border-radius: .5rem;
+ }
+ .shopping-cart .box-container .box .fa-times:hover{
+    background-color: var(--alterGreen);
+ }
+ 
+ .shopping-cart .box-container .box img{
+    height: 40rem;
+    width: auto;
+ }
+ 
+ .shopping-cart .box-container .box .name{
+    padding:1rem 0;
+    font-size: 2.3rem;
+    color:var(--darkBlue);
+ }
+ 
+ .shopping-cart .box-container .box .price{
+    padding:1rem 0;
+    font-size: 2.1rem;
+    color:var(--splashy);
+ }
+ 
+ .shopping-cart .box-container .box input[type="number"]{
+    margin:.5rem 0;
+    border:var(--border);
+    border-radius: .5rem;
+    padding:1.2rem 1.4rem;
+    font-size: 2rem;
+    color:var(--deftblue);
+    width: 9rem;
+    background: whitesmoke;
+ }
+ 
+ .shopping-cart .box-container .box .sub-total{
+    padding-top: 1.6rem;
+    font-size: 2.2rem;
+    color:var(--splashy);
+    font-weight: bold;
+ }
+ 
+ .shopping-cart .box-container .box .sub-total span{
+    color:var(--blue);
+ }
+ 
+ .shopping-cart .cart-total{
+    max-width: 1200px;
+    margin:0 auto;
+    border:var(--border);
+    padding:2rem;
+    text-align: center;
+    margin-top: 2rem;
+    border-radius: .6rem;
+    box-shadow: var(--box-shadow);
+    background: whitesmoke;
+
+ }
+ 
+ .shopping-cart .cart-total p{
+    font-size: 2.5rem;
+    color:var(--blue);
+    font-weight: bold;
+ }
+ 
+ .shopping-cart .cart-total p span{
+    color:var(--splashy);
+ }
+ 
+ .shopping-cart .cart-total .flex{
+    display: flex;
+    flex-wrap: wrap;
+    column-gap:1.5rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+ }
+ 
+ .shopping-cart .disabled{
+    pointer-events: none;
+    opacity: .5;
+    user-select: none;
+ }
+
+ .search-form form{
+    max-width: 1200px;
+    margin:0 auto;
+    display: flex;
+    gap:1.4rem;
+    margin-top: 4rem;
+ }
+ 
+ .search-form form .btn{
+    margin-top: 0;
+ }
+ 
+ .search-form form .box{
+    width: 100%;
+    padding:1.2rem 1.4rem;
+    font-size: 2rem;
+    color:var(--deftblue);
+    background-color:var(--snow);
+    border-radius: .5rem;
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+ }
+
+ .order-history {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.order-history h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2em;
+    font-family: 'Libre Baskerville', serif;
+}
+
+.order-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.order-card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.order-card h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.order-card p {
+    margin: 8px 0;
+    font-size: 1em;
+}
+
+.status {
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: white;
+}
+
+.confirmed {
+    background-color: green;
+}
+
+.pending {
+    background-color: orange;
 }
