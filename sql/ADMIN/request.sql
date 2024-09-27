@@ -11,6 +11,7 @@ SELECT
     DONOR.DATE_D AS Request_Date
 FROM 
     DONOR
+    where VERIFIED='N'and volunteer_id is NULL
 UNION ALL
 SELECT 
     'Recipient' AS Request_Type,
@@ -21,10 +22,14 @@ SELECT
     RECIPIENT.INSTITUTION_NAME,
     RECIPIENT.DATE_R AS Request_Date
 FROM 
-    RECIPIENT;
+    RECIPIENT
+    where VERIFIED='N' and volunteer_id is NULL;
 
 
 --tells about availabel volunteer
+
+SELECT * from COMBINEDREQUEST;
+
 
 CREATE OR REPLACE VIEW available_volunteer AS
 SELECT
@@ -36,19 +41,18 @@ SELECT
     V.PHONE
 FROM
     VOLUNTEER V
-where AVAILABILITY='Free';
+where TASK_COUNT<5;
 
 
 SELECT * FROM available_volunteer;
 
 
 
-update VOLUNTEER set AVAILABILITY='Free' where VOLUNTEER_ID IN (1,2,3,4,5);
-
 
 -- available food or verified sub-query
 CREATE OR REPLACE VIEW DONOR_FOOD_DONATION_REQUEST AS
 SELECT
+    F.FOOD_ID AS "FOOD ID",
     D.INSTITUTION_NAME AS "Donor Name",
     F.NAME AS "Food Name",
     F.PHOTO AS "Food Image",
@@ -59,13 +63,12 @@ FROM
     DONOR D,FOOD F
 WHERE
     F.donor_id=D.donor_id and
-    F.VERIFIED = 'N' AND D.VERIFIED = 'Y'
+    F.VERIFIED = 'N' AND D.VERIFIED = 'Y' and
+    F.volunteer_id is NULL
     and f.food_id not in (select food_id from receives); 
 
 
 SELECT * from DONOR_FOOD_DONATION_REQUEST;
-
-
 
 
 
@@ -87,11 +90,12 @@ SELECT * from donor;
 create or REPLACE PROCEDURE assign_volunteer(
     MANAGER_ID in number,
     VOLUNTEER_ID in number,
-    task in VARCHAR2
+    task in VARCHAR2,
+    PHONE in VARCHAR2
 )
 is
 BEGIN
-insert into ASSIGN (manager_id, volunteer_id, task) values (manager_id,volunteer_id,task);
+insert into ASSIGN (manager_id, volunteer_id, task,phone) values (manager_id,volunteer_id,task,phone);
 END assign_volunteer;
 /
 
@@ -103,7 +107,7 @@ SHOW ERRORS PROCEDURE assign_volunteer;
 
 
 BEGIN
-    assign_volunteer(1, 2, 'Organize Event');
+    assign_volunteer(1, 2, 'Organize Event',4);
 END;
 /
 
@@ -115,7 +119,7 @@ delete from ASSIGN where MANAGER_ID=1 AND VOLUNTEER_ID=2;
 --volunteer function
 set SERVEROUTput on
 CREATE OR REPLACE FUNCTION getVolunteerId(
-    volunteerNumber NUMBER
+    volunteerNumber VARCHAR2
 ) RETURN NUMBER
 IS
     Id NUMBER;
@@ -145,7 +149,7 @@ set SERVEROUTput on
 DECLARE
 ID number;
 BEGIN
-ID:=getVolunteerId(1112223333);
+ID:=getVolunteerId(2223334444);
 dbms_output.put_line(ID);
 END;
 /
@@ -154,4 +158,87 @@ END;
 
 
 
-delete from ASSIGN where MANAGER_ID=1;
+
+
+
+
+--sequence
+CREATE SEQUENCE volunteer_task_seq
+START WITH 1
+INCREMENT BY 1
+MAXVALUE 5 -- Max availability is 5
+;
+
+
+
+CREATE OR REPLACE TRIGGER update_volunteer_on_task
+AFTER INSERT ON ASSIGN
+FOR EACH ROW
+DECLARE
+    current_task_count NUMBER;
+BEGIN
+    -- Get the current task count for the volunteer
+    SELECT TASK_COUNT INTO current_task_count
+    FROM VOLUNTEER
+    WHERE VOLUNTEER_ID = :NEW.VOLUNTEER_ID;
+
+    -- Check if the current task count is less than 5
+    IF current_task_count < 5 THEN
+        -- Increment the task count by 1 using a sequence (we just add 1, no need to use sequence here)
+        UPDATE VOLUNTEER
+        SET TASK_COUNT = TASK_COUNT + 1
+        WHERE VOLUNTEER_ID = :NEW.VOLUNTEER_ID;
+    ELSE
+        -- Raise an error if the task count exceeds 5
+        RAISE_APPLICATION_ERROR(-20002, 'Volunteer has exceeded the maximum task limit of 5.');
+    END IF;
+
+    -- Update related tables based on the task
+    IF :NEW.TASK = 'Donor verification' AND :NEW.PHONE IS NOT NULL THEN
+        UPDATE DONOR
+        SET VOLUNTEER_ID = :NEW.VOLUNTEER_ID
+        WHERE PHONE = :NEW.PHONE;
+        
+    ELSIF :NEW.TASK = 'Recipient verification' AND :NEW.PHONE IS NOT NULL THEN
+        UPDATE RECIPIENT
+        SET VOLUNTEER_ID = :NEW.VOLUNTEER_ID
+        WHERE PHONE = :NEW.PHONE;
+        
+    ELSIF :NEW.TASK = 'food verification' AND :NEW.PHONE IS NOT NULL THEN
+        UPDATE FOOD
+        SET VOLUNTEER_ID = :NEW.VOLUNTEER_ID
+        WHERE FOOD_ID = TO_NUMBER(:NEW.PHONE); -- Assuming PHONE field is used to pass FOOD_ID
+    END IF;
+END;
+/
+
+
+
+
+
+
+SELECT constraint_name, constraint_type
+FROM user_constraints
+WHERE table_name = 'ASSIGN' AND owner = 'ADMIN';
+
+
+
+
+delete from assign;
+
+
+
+
+update VOLUNTEER set task_count=4 where VOLUNTEER_ID=6;
+
+
+update donor set VOLUNTEER_ID=NULL where DONOR_ID in(2,4,6,8);
+update RECIPIENT set VOLUNTEER_ID=NULL where RECIPIENT_ID in(2,4,6,8);
+update food set VOLUNTEER_ID=NULL where FOOD_ID in(2,4,6,8);
+
+
+
+
+
+
+

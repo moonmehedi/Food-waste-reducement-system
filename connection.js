@@ -46,7 +46,9 @@ export const run_query = async (query, params, isRefCursor = false) => {
     return result.rows;
   } catch (err) {
     console.error("Query execution failed:", err);
-    throw new Error("Query execution failed");
+
+    // Remove the generic error message and rethrow the original error
+    throw err;
   } finally {
     if (conn) {
       try {
