@@ -7,6 +7,7 @@ IS
 BEGIN
     OPEN p_results FOR
         SELECT 
+            D.DONOR_ID as ID,
             'Donor' AS Request_Type,
             D.EMAIL AS Email_Address,
             D.STREETNO AS Request_Address,
@@ -19,8 +20,10 @@ BEGIN
             DONOR D
         WHERE 
             D.VOLUNTEER_ID = p_volunteer_id AND D.VERIFIED = 'N'
+            AND D.authenticity='pending'
         UNION ALL
         SELECT 
+            R.RECIPIENT_ID AS ID,
             'Recipient' AS Request_Type,
             R.EMAIL AS Email_Address,
             R.STREETNO AS Request_Address,
@@ -33,8 +36,10 @@ BEGIN
             RECIPIENT R
         WHERE
             R.VOLUNTEER_ID = p_volunteer_id AND R.VERIFIED = 'N'
+            AND R.authenticity='pending'
         UNION ALL
         SELECT 
+        F.FOOD_ID AS ID,
             'Food' AS Request_Type,
             D.EMAIL AS Email_Address,
             D.STREETNO AS Request_Address,
@@ -49,7 +54,8 @@ BEGIN
             DONOR D ON F.DONOR_ID = D.DONOR_ID
         WHERE
             F.VOLUNTEER_ID = p_volunteer_id AND 
-            F.VERIFIED = 'N';
+            F.VERIFIED = 'N'
+             AND F.authenticity='pending';
 END;
 /
 
@@ -57,6 +63,7 @@ END;
 
 DECLARE
     v_results SYS_REFCURSOR;
+    v_id NUMBER;
     v_request_type VARCHAR2(100);
     v_email_address VARCHAR2(100);
     v_request_address VARCHAR2(100);
@@ -72,6 +79,7 @@ BEGIN
     -- Fetch rows from the cursor and print each row
     LOOP
         FETCH v_results INTO 
+            v_id,
             v_request_type, 
             v_email_address, 
             v_request_address, 
@@ -100,3 +108,16 @@ BEGIN
     CLOSE v_results;
 END;
 /
+
+UPDATE RECIPIENT
+SET VOLUNTEER_ID=2
+WHERE AUTHENTICITY='pending';
+
+
+
+
+
+
+
+
+

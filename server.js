@@ -188,7 +188,7 @@ app.post('/login', async (req, res) => {
                   console.error('Error saving session:', err);
                   return res.status(500).json({ message: 'Internal server error' });
               }
-              console.log(req.session.user,'\n',req.session.sessionID)
+             // console.log('current user ;',req.session.user,'end here\n')
               res.status(200).json({ message: 'Login successful' });
           });
       } else {
@@ -206,7 +206,7 @@ app.post('/login', async (req, res) => {
 
 //get user detail
 app.get('/admin/current-user', (req, res) => {
-  console.log('user ingfo :',req.session.user,req.sessionStore,req.sessionID)
+  //console.log('user ingfo :',req.session.user,req.sessionStore,req.sessionID)
   if (req.session.user) {
       res.json(req.session.user);
   } else {
@@ -219,7 +219,7 @@ app.get('/admin/current-user', (req, res) => {
 
 //get user detail
 app.get('/donor/current-user', (req, res) => {
-  console.log('user ingfo :',req.session.user,req.sessionStore,req.sessionID)
+  //console.log('user ingfo :',req.session.user)
   if (req.session.user) {
       res.json(req.session.user);
   } else {
@@ -260,7 +260,7 @@ app.get('/logout', (req, res) => {
 // Add to your existing server.js
 app.get("/admin/dashboard-info", async (req, res) => {
   try {
-    console.log(req.session.user)
+ //   console.log(req.session.user)
     const query = "SELECT * FROM FETCH_INFO";
     const result = await run_query(query, {});
     console.log(result);
@@ -635,175 +635,58 @@ app.get('/admin/donor-food-donation-requests', async (req, res) => {
 
 
 
+// Parts of Zishan
 
+//1. Task Management
+//2. Verification History
 
-//zishan volunteer
-
-// app.get("/assigned_tasks/:volunteer_id", async (req, res) => {
-//   const volunteerId = req.params.volunteer_id;
-
-//   const query = `
-//     BEGIN
-//         get_assigned_tasks(:volunteer_id, :p_results);
-//     END;
-//   `;
-
-//   let params = {
-//     volunteer_id: { dir: oracledb.BIND_IN, val: volunteerId, type: oracledb.NUMBER },
-//     p_results: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR }
-//   };
-
-//   try {
-//     const result = await run_query(query, params);
-//     console.log(result);
-//     const resultSet = result.outBinds.p_results;
-
-//     let rows = [];
-//     let row;
-//     while ((row = await resultSet.getRow())) {
-//       rows.push(row);
-//     }
-
-//     await resultSet.close();
-//     res.json(rows);
-//   } catch (err) {
-//     console.error("Error fetching assigned tasks:", err);
-//     res.status(500).json({ error: "Failed to fetch assigned tasks" });
-//   }
-// });
-
-
-
-//const app1 = express();
-//app.use(cors());
-//app.use(express.json());
-
-//oracledb.initOracleClient({libDir: '/path_to_instantclient'}); // Adjust this path as per your Oracle setup
-
-// Oracle DB connection
-
-// Get assigned tasks for a volunteer
-// Get assigned tasks for a volunteer
-app.get('/assigned_tasks/:volunteerId', async (req, res) => {
-  const volunteerId = req.params.volunteerId;
-
-  try {
-    const result = await run_query(
-      `SELECT * FROM TASKS WHERE VOLUNTEER_ID = :volunteerId`,
-      [volunteerId]
-    );
-    res.json(result.map(row => ({
-      TASK_ID: row[0],
-      REQUEST_TYPE: row[1],
-      EMAIL_ADDRESS: row[2],
-      REQUEST_ADDRESS: row[3],
-      PHONE: row[4],
-      INSTITUTION_TYPE: row[5],
-      INSTITUTION_NAME: row[6],
-      REQUEST_DATE: row[7]
-    })));
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-    res.status(500).json({ error: "Failed to fetch tasks" });
-  }
-});
-
-// Accept task
-app.post('/task/:taskId/accept', async (req, res) => {
-  const taskId = req.params.taskId;
-
-  try {
-    await run_query(
-      `UPDATE TASKS SET STATUS = 'Accepted' WHERE TASK_ID = :taskId`,
-      [taskId]
-    );
-    res.json({ message: 'Task accepted!' });
-  } catch (error) {
-    console.error("Error accepting task:", error);
-    res.status(500).json({ error: "Failed to accept task" });
-  }
-});
-
-// Reject task
-app.post('/task/:taskId/reject', async (req, res) => {
-  const taskId = req.params.taskId;
-
-  try {
-    await run_query(
-      `UPDATE TASKS SET STATUS = 'Rejected' WHERE TASK_ID = :taskId`,
-      [taskId]
-    );
-    res.json({ message: 'Task rejected!' });
-  } catch (error) {
-    console.error("Error rejecting task:", error);
-    res.status(500).json({ error: "Failed to reject task" });
-  }
-});
-
-// Get verification history
-app.get('/verification_history', async (req, res) => {
-  try {
-    const result = await run_query(
-      `SELECT request_type, username, email, request_address, phone, institution_type, institution_name, request_date, authenticity 
-      FROM verification_history`
-    );
-
-
-    console.log(result);
-    res.json(result);
-  } catch (error) {
-    console.error("Error fetching verification history:", error);
-    res.status(500).json({ error: 'Failed to fetch data' });
-  }
-});
-
-
-
-
-
-
-
-// server.js
-// server.js
 
 app.get('/volunteer/getTasks', async (req, res) => {
-  console.log('listening');
-  
+  console.log('Listening to volunteer getTasks request');
+
+  // Retrieve volunteer_id from the query parameters
+  const volunteer_id = req.query.volunteer_id;
+
+  console.log('Volunteer ID:', volunteer_id);
+
   const query = `
-    BEGIN
-      get_assigned_tasks(:volunteer_id, :result);
-    END;
+      BEGIN
+          get_assigned_tasks(:volunteer_id, :result);
+      END;
   `;
 
   try {
-    const binds = {
-      volunteer_id: 2,  // Replace with actual dynamic volunteer ID
-      result: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }  // SYS_REFCURSOR bind
-    };
+      const binds = {
+          volunteer_id: volunteer_id,  // Bind the dynamic volunteer_id from the frontend
+          result: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }  // SYS_REFCURSOR bind
+      };
 
-    // Execute query and get rows directly
-    const rows = await run_query(query, binds, true);
+      // Execute the query and fetch rows
+      const rows = await run_query(query, binds, true);
 
-    // Debugging the fetched rows
-    console.log('Fetched rows:', rows);
+      // Debugging the fetched rows
+      console.log('Fetched rows:', rows);
 
-    // Process rows and format tasks
-    const tasks = rows.map((row, index) => ({
-      requestNo: index + 1,
-      requestType: row.REQUEST_TYPE,   // Adjust based on actual column names
-      emailAddress: row.EMAIL_ADDRESS,
-      phone: row.PHONE,
-      institutionType: row.INSTITUTION_TYPE,
-      institutionName: row.INSTITUTION_NAME,
-      requestDate: row.REQUEST_DATE
-    }));
+      // Process the rows and format the tasks
+      const tasks = rows.map((row, index) => ({
+          //requestNo: index + 1,
 
-    res.json(tasks); // Send the tasks as JSON to the frontend
+          requestId: row.ID,
+          requestType: row.REQUEST_TYPE,   // Adjust based on actual column names
+          emailAddress: row.EMAIL_ADDRESS,
+          phone: row.PHONE,
+          institutionType: row.INSTITUTION_TYPE,
+          institutionName: row.INSTITUTION_NAME,
+          requestDate: row.REQUEST_DATE
+      }));
+
+      res.json(tasks); // Send the tasks as JSON to the frontend
   } catch (error) {
-    console.error('Error fetching tasks:', error);
-    res.status(500).send('Error fetching tasks');
+      console.error('Error fetching tasks:', error);
+      res.status(500).send('Error fetching tasks');
   }
 });
+
 
 
 
@@ -832,24 +715,31 @@ app.post('/rejectTask/:id', async (req, res) => {
 app.get('/volunteer/getHistory', async (req, res) => {
   // Example: Fetching volunteer ID from request query or authentication context
 
+  console.log('Listening to volunteer getHistory request');
+
+  const volunteer_id = req.query.volunteer_id;
+
+  console.log('Volunteer ID:', volunteer_id);
+  
   const query = `
-      BEGIN 
+      BEGIN
           get_verified_tasks(:volunteer_id, :result);
       END;
   `;
 
   try {
   const binds = {
-    volunteer_id: 2,
+    volunteer_id: volunteer_id, 
     result: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }
   };
 
     // Execute the query and handle the ref cursor
-    const rows = await run_query(query, binds, true);  // Assuming `true` for ref cursor
+    const rows = await run_query(query, binds, true);  // Assuming true for ref cursor
     console.log('Fetched rows:', rows);
     
     const tasks= rows.map((row, index) => ({
-      requestNo: index+1 ,   // Ensure these indices match the actual data
+      //requestNo: index+1 ,   // Ensure these indices match the actual data
+      requestId: row.ID,
       requestType: row.REQUEST_TYPE,   // Adjust based on actual column names
       emailAddress: row.EMAIL_ADDRESS,
       requestAddress: row.REQUEST_ADDRESS,
@@ -864,6 +754,70 @@ app.get('/volunteer/getHistory', async (req, res) => {
   } catch (error) {
     console.error('Error fetching verification history:', error);
     res.status(500).send('Error fetching verification history');
+  }
+});
+
+
+
+app.post('/volunteer/updateTaskStatus/:id', async (req, res) => {
+  const taskId = req.params.id;
+  const authenticityStatus = req.body.authenticity;  // 'Y' for accept, 'N' for reject
+  const requestType = req.body.reqType;  // 'Y' for accept, 'N' for reject
+
+  console.log(`Updating task ${taskId} with status ${authenticityStatus} reqtype ${requestType}`);
+
+  const query = `
+    BEGIN
+        update_task_status(:task_id, :authenticity,:reqType);
+    END;
+  `;
+
+  const binds = {
+      task_id: taskId,  // The task ID to update
+      authenticity: authenticityStatus,
+      reqType:requestType  // 'Y' for accepted, 'N' for rejected
+  };
+
+  try {
+      await run_query(query, binds);
+      res.status(200).send(`Task ${taskId} updated successfully`);
+  } catch (error) {
+      console.error(`Error updating task ${taskId}:`, error);
+      res.status(500).send('Error updating task');
+  }
+});
+
+
+
+
+app.post("/volunteer/contact_admin", async (req, res) => {
+  const user = req.body;
+  console.log("Received user message:", user);
+  
+  // Validate phone number
+  if (user.phone.length !== 11) {
+      res.status(400).json({ error: "Phone number must be 11 digits" });
+      return;
+  }
+
+  try {
+      const query = `
+        INSERT INTO CONTACT (EMAIL,PHONE,MESSAGE)
+        VALUES (:email, :phone, :message)
+      `;
+
+      const params = {
+        email: user.email,
+        phone: user.phone,
+        message: user.comment
+      };
+
+      // Execute the query
+      await run_query(query, params);
+      res.status(201).json({ message: "Your Query has been sent to the Admin" });
+  } catch (err) {
+      console.error("Error while handling contact submission:", err);
+      res.status(500).json({ error: "Internal Server Error. Please try again later." });
   }
 });
 

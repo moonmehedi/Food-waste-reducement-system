@@ -42,8 +42,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-
-
   document.getElementById('logoutButton').addEventListener('click', () => {
     // Make a request to the logout route
     fetch('http://127.0.0.1:5000/logout')
@@ -57,5 +55,3 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error during logout:', error);
       });
   });
-
-
