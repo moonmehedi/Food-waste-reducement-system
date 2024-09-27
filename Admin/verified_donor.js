@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-      const response = await fetch('http://localhost:5000/admin/recipients');
+      const response = await fetch('http://localhost:5000/admin/verified-donors');
       const donors = await response.json();
   
       const tableBody = document.getElementById('donor-table-body');

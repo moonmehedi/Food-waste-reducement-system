@@ -312,6 +312,74 @@ app.get('/admin/recipients', async (req, res) => {
 
 
 
+
+
+
+//distribute food
+// Endpoint to assign food to recipient
+app.post('/admin/assign-food', async (req, res) => {
+  const { req_id,manager_id, food_id, food_quantity, number_of_people, recipient_id } = req.body;
+  console.log(req_id,manager_id, food_id, food_quantity, number_of_people, recipient_id);
+  // Prepare the PL/SQL block to call the procedure
+  const plsql = `
+    BEGIN 
+      DISTRIBUTE_FOOD(
+        p_manager_id    => :manager_id,
+        p_food_id       => :food_id,
+        p_food_quantity => :food_quantity,
+        p_num_people    => :number_of_people,
+        p_recipient_id  => :recipient_id,
+        p_req_id  => :req_id
+      ); 
+    END;`;
+
+  try {
+    // Execute the PL/SQL block
+    await run_query(plsql, {
+      manager_id: manager_id,
+      food_id: food_id,
+      food_quantity: parseInt(food_quantity), // Ensure quantity is an integer
+      number_of_people: parseInt(number_of_people), // Ensure people is an integer
+      recipient_id: recipient_id,
+      req_id:req_id
+    });
+
+    // Send a success response
+    res.status(200).json({ message: 'Food assigned successfully.' });
+  } catch (err) {
+    console.error('Failed to assign food:', err);
+    res.status(500).json({ error: 'Failed to assign food. Error: ' + err.message });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+//for requsted recipient
+
+app.get('/admin/requested-recipients', async (req, res) => {
+  try {
+      const query = 'SELECT * from RECIPIENT_INFO_food_distribution';
+      const result = await run_query(query, {});
+      res.json(result);
+  } catch (error) {
+      console.error('Error fetching recipient:', error);
+      res.status(500).send('Server error');
+  }
+});
+
+
+
+
 // Multer setup for handling file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -452,7 +520,7 @@ app.get('/admin/verified-food', async (req, res) => {
   let conn;
   try {
     conn = await connection();
-    const query = 'SELECT * FROM donor_food_view';
+    const query = 'SELECT * FROM DONOR_CURRENT_FOOD_VIEW';
     const result = await conn.execute(query);
    // console(result);
    // Process the result to handle BLOBs
@@ -465,7 +533,9 @@ app.get('/admin/verified-food', async (req, res) => {
         base64Image, // Food_Image as Base64
         row[3], // Food_Quantity
         row[4], // Exp_Date
-        row[8]  // Food_Date
+        row[5],  // Food_Date
+        row[6]  //food id
+
       ];
     }));
     console.log(donations)
@@ -533,6 +603,109 @@ app.get('/admin/combined-requests', async (req, res) => {
 
 
 
+
+
+//pending request
+
+app.get('/admin/pending-requests', async (req, res) => {
+  const query = 'SELECT * FROM COMBINEDPENDINGREQUEST';
+  try {
+    const rows = await run_query(query,{});
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching pending requests:', err);
+    res.status(500).json({ message: 'Error fetching pending requests' });
+  }
+});
+
+
+
+// Endpoint to get donor food donation pending requests
+app.get('/admin/donor-food-donation-pending-requests', async (req, res) => {
+  let conn;
+  console.log('trying')
+  try {
+    conn = await connection();
+    const query = "SELECT * FROM DONOR_FOOD_DONATION_PENDING_REQUEST";
+    const result = await conn.execute(query);
+    console.log(result);
+   // Process the result to handle BLOBs
+    const donations = await Promise.all(result.rows.map(async row => {
+      const foodImage = row[3]; // Assuming BLOB is at index 2
+      const base64Image = await blobToBase64(foodImage);
+      return [
+        row[0], //id
+        row[1], // d_Name
+        row[2], // food ma,e
+        base64Image, // Food_Image as Base64
+        row[4], // quantitty
+        row[5],  //  Exp_Date
+        row[6] , // donation date
+        row[7]
+      ];
+    }));
+    console.log(donations)
+    res.json(donations);
+  } catch (error) {
+    console.error('Error fetching food:', error);
+    res.status(500).send('Server error');
+  } finally {
+    if (conn) {
+      try {
+        await conn.close();
+      } catch (err) {
+        console.error('Failed to close connection:', err);
+      }
+    }
+  }
+});
+
+
+
+
+
+
+//REQUEST ACCEPT AND REJECT BUTTON
+app.post('/admin/update-request-status', async (req, res) => {
+  console.log('Received body:', req.body); // This should show the complete incoming request body
+
+  const { id, requestType, tableType, action } = req.body; // Get data from the request body
+  console.log('Parsed data:', { id, requestType, tableType, action }); // Log parsed data
+
+  // SQL query to call the stored procedure
+  const query = `
+      BEGIN
+          update_request_status(:id, :request_type, :table_type, :action);
+      END;
+  `;
+
+  try {
+      // Execute the stored procedure using the run_query function
+      await run_query(query, {
+          id: id,
+          request_type: requestType, // Convert to lowercase to match the stored procedure
+          table_type: tableType, // Ensure this matches the variable in request
+          action: action, // Convert to lowercase to match the stored procedure
+      });
+      // Respond to the frontend with success message
+      res.json({ success: true, message: `Request ${action}ed successfully.` });
+  } catch (err) {
+      console.error('Error executing stored procedure:', err);
+      res.json({ success: false, message: 'Failed to update the request status.' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+//ASSIGN VOLUNTEER
 app.post('/admin/assign-volunteer', async (req, res) => {
   const { managerId, volunteerNumber, task, phone } = req.body;
 

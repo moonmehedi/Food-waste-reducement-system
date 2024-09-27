@@ -31,7 +31,6 @@ SELECT
     R.EMAIL,
     R.INSTITUTION_NAME,
     R.INSTITUTION_TYPE,
-    R.NUMBER_OF_PEOPLE AS "Number Of People",
     "DIVISION" || ', ' || "DISTRICT" || ', ' || "CITY" || ', ' || "STREETNO" AS "ADDRESS",
     R.DATE_R AS "Date"
 FROM
@@ -57,3 +56,6 @@ WHERE
     F.donor_id=D.donor_id and
     F.VERIFIED = 'Y' AND D.VERIFIED = 'Y'
     and f.food_id not in (select food_id from receives); 
+
+
+SELECT * FROM DONOR_FOOD_VIEW

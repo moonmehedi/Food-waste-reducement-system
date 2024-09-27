@@ -238,6 +238,8 @@ update food set VOLUNTEER_ID=NULL where FOOD_ID in(2,4,6,8);
 
 
 
+UPDATE FOOD
+SET EXP_DATE = SYSDATE + 30;
 
 
 

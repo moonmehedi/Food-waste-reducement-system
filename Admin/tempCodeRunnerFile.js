@@ -1,0 +1,197 @@
+// script.js
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Fetch pending requests and populate the table
+    await fetchAndPopulateRequests();
+    // Fetch food requests and populate the table
+    await fetchAndPopulateFoodRequests();
+  
+    // Attach event listeners to dynamically generated buttons
+    attachButtonListeners();
+  });
+  
+ // Function to fetch and populate the pending requests table
+async function fetchAndPopulateRequests() {
+    try {
+      const response = await fetch('http://localhost:5000/admin/pending-requests');
+      const data = await response.json();
+      const table = document.getElementById('combined-requests-table');
+      console.log('combined requests', data);
+  
+      // Clear existing rows (except the header)
+      table.querySelectorAll('tr:not(:first-child)').forEach(row => row.remove());
+  
+      // Populate table rows with data
+      data.forEach((request, index) => {
+        const row = table.insertRow();
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${request[1]}</td>
+          <td>${request[2]}</td>
+          <td>${request[3]}</td>
+          <td>${request[4]}</td>
+          <td>${request[5]}</td>
+          <td>${request[6]}</td>
+          <td>${request[7]}</td>
+          <td>${request[8]}</td>
+          <td><button class="btn-assign" data-id="${request[0]}" data-table="combined">Accept</button></td>
+          <td><button class="btn-reject" data-id="${request[0]}" data-table="combined">Reject</button></td>
+        `;
+      });
+  
+      // Attach event listeners to the new buttons
+      attachButtonListeners();
+  
+    } catch (error) {
+      console.error('Error fetching pending requests:', error);
+    }
+  }
+  
+  // Function to fetch and populate the food requests table
+  async function fetchAndPopulateFoodRequests() {
+    try {
+      const response = await fetch('http://localhost:5000/admin/donor-food-donation-pending-requests');
+      const data = await response.json();
+      const table = document.getElementById('food-request-table');
+      console.log('food requests', data);
+  
+      // Clear existing rows (except the header)
+      table.querySelectorAll('tr:not(:first-child)').forEach(row => row.remove());
+  
+      // Populate table rows with data
+      data.forEach((request, index) => {
+        const row = table.insertRow();
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${request[1]}</td>
+          <td>${request[2]}</td>
+          <td><img src="${request[3]}" alt="Food Image" width="50"></td>
+          <td>${request[4]}</td>
+          <td>${request[5]}</td>
+          <td>${request[6]}</td>
+          <td>${request[7]}</td>
+          <td><button class="btn-assign" data-id="${request[0]}" data-table="food">Accept</button></td>
+          <td><button class="btn-reject" data-id="${request[0]}" data-table="food">Reject</button></td>
+        `;
+      });
+  
+      // Attach event listeners to the new buttons
+      attachButtonListeners();
+  
+    } catch (error) {
+      console.error('Error fetching food requests:', error);
+    }
+  }
+  
+  
+  // Function to fetch and populate the food requests table
+  async function fetchAndPopulateFoodRequests() {
+    try {
+      const response = await fetch('http://localhost:5000/admin/donor-food-donation-pending-requests');
+      const data = await response.json();
+      const table = document.getElementById('food-request-table');
+      console.log('food requests', data);
+  
+      // Clear existing rows (except the header)
+      table.querySelectorAll('tr:not(:first-child)').forEach(row => row.remove());
+  
+      // Populate table rows with data
+      data.forEach((request, index) => {
+        const row = table.insertRow();
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${request[1]}</td>
+          <td>${request[2]}</td>
+          <td><img src="${request[3]}" alt="Food Image" width="50"></td>
+          <td>${request[4]}</td>
+          <td>${request[5]}</td>
+          <td>${request[6]}</td>
+          <td>${request[7]}</td>
+          <td><button class="btn-assign" data-request="${index + 1}" data-table="food" data-row="${index + 1}">Accept</button></td>
+          <td><button class="btn-reject" data-request="${index + 1}" data-table="food" data-row="${index + 1}">Reject</button></td>
+        `;
+      });
+    } catch (error) {
+      console.error('Error fetching food requests:', error);
+    }
+  }
+  
+  // Function to attach event listeners to buttons
+  function attachButtonListeners() {
+    const acceptButtons = document.querySelectorAll('.btn-assign');
+    const rejectButtons = document.querySelectorAll('.btn-reject');
+  
+    acceptButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        handleButtonClick(e, 'Accept');
+      });
+    });
+  
+    rejectButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        handleButtonClick(e, 'Reject');
+      });
+    });
+  }
+  // Function to handle button click events
+function handleButtonClick(event, action) {
+    const button = event.target;
+    const id = button.getAttribute('data-id'); // Get ID from data-id attribute
+    const table = button.getAttribute('data-table'); // Get table type
+    const requestType = getRowData(button)['Request Type']; // Get request type from the row data
+  
+    // Log to the console
+    console.log(`ID ${id} of ${table} table selected with action: ${action}`);
+  
+    // Prepare data to send to the backend
+    const requestData = {
+      id: id,
+      requestType: requestType,
+      tableType: table,
+      action: action // "Accept" or "Reject"
+    };
+  
+    // Send the data to the backend
+    fetch('http://localhost:5000/admin/update-request-status', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert(`Request ${action}ed successfully.`);
+      } else {
+        alert(`Failed to ${action} the request: ${data.message}`);
+      }
+    })
+    .catch(error => {
+      console.error(`Error ${action}ing request:`, error);
+      alert(`An error occurred: ${error.message}`);
+    });
+  }
+  
+  
+  // Function to get row data for a clicked button
+  function getRowData(button) {
+    const row = button.closest('tr');
+    const rowData = {};
+    row.querySelectorAll('td').forEach((td, index) => {
+      const headers = [
+        'Request No',
+        'Request Type',
+        'Email Address',
+        'Request Address',
+        'Phone',
+        'Institution Type',
+        'Institution Name',
+        'Request Date',
+        'Authenticity'
+      ];
+      rowData[headers[index]] = td.innerText;
+    });
+    return rowData;
+  }
+  
