@@ -33,7 +33,9 @@ async function handleSubmit(event) {
       },
       password: Password.value,
     };
+    console.log(user.dob);
     console.log("Form data: ", user);
+    
 
     try {
       const response = await fetch("http://localhost:5000/user/signup_cus", {
