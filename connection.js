@@ -28,6 +28,7 @@ export const run_query = async (query, params, isRefCursor = false) => {
       : { autoCommit: true };
 
     const result = await conn.execute(query, params, options);
+    
 
     if (isRefCursor) {
       // Handle ref cursor

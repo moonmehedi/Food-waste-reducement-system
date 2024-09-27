@@ -8,9 +8,42 @@
     <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Alex+Brush|Raleway+Dots" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Request History</title>
+    <title>Current Order</title>
     <style>
-      .history-container {
+        /* Styling the navigation buttons */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    
+        .nav-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+    
+        .nav-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+    
+        .nav-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    
+        .nav-btn:disabled:hover {
+            transform: none;
+        }
+    
+        /* Styling the history container */
+        .history-container {
             width: 80%;
             margin: 50px auto;
             padding: 20px;
@@ -20,92 +53,53 @@
             text-align: center;
             justify-content: center;
         }
+    
         .history-section h2 {
             font-size: 3.5rem;
             margin-bottom: 10px;
         }
-        .swiper {
+    
+        .history-data div {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             width: 100%;
-            height: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .swiper-slide {
+    
+        .history-data div:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+    
+        .history-data div div {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            background-color: #e9ecef;
-            border-radius: 10px;
+            text-align: center;
         }
-        .card-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-        }
-        .card-content {
-            width: 100%;
-            text-align: left;
+    
+        .history-data div div span {
+            font-size: 1.8rem;
             line-height: 2rem;
+            color: #2e7d32;
+            font-family: 'Libre Baskerville', serif;
         }
-        .card-content div {
-            margin-bottom: 10px;
-        }
-        .card-content span {
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        .card-content .value {
+    
+        .history-data div div span.value {
+            font-size: 2.2rem;
+            color: #388e3c;
             font-weight: bold;
-            color: #495057;
+            font-family: 'Libre Baskerville', serif;
         }
-        .swiper-pagination {
-            bottom: 10px;
-        }
-       /* Container for history data */
-       .history-data div {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #e0f7fa, #f1f8e9); 
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    align-items: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.history-data div:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-.history-data div div {
-    display: flex;
-    flex-direction: column; /* Align content vertically */
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.history-data div div span {
-    font-size: 1.8rem;
-    line-height: 2rem;
-    color: #2e7d32; 
-    font-family: 'Libre Baskerville', serif; 
-}
-
-.history-data div div span.value {
-    font-size: 2.2rem;
-    color: #388e3c; 
-    font-weight: bold;
-    font-family: 'Libre Baskerville', serif; 
-}
-
-
-
-
     </style>
+    
 </head>
 <body>
 
@@ -141,16 +135,17 @@
     <div class="header-2">
         <nav class="navbar">
             <a href="Recipient_home.html">Home</a>
-            <a href="request_history.html">Request History</a>
+            <a href="request_history.html">Current Order</a>
             <a href="contact.html">Contact Us</a>
             <a href="request_food.html">Request Food</a>
+            <a href="history.html">Request History</a>
         </nav>
     </div>
 </header>
 
 <div class="history-container">
     <div class="history-section">
-        <h2>Request History</h2>
+        <h2>Current Order</h2>
         <div class="history-data">
 
         </div>

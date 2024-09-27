@@ -18,6 +18,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
     console.log(response);
     const result = await response.json();
+   // console.log(result);
 
     if (response.ok) {
         alert('Login successful');
@@ -32,6 +33,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
             window.location.href = '/Recipient/Recipient_home.html';
         }
     } else {
+        
         alert(result.message);
     }
 });

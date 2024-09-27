@@ -158,6 +158,7 @@ app.post("/user/signup_vol", async (req, res) => {
 
 app.post('/login', async (req, res) => {
   const { email, password, role } = req.body;
+  console.log(email,password,role);
 
   try {
       let query;
@@ -174,15 +175,20 @@ app.post('/login', async (req, res) => {
       }
 
       const params = { email, password };
+      //console.log(params);
       const result = await run_query(query, params);
-
+      console.log('this is the result ' , result);  
+     // console.log(email, password); 
       if (result.length > 0) {
+        console.log(req.session.user, 'Password');
           req.session.user = {
               id: result[0][0],
               email: result[0][1],
               name: result[0][3],
               role: role
+              
           };
+         
           req.session.save((err) => {
               if (err) {
                   console.error('Error saving session:', err);
@@ -193,6 +199,7 @@ app.post('/login', async (req, res) => {
           });
       } else {
           res.status(401).json({ message: 'Invalid credentials' });
+          //console.log(req.session.user);
       }
   } catch (err) {
       console.error('Error during login:', err);
@@ -875,7 +882,6 @@ app.get('/volunteer/getHistory', async (req, res) => {
 
 //arif er part
 
-	
 app.post("/users/request_food", async (req, res) => {
   const { people, date, email } = req.body; 
   console.log("Received request data:", req.body);
@@ -885,38 +891,41 @@ app.post("/users/request_food", async (req, res) => {
   console.log("Date:", date);
   console.log("Email:", email);
 
+  // Check if all required fields are provided
   if (!people || !date || !email) {
-      return res.status(400).json({ error: "All fields are required" });
+    return res.status(400).json({ error: "All fields are required" });
   }
+
+  // Define the SQL query
+  const insertQuery = `
+  INSERT INTO RECEIVES (NUMBER_OF_PEOPLE, DATE_RECEIVES, RECIPIENT_ID)
+  VALUES (:people_param, TO_DATE(:date_param, 'YYYY-MM-DD'), 
+  (SELECT RECIPIENT_ID FROM RECIPIENT WHERE EMAIL = :email_param)
+  )
+`;
+
 
   try {
-      const updateQuery = `
-          UPDATE RECIPIENT
-          SET NUMBER_OF_PEOPLE = :people_param, DATE_R = TO_DATE(:date_param, 'yyyy-mm-dd')
-          WHERE EMAIL = :email_param
-      `;
+    const params = {
+      people_param: people,
+      date_param: date, 
+      email_param: email
+    };
 
-      const params = {
-          people_param: people,
-          date_param: date, 
-          email_param: email
-      };
-
-      await run_query(updateQuery, params);
-      res.status(200).json({ message: "Request updated successfully" });
+    // Assuming run_query is a function that runs your SQL query
+    await run_query(insertQuery, params);
+    res.status(200).json({ message: "Request updated successfully" });
   } catch (err) {
-      console.error("Error while updating recipient:", err);
-      res.status(500).json({ error: "Internal server error" });
+    console.error("Error while updating recipient:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
-
 
 
 app.get('/users/request_history', async (req, res) => {
   const email = req.query.email;
   console.log(email);
+  
   if (!email) {
       return res.status(400).json({ error: 'Email is required' });
   }
@@ -924,30 +933,91 @@ app.get('/users/request_history', async (req, res) => {
   try {
       const query = `
           SELECT
-              INSTITUTION_NAME AS "institutionName",
-              INSTITUTION_TYPE AS "institutionType",
-              NUMBER_OF_PEOPLE AS "numberOfPeople",
-              TO_CHAR(DATE_R, 'YYYY-MM-DD') AS "date"
+              "institutionName",
+              "institutionType",
+              "numberOfPeople",
+              "date",
+              "status"
           FROM
-              RECIPIENT
+              recipient_requests_today
           WHERE
-              email = :email
-          ORDER BY
-              DATE_R DESC
+              "email" = :email
       `;
-      const result = await run_query(query, {email});
-      console.log(result);
-    res.status(200).send(result[0]);
+      
+      const result = await run_query(query, { email });
+      console.log('Request data:', result);
+
+      if (result.length === 0) {
+        return res.status(200).json({
+            message: "<strong style='font-size: 20px;'>There is no request today</strong>"
+        });
+    }
+    
+
+      res.status(200).json(result); 
   } catch (err) {
       console.error('Error fetching request history:', err);
       res.status(500).json({ error: 'Internal server error' });
   }
 });
-//contact information
 
 
+//this is for history of previous requests
+app.get('/users/history', async (req, res) => {
+  const email = req.query.email;
+  console.log('Email received:', email);
+
+  if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+  }
+
+  try {
+  
+      const recipientIdQuery = `
+          SELECT "recipient_id"
+          FROM  RECIPIENT
+          WHERE  email = :email
+      `;
+
+      const recipientResult = await run_query(recipientIdQuery, { email });
+
+      if (recipientResult.length === 0) {
+          return res.status(404).json({ error: 'Recipient not found' });
+      }
+
+      const recipientId = recipientResult[0].recipient_id;
+
+ 
+      const query = `
+          SELECT
+              "numberOfPeople",
+              "date"
+          FROM
+              RECEIVES
+          WHERE
+              "recipient_id" = :recipientId
+              AND "food_id" IS NOT NULL
+              AND "manager_id" IS NOT NULL
+      `;
+
+      const result = await run_query(query, { recipientId });
+      console.log('Request data:', result);
+
+      if (result.length === 0) {
+          return res.status(200).json({
+              message: "<strong style='font-size: 20px;'>You Have No Previous Requests</strong>"
+          });
+      }
+
+      res.status(200).json(result);
+  } catch (err) {
+      console.error('Error fetching request history:', err);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
+//ended
 
 app.post("/users/contact", async (req, res) => {
   const user = req.body;

@@ -8,7 +8,126 @@
     <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Alex+Brush|Raleway+Dots" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Request Food</title>
+    <title>Request History</title>
+    <style>
+      .history-container {
+            width: 80%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: whitesmoke;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            justify-content: center;
+        }
+        .history-section h2 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+        }
+        .swiper {
+            width: 100%;
+            height: 100%;
+        }
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+        }
+        .card-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+        }
+        .card-content {
+            width: 100%;
+            text-align: left;
+            line-height: 2rem;
+        }
+        .card-content div {
+            margin-bottom: 10px;
+        }
+        .card-content span {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .card-content .value {
+            font-weight: bold;
+            color: #495057;
+        }
+        .swiper-pagination {
+            bottom: 10px;
+        }
+       /* Container for history data */
+       .history-data div {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #e0f7fa, #f1f8e9); 
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.history-data div:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.history-data div div {
+    display: flex;
+    flex-direction: column; /* Align content vertically */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.history-data div div span {
+    font-size: 1.8rem;
+    line-height: 2rem;
+    color: #2e7d32; 
+    font-family: 'Libre Baskerville', serif; 
+}
+
+.history-data div div span.value {
+    font-size: 2.2rem;
+    color: #388e3c; 
+    font-weight: bold;
+    font-family: 'Libre Baskerville', serif; 
+}
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.history-table th,
+.history-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.history-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.history-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+
+
+
+    </style>
 </head>
 <body>
 
@@ -21,20 +140,9 @@
               <a href="#" class="fab fa-instagram"></a>
               <a href="#" class="fab fa-linkedin"></a>
            </div>
-           <!-- <div class="pages"><p><a href="../Sign Up/role.html" id="login-button"> LogOut </a></p>|  <a href="signup-recipient.html" id="register-button">Sign Up</a> </p></div> 
-            </div>-->
-        
         </div>
     </div>
 
-    <div class="header-1">
-        <a href="index.html" class="logo"><img src="../Images/waste.png" class="icon">Food Waste Reduction System</a>
-        <div class="icons">
-            <a href="#" id="search-btn" class="ri-search-line"></a>
-            <a href="#" class="ri-heart-line"></a>
-            <a href="#" id="profile-icon" class="ri-user-line"></a>
-        </div>
-    </div>
     <div class="profile-modal" id="profile-modal">
         <p>Username: <span class="username">Maisha</span></p>
         <p>Email: <span class="email">maisha99@gmail.com</span></p>
@@ -44,8 +152,14 @@
     <!-- Overlay -->
     <div class="overlay" id="overlay"></div>
 
-
-
+    <div class="header-1">
+        <a href="index.html" class="logo"><img src="../Images/waste.png" class="icon">Food Waste Reduction System</a>
+        <div class="icons">
+            <a href="#" id="search-btn" class="ri-search-line"></a>
+            <a href="#" class="ri-heart-line"></a>
+            <a href="#" id="profile-icon" class="ri-user-line"></a>
+        </div>
+    </div>
     <div class="header-2">
         <nav class="navbar">
             <a href="Recipient_home.html">Home</a>
@@ -53,65 +167,23 @@
             <a href="contact.html">Contact Us</a>
             <a href="request_food.html">Request Food</a>
             <a href="history.html">Request History</a>
-           <!-- <a href="food_posts.html">Food Posts</a> -->  
         </nav>
     </div>
 </header>
 
-<div class="donate-container">
-    <h2>Request Food</h2>
-    <form class="donate-form">
-       <!--  <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+<div class="history-container">
+    <div class="history-section">
+        <h2>History</h2>
+        <div class="history-data">
 
-        <label for="institution-name">Institution Name</label>
-        <input type="text" id="institution-name" name="institution-name" placeholder="Enter the name of the institution" required>
-
-        <label for="institution-type">Institution Type</label>
-        <select id="institution-type" name="institution-type" required>
-            <option value="school">School</option>
-            <option value="hospital">Hospital</option>
-            <option value="community-center">Community Center</option>
-            <option value="other">Other</option>
-        </select>
-        -->
-        <label for="number-of-people">Number of People</label>
-        <input type="number" id="number-of-people" name="number-of-people" placeholder="Enter the number of people" required>
-  <!--
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
-
-    <label for="address">Address</label>
-        <div class="box" id="address-dropdown">Enter Address</div>
-        <div class="address-fields">
-            <span>City</span>
-            <input type="text" name="city" class="box" placeholder="Enter your city" required>
-            <span>District</span>
-            <input type="text" name="district" class="box" placeholder="Enter your district" required>
-            <span>Division</span>
-            <input type="text" name="division" class="box" placeholder="Enter your division" required>
-            <span>Street No.</span>
-            <input type="text" name="street_no" class="box" placeholder="Enter your street number" required>
         </div>
-        -->   
-
-        <label for="date">Date</label>
-        <input type="date" id="date" name="date" placeholder="Select the date" required>
-
-        <button type="submit" class="btn-donate">Request</button>
-    </form>
+    </div>
 </div>
-
-
-
-
 
 <section class="footer">
     <div class="box-container">
         <div class="box">
-            <h3>
-                Our Locations
-            </h3>
+            <h3>Our Locations</h3>
             <a href="#"><i class="fas fa-map-marker-alt"></i>Dhaka</a>
             <a href="#"><i class="fas fa-map-marker-alt"></i>Chittagong</a>
             <a href="#"><i class="fas fa-map-marker-alt"></i>Rajshahi</a>
@@ -123,19 +195,19 @@
         </div>
 
         <div class="box">
-            <h3>
-                Quick Links
-            </h3>
+            <h3>Quick Links</h3>
             <a href="Donor_home.html"><i class="fas fa-arrow-right"></i>Home</a>
             <a href="#"><i class="fas fa-arrow-right"></i>Donation History</a>
             <a href="#"><i class="fas fa-arrow-right"></i>Contact Us</a>
         </div>
+
         <div class="box">
             <h3>Extra Links</h3>
             <a href="#"><i class="fas fa-arrow-right"></i> Account Info</a>
             <a href="#"><i class="fas fa-arrow-right"></i> Privacy Policy</a>
             <a href="#"><i class="fas fa-arrow-right"></i> Services</a>
         </div>
+
         <div class="box">
             <h3>Contact Info</h3>
             <a href="#"><i class="fas fa-phone"></i> +880-1678-345-901</a>
@@ -153,11 +225,9 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<!--<script src="recipient.js"></script>
-
-<script src="signup.js"></script> -->
-<script src="request_food.js"></script>
-<script src="../admin.js"></script>
-<script src="../session.js"></script>
+<script src="history.js"></script>
+<script src="recipient.js"></script>          
+<script src="../admin.js"></script> 
+<script src="../session.js"></script>         
 </body>
 </html>
