@@ -1,5 +1,11 @@
 let count = 0;
 let task; // Declare task globally
+let phone;
+let food_id;
+let requestId;
+let food_res
+
+
 
 document.addEventListener('DOMContentLoaded', async function() {
     // Handle collapsible elements
@@ -41,9 +47,23 @@ document.addEventListener('DOMContentLoaded', async function() {
     function attachAssignButtonListeners() {
         document.querySelectorAll('.btn-assign').forEach(function(button) {
             button.addEventListener('click', function() {
-                var requestId = this.getAttribute('data-request');
+                requestId = this.getAttribute('data-request');
                 console.log(requestId);
-                task = this.closest('tr').querySelector('td:nth-child(2)').innerText; // Set task variable
+                const table = this.closest('table');
+
+                if (table.id === 'combined-requests-table') {
+                    // If the button is in the combined requests table, get the request type
+                    task = this.closest('tr').querySelector('td:nth-child(2)').innerText; // Request Type
+                    phone = this.closest('tr').querySelector('td:nth-child(5)').innerText; // Request Type
+                    
+                } else if (table.id === 'food-requests-table') {
+                    // If the button is in the food requests table, get the food name
+                    task = 'food';
+                    phone=get_food_id();
+                }
+    
+                console.log("Task: ", task);
+                //event listener
                 document.querySelectorAll('.btn-choose').forEach(function(button) {
                     button.removeEventListener('click', chooseButtonHandler); // Remove old listeners
                     button.addEventListener('click', chooseButtonHandler); // Add new listener
@@ -59,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const volunteerNumber = this.closest('tr').querySelector('td:nth-child(6)').innerText;
         const managerId = await getSessionManagerId(); // Fetch the manager ID from session
 
-        console.log("got", managerId, volunteerNumber, task, count++);
+        console.log("got", managerId, volunteerNumber, task, phone);
 
         try {
             const response = await fetch('http://localhost:5000/admin/assign-volunteer', {
@@ -67,14 +87,32 @@ document.addEventListener('DOMContentLoaded', async function() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ managerId, volunteerNumber, task }),
+                body: JSON.stringify({ managerId, volunteerNumber, task ,phone}),
             });
 
             const result = await response.json();
             if (result.success) {
                 alert('Volunteer assigned successfully!');
+                if (task === 'food') {
+                    // If task is 'food', remove the row from the food requests table
+                    removeRowFromTable(foodRequestsTable, requestId);
+                } else {
+                    // Otherwise, remove the row from the combined requests table
+                    removeRowFromTable(combinedRequestsTable, requestId);
+                }
+                closeVolunteerModal();
             } else {
-                alert('Failed to assign volunteer.');
+                console.log(result);
+                if (result.err==1) {
+                    alert(result.message);  // Display the err
+                    
+                const volunteerRow = this.closest('tr');
+                volunteerRow.parentNode.removeChild(volunteerRow);
+                } else {
+                    alert('Failed to assign volunteer.');
+                }
+    
+                closeVolunteerModal();
             }
         } catch (error) {
             console.error('Error assigning volunteer:', error);
@@ -128,6 +166,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         const response = await fetch('http://localhost:5000/admin/donor-food-donation-requests');
         const foodRequests = await response.json();
+       // console.log(foodRequests[0][0]); 
+       food_res=foodRequests;
         foodRequests.forEach((request, index) => {
             const row = document.createElement('tr');
             row.innerHTML =
@@ -147,15 +187,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     // Handle close button in volunteer modal
-    var closeVolunteerModal = document.getElementById('close-volunteer-modal');
-    if (closeVolunteerModal) {
-        closeVolunteerModal.addEventListener('click', function() {
-            var volunteerModal = document.getElementById('volunteer-modal');
-            var overlay = document.getElementById('overlay');
-            volunteerModal.style.display = (volunteerModal.style.display === 'flex') ? 'none' : 'flex';
-            overlay.style.display = (overlay.style.display === 'block') ? 'none' : 'block';
+    var closeVolunteerModalButton = document.getElementById('close-volunteer-modal');
+    if (closeVolunteerModalButton) {
+        closeVolunteerModalButton.addEventListener('click', function() {
+            closeVolunteerModal();  // Call the function to hide the modal and overlay
         });
     }
+    
 
     // Close the profile modal when clicking outside of it
     window.addEventListener('click', function(event) {
@@ -185,3 +223,33 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 });
+
+
+
+function get_food_id(){
+//req_id returns which row of table selected    
+//index 0 of that row contains food id
+return food_res[requestId-1][0];
+}
+
+
+
+function removeRowFromTable(table, requestId) {
+    // Iterate through the table rows to find the matching request ID and remove the row
+    for (let i = 0, row; row = table.rows[i]; i++) {
+        if (row.querySelector('.btn-assign')?.getAttribute('data-request') == requestId) {
+            row.parentNode.removeChild(row); // Remove the row
+            break;
+        }
+    }
+}
+
+// Helper function to close the volunteer modal
+function closeVolunteerModal() {
+    var volunteerModal = document.getElementById('volunteer-modal');
+    var overlay = document.getElementById('overlay');
+    if (volunteerModal && overlay) {
+        volunteerModal.style.display = 'none';  // Hide modal
+        overlay.style.display = 'none';  // Hide overlay
+    }
+}

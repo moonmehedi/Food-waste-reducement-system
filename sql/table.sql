@@ -27,6 +27,18 @@ CREATE TABLE VOLUNTEER (
 );
 ALTER TABLE Volunteer
 ADD AVAILABILITY VARCHAR(255);
+
+--availability changed to task count
+ALTER TABLE VOLUNTEER
+RENAME COLUMN AVAILABILITY TO TASK_COUNT;
+
+--changing count
+ALTER TABLE VOLUNTEER
+MODIFY TASK_COUNT NUMBER DEFAULT 0;
+
+
+
+
 -- Create Assign table
 CREATE TABLE ASSIGN (
     MANAGER_ID NUMBER,
@@ -37,7 +49,21 @@ CREATE TABLE ASSIGN (
 );
 --adding task to the assign table 
 ALTER TABLE ASSIGN
-ADD task VARCHAR(25); 
+ADD task VARCHAR(50); 
+ALTER TABLE ASSIGN
+MODIFY TASK VARCHAR2(50);
+--adding phn column
+ALTER TABLE ASSIGN
+ADD PHONE VARCHAR2(20);
+
+
+--drop PRIMARY key constraint from this table
+ALTER TABLE "ADMIN"."ASSIGN"
+DROP CONSTRAINT SYS_C007588;
+
+
+--
+
 
 
 -- Create Donor table
@@ -263,3 +289,4 @@ FROM
     USER_TABLES;
 
 CONNECT admin/admin@localhost:8080
+
