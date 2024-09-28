@@ -13,10 +13,13 @@ const handleSubmit = async (e) => {
         phone: phone.value,
         comment: comment.value
     };
-  
 
-    
-        const response = await fetch("http://localhost:5000/users/contact", {
+    try {
+        // Disable the button while the request is processing
+        submit.disabled = true;
+        submit.innerText = "Sending...";
+
+        const response = await fetch("http://localhost:5000/volunteer/contact_admin", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -24,23 +27,22 @@ const handleSubmit = async (e) => {
             body: JSON.stringify(user),
         });
 
-      
+        const data = await response.json();
 
-       
-        const data = await response.json()
-       
-        if(response.ok)
-         {
-          alert(data.message);
-         
-         }
-         else{
-             alert(data.error)
-         }
-     
-  
-       
-      
-    
+        if (response.ok) {
+            alert(data.message);
+            // Clear form on success
+            form.reset();
+        } else {
+            alert(data.error);
+        }
+    } catch (error) {
+        alert("An error occurred. Please try again later.");
+    } finally {
+        // Re-enable the button after request completes
+        submit.disabled = false;
+        submit.innerText = "Send Message";
+    }
 };
+
 form.addEventListener("submit", handleSubmit);

@@ -130,6 +130,10 @@ CREATE TABLE GET_POINT (
     FOREIGN KEY (FOOD_ID) REFERENCES FOOD(FOOD_ID)
 );
 
+-- Add AUTHENTICITY column to the food table
+ALTER TABLE food
+ADD AUTHENTICITY VARCHAR2(20) DEFAULT 'pending';
+
 -- Create VulnerableCitizen table
 CREATE TABLE CUSTOMER(
     NID NUMBER PRIMARY KEY,
@@ -213,6 +217,27 @@ Add Status VARCHAR2(20) DEFAULT 'Pending';
 -- Add AUTHENTICITY column to the RECIPIENT table
 ALTER TABLE RECIPIENT
 ADD AUTHENTICITY VARCHAR2(20) DEFAULT 'pending';
+
+
+
+
+--alter table recipient
+alter table RECIPIENT
+drop column NUMBER_OF_PEOPLE;
+
+
+--status added
+ALTER TABLE RECIPIENT
+Add Status VARCHAR2(20) DEFAULT 'Pending';
+
+
+
+
+
+-- Add AUTHENTICITY column to the RECIPIENT table
+ALTER TABLE RECIPIENT
+ADD AUTHENTICITY VARCHAR2(20) DEFAULT 'pending';
+
 
 
 

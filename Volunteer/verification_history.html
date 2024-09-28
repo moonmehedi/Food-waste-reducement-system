@@ -22,6 +22,7 @@
     </div>
     <div class="header-2">
         <nav class="navbar">
+            <a href="Volunteer.html">Home</a>
             <a href="task_management.html">Task Management</a>
             <a href="verification_history.html">Verification History</a>
             <a href="contact_admin.html">Contact Admin</a>
@@ -31,6 +32,13 @@
 <div class="heading1">
     <h4>Verification History</h4>
 </div>
+
+    <!-- Search Bar for Filtering Tasks -->
+    <div id="search-bar-container" style="display: flex; justify-content: center; margin-bottom: 20px;">
+      <input type="text" id="search-input" placeholder="Search by Request Type, Institution Name, etc." style="width: 300px; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+      <button id="search-btn" style="margin-left: 10px; padding: 10px 20px;">Search</button>
+  </div>
+  
 <div class="container" style="max-width: 1500px;"></div>
 <table>
     <thead>
@@ -52,11 +60,21 @@
   </table>
 </div>
 
+<div class="profile-modal" id="profile-modal">
+    <p>Username: <span class="username">Maisha</span></p>
+    <p>Email: <span class="email">maisha99@gmail.com</span></p>
+    <a href="#" class="btn"  id="logoutButton">Log Out</a>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+
 <script src="images/scrollreveal.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="/Volunteer/verification_history.js"></script>
     <script src="contact_admin.js"></script>
     <script src="../admin.js"></script>
+    <script src="../session.js"></script>
 </body>
 </html>
 
