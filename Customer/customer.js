@@ -30,6 +30,8 @@ window.onload = () =>{
 var profileIcon = document.getElementById('profile-icon');
 if (profileIcon) {
     profileIcon.addEventListener('click', function() {
+
+        console.log('listening');
         var modal = document.getElementById('profile-modal');
         var overlay = document.getElementById('overlay');
 
@@ -76,81 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
         images[currentImageIndex].classList.add('active');
     }, 3000);
 });
-// Initialize Swiper
-var swiper = new Swiper(".reviews-slider", {
-    spaceBetween: 10,
-    grabCursor: true,
-    loop: true,
-    centeredSlides: true,
-    autoplay: {
-        delay: 9300,
-        disableOnInteraction: false,
-    },
-    pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-    },
-    breakpoints: {
-        0: {
-            slidesPerView: 1,
-        },
-        768: {
-            slidesPerView: 2,
-        },
-        1024: {
-            slidesPerView: 3,
-        },
-    },
-});
-var swiper = new Swiper(".books-slider", {
-    loop:true,
-    centeredSlides: true,
-    autoplay:{
-        delay:9500,
-        disableOnInteraction: false,
-    },
-    breakpoints: {
-      0: {
-        slidesPerView: 1,
-      },
-      768: {
-        slidesPerView: 2,
-      },
-      1024: {
-        slidesPerView: 3,
-      },
-    },
-  });
 
-  var swiper = new Swiper(".featured-slider", {
-    spaceBetween: 10,
-    loop:true,
-    centeredSlides: true,
-    autoplay:{
-        delay:9500,
-        disableOnInteraction: false,
-    },
-    navigation:{
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-    },
-    breakpoints: {
-      0: {
-        slidesPerView: 1,
-      },
-      450:{
-        slidesPerView: 2,
-      },
-      768: {
-        slidesPerView: 3,
-      },
-      1024: {
-        slidesPerView: 4,
-      },
-    },
-  });
 
-  const sr = ScrollReveal(
+  /*const sr = ScrollReveal(
     {
       origin: 'top',
       distance: '60px',
@@ -163,7 +93,7 @@ var swiper = new Swiper(".books-slider", {
   sr.reveal(`.home .books-slider`, {delay:600})
   sr.reveal(`.icons-container .icons`, {interval: 100})
   sr.reveal(`.discount__data`, {origin: 'left'})
-  sr.reveal(`.discount__images`, {origin: 'right'})
+  sr.reveal(`.discount__images`, {origin: 'right'})*/
 
 
 
