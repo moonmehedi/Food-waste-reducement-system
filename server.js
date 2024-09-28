@@ -644,20 +644,22 @@ app.get('/admin/donor-food-donation-requests', async (req, res) => {
 app.get('/volunteer/getTasks', async (req, res) => {
   console.log('Listening to volunteer getTasks request');
 
-  // Retrieve volunteer_id from the query parameters
+  // Retrieve volunteer_id and search term from the query parameters
   const volunteer_id = req.query.volunteer_id;
+  const searchTerm = req.query.search || '';  // Default to empty string if no search term
 
   console.log('Volunteer ID:', volunteer_id);
+  console.log('Search Term:', searchTerm);
 
-  const query = `
-      BEGIN
-          get_assigned_tasks(:volunteer_id, :result);
-      END;
-  `;
+  const query = 
+      `BEGIN
+          get_assigned_tasks(:volunteer_id, :searchTerm, :result);
+      END;`;
 
   try {
       const binds = {
           volunteer_id: volunteer_id,  // Bind the dynamic volunteer_id from the frontend
+          searchTerm: searchTerm,      // Pass the search term
           result: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }  // SYS_REFCURSOR bind
       };
 
@@ -669,10 +671,8 @@ app.get('/volunteer/getTasks', async (req, res) => {
 
       // Process the rows and format the tasks
       const tasks = rows.map((row, index) => ({
-          //requestNo: index + 1,
-
           requestId: row.ID,
-          requestType: row.REQUEST_TYPE,   // Adjust based on actual column names
+          requestType: row.REQUEST_TYPE,
           emailAddress: row.EMAIL_ADDRESS,
           phone: row.PHONE,
           institutionType: row.INSTITUTION_TYPE,
@@ -686,6 +686,11 @@ app.get('/volunteer/getTasks', async (req, res) => {
       res.status(500).send('Error fetching tasks');
   }
 });
+
+
+
+
+
 
 
 
@@ -711,51 +716,53 @@ app.post('/rejectTask/:id', async (req, res) => {
 
 
 
-
 app.get('/volunteer/getHistory', async (req, res) => {
-  // Example: Fetching volunteer ID from request query or authentication context
-
   console.log('Listening to volunteer getHistory request');
 
   const volunteer_id = req.query.volunteer_id;
+  const searchTerm = req.query.search || '';
 
   console.log('Volunteer ID:', volunteer_id);
-  
+  console.log('Search Term:', searchTerm);
+
   const query = `
       BEGIN
-          get_verified_tasks(:volunteer_id, :result);
+          get_verified_tasks(:volunteer_id, :searchTerm, :result);
       END;
   `;
 
   try {
-  const binds = {
-    volunteer_id: volunteer_id, 
-    result: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }
-  };
+      const binds = {
+          volunteer_id: volunteer_id, 
+          searchTerm: searchTerm,
+          result: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }
+      };
 
-    // Execute the query and handle the ref cursor
-    const rows = await run_query(query, binds, true);  // Assuming true for ref cursor
-    console.log('Fetched rows:', rows);
-    
-    const tasks= rows.map((row, index) => ({
-      //requestNo: index+1 ,   // Ensure these indices match the actual data
-      requestId: row.ID,
-      requestType: row.REQUEST_TYPE,   // Adjust based on actual column names
-      emailAddress: row.EMAIL_ADDRESS,
-      requestAddress: row.REQUEST_ADDRESS,
-      phone: row.PHONE,
-      institutionType: row.INSTITUTION_TYPE,
-      institutionName: row.INSTITUTION_NAME,
-      requestDate: row.REQUEST_DATE,
-      authenticity: row.AUTHENTICITY  // Ensure authenticity field is in the correct index
-    }));
+      // Execute the query and handle the ref cursor
+      const rows = await run_query(query, binds, true);  // Assuming true for ref cursor
+      console.log('Fetched rows:', rows);
+      
+      const tasks = rows.map((row) => ({
+          requestId: row.ID,
+          requestType: row.REQUEST_TYPE,
+          emailAddress: row.EMAIL_ADDRESS,
+          requestAddress: row.REQUEST_ADDRESS, // Include requestAddress
+          phone: row.PHONE,
+          institutionType: row.INSTITUTION_TYPE,
+          institutionName: row.INSTITUTION_NAME,
+          requestDate: row.REQUEST_DATE,
+          authenticity: row.AUTHENTICITY
+      }));
 
-    res.json(tasks);  // Send the task data as JSON to the front-end
+      res.json(tasks);  // Send the task data as JSON to the front-end
   } catch (error) {
-    console.error('Error fetching verification history:', error);
-    res.status(500).send('Error fetching verification history');
+      console.error('Error fetching verification history:', error);
+      res.status(500).send('Error fetching verification history');
   }
 });
+
+
+
 
 
 

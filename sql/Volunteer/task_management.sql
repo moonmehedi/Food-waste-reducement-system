@@ -109,15 +109,86 @@ BEGIN
 END;
 /
 
-UPDATE RECIPIENT
-SET VOLUNTEER_ID=2
-WHERE AUTHENTICITY='pending';
 
 
 
 
+--modified
 
-
-
-
-
+CREATE OR REPLACE PROCEDURE get_assigned_tasks (
+    p_volunteer_id IN NUMBER,
+    p_searchTerm IN VARCHAR2,   -- New parameter for dynamic searching
+    p_results OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_results FOR
+        SELECT 
+            D.DONOR_ID AS ID,
+            'Donor' AS Request_Type,
+            D.EMAIL AS Email_Address,
+            D.STREETNO AS Request_Address,
+            D.PHONE,
+            D.INSTITUTION_TYPE,
+            D.INSTITUTION_NAME,
+            D.DATE_D AS Request_Date,
+            D.VOLUNTEER_ID
+        FROM 
+            DONOR D
+        WHERE 
+            D.VOLUNTEER_ID = p_volunteer_id 
+            AND D.VERIFIED = 'N'
+            AND D.authenticity = 'pending'
+            AND (COALESCE(LOWER(p_searchTerm), '') = '' OR 
+                 LOWER(D.EMAIL) LIKE '%' || LOWER(p_searchTerm) || '%' 
+                 OR LOWER(D.INSTITUTION_NAME) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER(D.PHONE) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER('Donor') LIKE LOWER(p_searchTerm))  -- Check if p_searchTerm is 'donor'
+        UNION ALL
+        SELECT 
+            R.RECIPIENT_ID AS ID,
+            'Recipient' AS Request_Type,
+            R.EMAIL AS Email_Address,
+            R.STREETNO AS Request_Address,
+            R.PHONE,
+            R.INSTITUTION_TYPE,
+            R.INSTITUTION_NAME,
+            R.DATE_R AS Request_Date,
+            R.VOLUNTEER_ID
+        FROM 
+            RECIPIENT R
+        WHERE
+            R.VOLUNTEER_ID = p_volunteer_id 
+            AND R.VERIFIED = 'N'
+            AND R.authenticity = 'pending'
+            AND (COALESCE(LOWER(p_searchTerm), '') = '' OR
+                 LOWER(R.EMAIL) LIKE '%' || LOWER(p_searchTerm) || '%' 
+                 OR LOWER(R.INSTITUTION_NAME) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER(R.PHONE) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER('Recipient') LIKE LOWER(p_searchTerm))  -- Check if p_searchTerm is 'recipient'
+        UNION ALL
+        SELECT 
+            F.FOOD_ID AS ID,
+            'Food' AS Request_Type,
+            D.EMAIL AS Email_Address,
+            D.STREETNO AS Request_Address,
+            D.PHONE,
+            D.INSTITUTION_TYPE,
+            D.INSTITUTION_NAME,
+            F.DATE_F AS Request_Date,
+            F.VOLUNTEER_ID
+        FROM 
+            FOOD F
+        JOIN 
+            DONOR D ON F.DONOR_ID = D.DONOR_ID
+        WHERE
+            F.VOLUNTEER_ID = p_volunteer_id 
+            AND F.VERIFIED = 'N'
+            AND F.authenticity = 'pending'
+            AND (COALESCE(LOWER(p_searchTerm), '') = '' OR 
+                 LOWER(D.EMAIL) LIKE '%' || LOWER(p_searchTerm) || '%' 
+                 OR LOWER(D.INSTITUTION_NAME) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER(D.PHONE) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER('Food') LIKE LOWER(p_searchTerm));  -- Check if p_searchTerm is 'food'
+END;
+/

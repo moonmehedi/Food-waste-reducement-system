@@ -2,6 +2,7 @@ SET SERVEROUTPUT ON;
 
 CREATE OR REPLACE PROCEDURE get_verified_tasks (
     p_volunteer_id IN NUMBER,
+    p_searchTerm IN VARCHAR2,
     p_results OUT SYS_REFCURSOR
 )
 IS
@@ -24,7 +25,11 @@ BEGIN
             D.VOLUNTEER_ID = p_volunteer_id 
             AND (D.VERIFIED = 'Y' OR D.VERIFIED = 'N')
             AND (D.AUTHENTICITY = 'authentic' or D.AUTHENTICITY = 'Not authentic')
-        
+        AND (COALESCE(LOWER(p_searchTerm), '') = '' OR 
+                 LOWER(D.EMAIL) LIKE '%' || LOWER(p_searchTerm) || '%' 
+                 OR LOWER(D.INSTITUTION_NAME) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER(D.PHONE) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER('Donor') LIKE LOWER(p_searchTerm))  -- Check if p_searchTerm is 'donor'
         UNION ALL
         
         -- Recipient section
@@ -44,7 +49,11 @@ BEGIN
             R.VOLUNTEER_ID = p_volunteer_id 
             AND (R.VERIFIED = 'Y' OR R.VERIFIED = 'N')
             AND (R.AUTHENTICITY = 'authentic' or R.AUTHENTICITY = 'Not authentic')
-        
+        AND (COALESCE(LOWER(p_searchTerm), '') = '' OR
+                 LOWER(R.EMAIL) LIKE '%' || LOWER(p_searchTerm) || '%' 
+                 OR LOWER(R.INSTITUTION_NAME) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER(R.PHONE) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER('Recipient') LIKE LOWER(p_searchTerm))
         UNION ALL
         
         -- Food section
@@ -65,7 +74,12 @@ BEGIN
         WHERE
             F.VOLUNTEER_ID = p_volunteer_id
             AND (F.VERIFIED = 'Y' OR F.VERIFIED = 'N')
-            AND (F.AUTHENTICITY = 'authentic' or F.AUTHENTICITY = 'Not authentic');
+            AND (F.AUTHENTICITY = 'authentic' or F.AUTHENTICITY = 'Not authentic')
+            AND (COALESCE(LOWER(p_searchTerm), '') = '' OR 
+                 LOWER(D.EMAIL) LIKE '%' || LOWER(p_searchTerm) || '%' 
+                 OR LOWER(D.INSTITUTION_NAME) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER(D.PHONE) LIKE '%' || LOWER(p_searchTerm) || '%'
+                 OR LOWER('Food') LIKE LOWER(p_searchTerm));
 END;
 /
 
@@ -120,3 +134,88 @@ BEGIN
     CLOSE v_results;
 END;
 /
+
+
+--modified
+
+CREATE OR REPLACE PROCEDURE get_verified_tasks (
+    p_volunteer_id IN NUMBER,
+    p_searchTerm IN VARCHAR2,
+    p_results OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+    OPEN p_results FOR
+        -- Donor section
+        SELECT 
+            D.DONOR_ID AS ID,
+            'Donor' AS Request_Type,
+            D.EMAIL AS Email_Address,
+            D.STREETNO AS Request_Address,
+            D.PHONE,
+            D.INSTITUTION_TYPE,
+            D.INSTITUTION_NAME,
+            D.DATE_D AS Request_Date,
+            D.AUTHENTICITY
+        FROM 
+            DONOR D
+        WHERE 
+            D.VOLUNTEER_ID = p_volunteer_id 
+            AND (D.VERIFIED = 'Y' OR D.VERIFIED = 'N')
+            AND (D.AUTHENTICITY = 'authentic' OR D.AUTHENTICITY = 'Not authentic')
+            AND (COALESCE(LOWER(p_searchTerm), '') = '' OR 
+                LOWER(D.EMAIL) LIKE '%' || LOWER(p_searchTerm) || '%' 
+                OR LOWER(D.INSTITUTION_NAME) LIKE '%' || LOWER(p_searchTerm) || '%'
+                OR LOWER(D.PHONE) LIKE '%' || LOWER(p_searchTerm) || '%'
+                OR LOWER('Donor') LIKE LOWER(p_searchTerm))
+        UNION ALL
+        
+        -- Recipient section
+        SELECT 
+            R.RECIPIENT_ID AS ID,
+            'Recipient' AS Request_Type,
+            R.EMAIL AS Email_Address,
+            R.STREETNO AS Request_Address,
+            R.PHONE,
+            R.INSTITUTION_TYPE,
+            R.INSTITUTION_NAME,
+            R.DATE_R AS Request_Date,
+            R.AUTHENTICITY
+        FROM 
+            RECIPIENT R
+        WHERE
+            R.VOLUNTEER_ID = p_volunteer_id 
+            AND (R.VERIFIED = 'Y' OR R.VERIFIED = 'N')
+            AND (R.AUTHENTICITY = 'authentic' OR R.AUTHENTICITY = 'Not authentic')
+            AND (COALESCE(LOWER(p_searchTerm), '') = '' OR
+                LOWER(R.EMAIL) LIKE '%' || LOWER(p_searchTerm) || '%' 
+                OR LOWER(R.INSTITUTION_NAME) LIKE '%' || LOWER(p_searchTerm) || '%'
+                OR LOWER(R.PHONE) LIKE '%' || LOWER(p_searchTerm) || '%'
+                OR LOWER('Recipient') LIKE LOWER(p_searchTerm))
+        UNION ALL
+        
+        -- Food section
+        SELECT 
+            F.FOOD_ID AS ID,
+            'Food' AS Request_Type,
+            D.EMAIL AS Email_Address,
+            D.STREETNO AS Request_Address,
+            D.PHONE,
+            D.INSTITUTION_TYPE,
+            D.INSTITUTION_NAME,
+            F.DATE_F AS Request_Date,
+            F.AUTHENTICITY
+        FROM 
+            FOOD F
+        JOIN 
+            DONOR D ON F.DONOR_ID = D.DONOR_ID
+        WHERE 
+            F.VOLUNTEER_ID = p_volunteer_id
+            AND (F.VERIFIED = 'Y' OR F.VERIFIED = 'N')
+            AND (F.AUTHENTICITY = 'authentic' OR F.AUTHENTICITY = 'Not authentic')
+            AND (COALESCE(LOWER(p_searchTerm), '') = '' OR
+                LOWER(D.EMAIL) LIKE '%' || LOWER(p_searchTerm) || '%' 
+                OR LOWER(D.INSTITUTION_NAME) LIKE '%' || LOWER(p_searchTerm) || '%'
+                OR LOWER(D.PHONE) LIKE '%' || LOWER(p_searchTerm) || '%'
+                OR LOWER('Food') LIKE LOWER(p_searchTerm));
+END;

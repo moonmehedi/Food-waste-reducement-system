@@ -12,54 +12,6 @@
     <link rel="stylesheet" href="style.css">
     <title>Verification History</title>
 </head>
-<style>
-    /* Search Container */
-.search-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-  width: 100%;
-  max-width: 600px;
-  margin: 20px auto;
-}
-
-/* Search Input */
-.search-input {
-  width: 90%;
-  padding: 12px 20px;
-  border: 2px solid #ddd;
-  border-radius: 5px 0 0 5px;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.3s ease-in-out;
-}
-
-/* Focus effect on search input */
-.search-input:focus {
-  border-color: #4CAF50;
-}
-
-/* Search Button */
-.search-button {
-  padding: 15px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 0 5px 5px 0;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.search-button:hover {
-  background-color: #45a049;
-}
-
-/* Font Awesome icon for search */
-.search-button i {
-  font-size: 12px;
-}
-
-</style>
 <body>
 <header class="header">
     <div class="header-1">
@@ -79,10 +31,14 @@
 </header>
 <div class="heading1">
     <h4>Verification History</h4>
-    <input type="text" id="searchInput" class="search-input" placeholder="Search by email, request type, etc...">
-    <button class="search-button"><i class="fa fa-search"></i></button>
-      
 </div>
+
+    <!-- Search Bar for Filtering Tasks -->
+    <div id="search-bar-container" style="display: flex; justify-content: center; margin-bottom: 20px;">
+      <input type="text" id="search-input" placeholder="Search by Request Type, Institution Name, etc." style="width: 300px; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+      <button id="search-btn" style="margin-left: 10px; padding: 10px 20px;">Search</button>
+  </div>
+  
 <div class="container" style="max-width: 1500px;"></div>
 <table>
     <thead>
