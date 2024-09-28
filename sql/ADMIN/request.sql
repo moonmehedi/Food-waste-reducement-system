@@ -232,9 +232,13 @@ delete from assign;
 update VOLUNTEER set task_count=4 where VOLUNTEER_ID=6;
 
 
-update donor set VOLUNTEER_ID=NULL where DONOR_ID in(2,4,6,8);
-update RECIPIENT set VOLUNTEER_ID=NULL where RECIPIENT_ID in(2,4,6,8);
-update food set VOLUNTEER_ID=NULL where FOOD_ID in(2,4,6,8);
+
+
+update donor set VOLUNTEER_ID=NULL ,VERIFIED= 'Y' where FOOD_ID in(2,4,6,8);
+update donor set VOLUNTEER_ID=NULL ,VERIFIED= 'N' where DONOR_ID in(2,4,6,8);
+
+update RECIPIENT set VOLUNTEER_ID=NULL, VERIFIED= 'N' where RECIPIENT_ID in(2,4,6,8);
+update food set VOLUNTEER_ID=NULL, VERIFIED= 'N' where FOOD_ID in(2,4,6,8);
 
 
 
@@ -243,4 +247,17 @@ SET EXP_DATE = SYSDATE + 30;
 
 
 
+
+
+
+
+update  food set SELL_OR_DONATE='DONATE',VERIFIED='Y'  WHERE FOOD_ID IN (82,83,84,85)
+update  RECEIVES set MANAGER_ID=1,FOOD_ID= 82 where REQ_ID=1;
+update  RECEIVES set MANAGER_ID=1,FOOD_ID= 83 where REQ_ID=2;
+update  RECEIVES set MANAGER_ID=1,FOOD_ID= 84 where REQ_ID=3;
+update  RECEIVES set MANAGER_ID=1,FOOD_ID= 85 where REQ_ID=4;
+
+
+
+,83,84,85)
 

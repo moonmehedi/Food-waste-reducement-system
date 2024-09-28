@@ -1653,7 +1653,34 @@ app.post("/users/contact", async (req, res) => {
 });
 
 
+//donation history part of donor user
 
+/*app.get('/api/donor/history', async (req, res) => {
+  try {
+      // Get the current logged-in donor ID (you already have this logic in frontend)
+      const donorId = req.query.donorId;
+
+      // Query the database using the view you created
+      const query = `
+          SELECT food_name, food_photo, food_quantity, institution_name, 
+                 institution_type, date_r, city, division, district, streetno
+          FROM donor_donation_history
+          WHERE donor_id = $1`;
+      
+      const result = await pool.query(query, [donorId]);
+
+      // Send the data back to the frontend
+      res.json(result.rows);
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+  }
+});
+
+// Assuming your app is using port 5000
+app.listen(5000, () => {
+  console.log('Server running on port 5000');
+});*/
 
 
 
