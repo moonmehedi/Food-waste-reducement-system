@@ -8,7 +8,6 @@ const StreetNo = document.getElementById("street_no");
 const Phone = document.getElementById("phone");
 const InstitutionName = document.getElementById("institution_name");
 const InstitutionType = document.getElementById("institution_type");
-const NumberOfPeople = document.getElementById("number_of_people");
 const Password = document.getElementById("password");
 const PasswordConfirmation = document.getElementById("confirm_password");
 const signinBtn = document.getElementById("submit");
@@ -36,7 +35,6 @@ async function handleSubmit(event) {
         name: InstitutionName.value,
         type: InstitutionType.value,
       },
-      number_of_people: NumberOfPeople.value,
       password: Password.value,
       verified: null, // Example value for verified field
       volunteer_id: null, // Example value for volunteer_id field

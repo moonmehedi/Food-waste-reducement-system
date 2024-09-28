@@ -11,8 +11,8 @@
     <title>Request History</title>
     <style>
       .history-container {
-            width: 80%;
-            margin: 50px auto;
+            width: 90%;
+            margin: 80px auto;
             padding: 20px;
             background-color: whitesmoke;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -102,25 +102,50 @@
     font-family: 'Libre Baskerville', serif; 
 }
 .history-table {
-    width: 100%;
+    width: 110%;
     border-collapse: collapse;
     margin-top: 20px;
+    background: linear-gradient(135deg, #e0f7fa, #f1f8e9); /* Add a gradient background */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Add shadow */
+    border-radius: 20px;
+    overflow: hidden; /* Ensures rounded corners */
 }
 
 .history-table th,
 .history-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    border: none; /* Remove default border */
+    padding: 16px; /* Add more padding for better spacing */
     text-align: left;
+    font-size: 1.6rem; /* Increase font size */
+    font-family: 'Libre Baskerville', serif; /* Use a more elegant font */
+    color: #2e7d32; /* Text color */
 }
 
 .history-table th {
     background-color: #f2f2f2;
     font-weight: bold;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    color: #388e3c;
+}
+
+.history-table tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
 
 .history-table tr:hover {
-    background-color: #f1f1f1;
+    background-color: rgba(56, 142, 60, 0.1); /* Subtle hover effect */
+    transform: scale(1.06); /* Slight scaling on hover */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.history-table td:first-child {
+    text-align: left ;/* Align values in the first column (Number of People) to the right */
+    padding-left: 40px; 
+}
+
+.history-table td:last-child {
+    border-right: none;
 }
 
 

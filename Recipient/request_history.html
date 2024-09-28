@@ -98,6 +98,36 @@
             font-weight: bold;
             font-family: 'Libre Baskerville', serif;
         }
+
+.fade-out {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95) rotateX(10deg); 
+    transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.fade-in {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg); 
+    transition: opacity 0.6s ease-in, transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+
+.history-data div {
+    background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+
+.fade-in {
+    background-color: #e3ffe5; 
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); 
+}
+
+.fade-out {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+
     </style>
     
 </head>

@@ -46,7 +46,7 @@ export const run_query = async (query, params, isRefCursor = false) => {
     return result.rows;
   } catch (err) {
     console.error("Query execution failed:", err);
-    throw new Error("Query execution failed");
+    throw new Error(err.code);
   } finally {
     if (conn) {
       try {

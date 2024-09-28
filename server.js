@@ -96,7 +96,7 @@ app.post("/user/signup_rec", async (req, res) => {
 
   try {
     const query = `
-      INSERT INTO recipient (EMAIL, PASSWORD, INSTITUTION_NAME, INSTITUTION_TYPE, CITY, DISTRICT, DIVISION, STREETNO, PHONE, NUMBER_OF_PEOPLE, VOLUNTEER_ID, DATE_R)
+      INSERT INTO recipient (EMAIL, PASSWORD, INSTITUTION_NAME, INSTITUTION_TYPE, CITY, DISTRICT, DIVISION, STREETNO, PHONE, VOLUNTEER_ID, DATE_R)
       VALUES (:email, :password, :institution_name, :institution_type, :city, :district, :division, :streetno, :phone, :number_of_people, :volunteer_id, :date_r)
     `;
 
@@ -110,7 +110,6 @@ app.post("/user/signup_rec", async (req, res) => {
       division: user.address.division,
       streetno: user.address.streetNo,
       phone: user.address.phone,
-      number_of_people: user.number_of_people,
       volunteer_id: user.volunteer_id,
       date_r: new Date(),
     };
@@ -881,7 +880,6 @@ app.get('/volunteer/getHistory', async (req, res) => {
 
 
 //arif er part
-
 app.post("/users/request_food", async (req, res) => {
   const { people, date, email } = req.body; 
   console.log("Received request data:", req.body);
@@ -898,12 +896,10 @@ app.post("/users/request_food", async (req, res) => {
 
   // Define the SQL query
   const insertQuery = `
-  INSERT INTO RECEIVES (NUMBER_OF_PEOPLE, DATE_RECEIVES, RECIPIENT_ID)
-  VALUES (:people_param, TO_DATE(:date_param, 'YYYY-MM-DD'), 
-  (SELECT RECIPIENT_ID FROM RECIPIENT WHERE EMAIL = :email_param)
-  )
-`;
-
+    INSERT INTO RECEIVES (NUMBER_OF_PEOPLE, DATE_RECEIVES, RECIPIENT_ID, order_date)
+    VALUES (:people_param, TO_DATE(:date_param, 'YYYY-MM-DD'), 
+    (SELECT RECIPIENT_ID FROM RECIPIENT WHERE EMAIL = :email_param), SYSDATE)
+  `;
 
   try {
     const params = {
@@ -916,11 +912,26 @@ app.post("/users/request_food", async (req, res) => {
     await run_query(insertQuery, params);
     res.status(200).json({ message: "Request updated successfully" });
   } catch (err) {
-    console.error("Error while updating recipient:", err);
-    res.status(500).json({ error: "Internal server error" });
+    console.log("...........................")
+    console.log(err.message);
+    console.log("...........................")
+
+    if (err.message == "ORA-20001") {
+      res.status(400).json({ error: "You cannot request food more than 2 times a day" });
+  }
+  else if (err.message == "ORA-20002")
+  {
+    res.status(400).json({ error: "You cannot request food for a previous date." });
+  } 
+  
+    else{
+       res.status(500).json({ error: "Internal Server Error" });
+    }
+    
   }
 });
 
+//running request all
 
 app.get('/users/request_history', async (req, res) => {
   const email = req.query.email;
@@ -933,8 +944,6 @@ app.get('/users/request_history', async (req, res) => {
   try {
       const query = `
           SELECT
-              "institutionName",
-              "institutionType",
               "numberOfPeople",
               "date",
               "status"
@@ -972,32 +981,35 @@ app.get('/users/history', async (req, res) => {
   }
 
   try {
+    console.log('arif');
   
       const recipientIdQuery = `
-          SELECT "recipient_id"
-          FROM  RECIPIENT
-          WHERE  email = :email
+         SELECT recipient_id
+            FROM "RECIPIENT"
+             where email=:email
       `;
 
       const recipientResult = await run_query(recipientIdQuery, { email });
+      console.log(recipientResult);
 
       if (recipientResult.length === 0) {
           return res.status(404).json({ error: 'Recipient not found' });
       }
 
-      const recipientId = recipientResult[0].recipient_id;
+      const recipientId = recipientResult[0][0];
+      console.log('is',recipientId);
 
  
       const query = `
           SELECT
-              "numberOfPeople",
-              "date"
+               NUMBER_OF_PEOPLE,
+            TO_CHAR(DATE_RECEIVES, 'YYYY-MM-DD') 
           FROM
               RECEIVES
           WHERE
-              "recipient_id" = :recipientId
-              AND "food_id" IS NOT NULL
-              AND "manager_id" IS NOT NULL
+              recipient_id = :recipientId
+              AND FOOD_ID IS NOT NULL
+              AND MANAGER_ID IS NOT NULL
       `;
 
       const result = await run_query(query, { recipientId });
@@ -1008,6 +1020,7 @@ app.get('/users/history', async (req, res) => {
               message: "<strong style='font-size: 20px;'>You Have No Previous Requests</strong>"
           });
       }
+     
 
       res.status(200).json(result);
   } catch (err) {

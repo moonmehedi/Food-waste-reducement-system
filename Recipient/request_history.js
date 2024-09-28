@@ -26,18 +26,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             historyData.appendChild(requestDetails);
 
             // Function to update the display for a given index
-            const updateDisplay = (index) => {
-                const request = requestData[index]; // Access the request by index
-                console.log('Current request:', request);
+           // Function to update the display for a given index
+const updateDisplay = (index) => {
+    const request = requestData[index]; 
+    console.log('Current request:', request);
 
-                requestDetails.innerHTML = `
-                    <div><span>Institution Name:</span> <span class="value">${request[0]}</span></div>
-                    <div><span>Institution Type:</span> <span class="value">${request[1]}</span></div>
-                    <div><span>Number of People:</span> <span class="value">${request[2]}</span></div>
-                    <div><span>Date:</span> <span class="value">${request[3]}</span></div>
-                    <div><span>Status:</span> <span class="value">${request[4]}</span></div>
-                `;
-            };
+
+    requestDetails.classList.add('fade-out');
+
+    
+    setTimeout(() => {
+        requestDetails.innerHTML = `
+            <div><span>Number of People:</span> <span class="value">${request[0]}</span></div>
+            <div><span>Date:</span> <span class="value">${request[1]}</span></div>
+            <div><span>Status:</span> <span class="value">${request[2]}</span></div>
+        `;
+
+      
+        requestDetails.classList.remove('fade-out');
+        requestDetails.classList.add('fade-in');
+        setTimeout(() => {
+            requestDetails.classList.remove('fade-in');
+        }, 500); 
+    }, 500); 
+};
+
 
             // Initial display
             updateDisplay(currentIndex);
