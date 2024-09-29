@@ -55,6 +55,7 @@ FROM
 WHERE
     F.donor_id=D.donor_id and
     F.VERIFIED = 'Y' AND D.VERIFIED = 'Y'
+    and F.SELL_OR_DONATE='DONATE'
     and F.food_id not in (RECEIVES.FOOD_ID); 
 
 

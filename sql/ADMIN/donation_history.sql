@@ -17,6 +17,8 @@ FROM
     rec.recipient_id=R.recipient_id
     and 
     f.donor_id=d.donor_id
+    AND
+    F.SELL_OR_DONATE='DONATE'
 ORDER BY
     F.DATE_F ASC;
 

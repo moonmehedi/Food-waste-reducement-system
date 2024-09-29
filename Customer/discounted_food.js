@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+
     let allFoodData = [];  // To store all food data globally
 
     // Initially load all foods without search filter
@@ -49,13 +51,44 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p><span>Original Price:</span> ${item.originalPrice}$</p>
                     <p><span>Discounted Price:</span>${item.discountedPrice}$</p>
                     <button class="btn-assign" data-food-id="${item.foodId}">Add to Cart</button>
-                </div>`;
+                </div>
+                <div class="swiper-lazy-preloader"></div>`;
             
             swiperWrapper.appendChild(slide);
         });
 
-        // Reinitialize Swiper after updating slides
+        var swiper = new Swiper(".featured-slider", {
+            spaceBetween: 10,
+            loop:true,
+            lazy: true, 
+            centeredSlides: true,
+            autoplay:{
+                delay:5000,
+                disableOnInteraction: false,
+            },
+            navigation:{
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+              0: {
+                slidesPerView: 1,
+              },
+              450:{
+                slidesPerView: 2,
+              },
+              768: {
+                slidesPerView: 3,
+              },
+              1024: {
+                slidesPerView: 4,
+              },
+            },
+          });
+        
         swiper.update();
+
+
 
         // Handle "Add to Cart" Button
         document.querySelectorAll('.btn-assign').forEach(button => {

@@ -64,6 +64,7 @@ FROM
 WHERE
     F.donor_id=D.donor_id and
     F.VERIFIED = 'N' AND D.VERIFIED = 'Y' and
+    F.SELL_OR_DONATE='DONATE' and
     F.volunteer_id is NULL ; 
 
 

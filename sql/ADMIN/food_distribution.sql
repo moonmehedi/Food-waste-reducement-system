@@ -12,7 +12,7 @@ FROM
 WHERE
     F.donor_id=D.donor_id and
     F.VERIFIED = 'Y' AND D.VERIFIED = 'Y' and TRUNC(F.EXP_DATE)>=TRUNC(SYSDATE)
-    and F.QUANTITY >0
+    and F.QUANTITY >0 and F.SELL_OR_DONATE='DONATE'
     ORDER BY F.QUANTITY;
 
 

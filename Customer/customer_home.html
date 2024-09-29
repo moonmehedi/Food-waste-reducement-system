@@ -182,7 +182,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </section>
 
@@ -250,11 +249,36 @@
 <!-- Overlay -->
 <div class="overlay" id="overlay"></div>
 
-<script src="images/scrollreveal.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="../session.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var swiper = new Swiper(".reviews-slider", {
+        spaceBetween: 10,
+        grabCursor: true,
+        loop: true,
+        centeredSlides: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        breakpoints: {
+            0: {
+                slidesPerView: 1,
+            },
+            768: {
+                slidesPerView: 2,
+            },
+            1024: {
+                slidesPerView: 3,
+            },
+        },
+    });
+});
+
+</script>
 <script src="/Customer/customer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="/Customer/discounted_food.js"></script>
+
 
 </body>
 </html>
