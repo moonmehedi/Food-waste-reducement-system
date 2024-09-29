@@ -7,7 +7,7 @@ SELECT
     F.EXP_DATE AS Exp_Date,
     R.INSTITUTION_NAME AS Recipient_Name,
     R.INSTITUTION_TYPE AS Institution_Type,
-    R.NUMBER_OF_PEOPLE AS Number_Of_People,
+    Rec.RECEIVED_AMOUNT AS Number_Of_People,
     F.DATE_F AS Food_Date
 
 FROM

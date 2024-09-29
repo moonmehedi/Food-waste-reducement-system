@@ -64,8 +64,7 @@ FROM
 WHERE
     F.donor_id=D.donor_id and
     F.VERIFIED = 'N' AND D.VERIFIED = 'Y' and
-    F.volunteer_id is NULL
-    and f.food_id not in (select food_id from receives); 
+    F.volunteer_id is NULL ; 
 
 
 SELECT * from DONOR_FOOD_DONATION_REQUEST;
@@ -229,7 +228,7 @@ delete from assign;
 
 
 
-update VOLUNTEER set task_count=4 where VOLUNTEER_ID=6;
+update VOLUNTEER set task_count=3 where VOLUNTEER_ID=2;
 
 
 

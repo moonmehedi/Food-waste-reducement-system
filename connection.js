@@ -28,6 +28,7 @@ export const run_query = async (query, params, isRefCursor = false) => {
       : { autoCommit: true };
 
     const result = await conn.execute(query, params, options);
+    
 
     if (isRefCursor) {
       // Handle ref cursor
@@ -45,9 +46,7 @@ export const run_query = async (query, params, isRefCursor = false) => {
     return result.rows;
   } catch (err) {
     console.error("Query execution failed:", err);
-
-    // Remove the generic error message and rethrow the original error
-    throw err;
+    throw new Error(err.code);
   } finally {
     if (conn) {
       try {

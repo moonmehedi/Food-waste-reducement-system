@@ -30,7 +30,7 @@ async function fetchAndPopulateRequests() {
                 <td>${request[4]}</td>
                 <td>${request[5]}</td>
                 <td>${request[6]}</td>
-                <td>${request[7]}</td>
+               <td>${new Date(request[7]).toLocaleDateString()}</td>
                 <td>${request[8]}</td>
                 <td><button class="btn-assign" data-id="${request[0]}" data-table="combined">Accept</button></td>
                 <td><button class="btn-reject" data-id="${request[0]}" data-table="combined">Reject</button></td>
@@ -63,9 +63,9 @@ async function fetchAndPopulateFoodRequests() {
                 <td>${index + 1}</td>
                 <td>${request[1]}</td>
                 <td>${request[2]}</td>
-                <td><img src="${request[3]}" alt="Food Image" width="50"></td>
+                <td><img src="data:image/jpeg;base64,${request[3]}" alt="${request[2]}" class="food-image" width="50"></td>
                 <td>${request[4]}</td>
-                <td>${request[5]}</td>
+                <td>${new Date(request[5]).toLocaleDateString()}</td>
                 <td>${request[6]}</td>
                 <td>${request[7]}</td>
                 <td><button class="btn-assign" data-id="${request[0]}" data-table="food">Accept</button></td>

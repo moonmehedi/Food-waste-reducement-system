@@ -6,3 +6,6 @@ add sequence for automatic id generation
 
 
 as many changed have happend thus we should do a generative table and then execute all generate tables
+
+
+volunteer availability should be reduced by 1

@@ -8,44 +8,11 @@
     <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Alex+Brush|Raleway+Dots" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Current Order</title>
+    <title>Request History</title>
     <style>
-        /* Styling the navigation buttons */
-        .navigation-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-    
-        .nav-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-    
-        .nav-btn:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-    
-        .nav-btn:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-    
-        .nav-btn:disabled:hover {
-            transform: none;
-        }
-    
-        /* Styling the history container */
-        .history-container {
-            width: 80%;
-            margin: 50px auto;
+      .history-container {
+            width: 90%;
+            margin: 80px auto;
             padding: 20px;
             background-color: whitesmoke;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -53,83 +20,139 @@
             text-align: center;
             justify-content: center;
         }
-    
         .history-section h2 {
             font-size: 3.5rem;
             margin-bottom: 10px;
         }
-    
-        .history-data div {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .swiper {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            align-items: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
         }
-    
-        .history-data div:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-    
-        .history-data div div {
+        .swiper-slide {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
         }
-    
-        .history-data div div span {
-            font-size: 1.8rem;
+        .card-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+        }
+        .card-content {
+            width: 100%;
+            text-align: left;
             line-height: 2rem;
-            color: #2e7d32;
-            font-family: 'Libre Baskerville', serif;
         }
-    
-        .history-data div div span.value {
-            font-size: 2.2rem;
-            color: #388e3c;
+        .card-content div {
+            margin-bottom: 10px;
+        }
+        .card-content span {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .card-content .value {
             font-weight: bold;
-            font-family: 'Libre Baskerville', serif;
+            color: #495057;
         }
-
-.fade-out {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95) rotateX(10deg); 
-    transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        .swiper-pagination {
+            bottom: 10px;
+        }
+       /* Container for history data */
+       .history-data div {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #e0f7fa, #f1f8e9); 
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.fade-in {
-    opacity: 1;
-    transform: translateY(0) scale(1) rotateX(0deg); 
-    transition: opacity 0.6s ease-in, transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+.history-data div:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.history-data div div {
+    display: flex;
+    flex-direction: column; /* Align content vertically */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.history-data div div span {
+    font-size: 1.8rem;
+    line-height: 2rem;
+    color: #2e7d32; 
+    font-family: 'Libre Baskerville', serif; 
+}
+
+.history-data div div span.value {
+    font-size: 2.2rem;
+    color: #388e3c; 
+    font-weight: bold;
+    font-family: 'Libre Baskerville', serif; 
+}
+.history-table {
+    width: 110%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: linear-gradient(135deg, #e0f7fa, #f1f8e9); /* Add a gradient background */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Add shadow */
+    border-radius: 20px;
+    overflow: hidden; /* Ensures rounded corners */
+}
+
+.history-table th,
+.history-table td {
+    border: none; /* Remove default border */
+    padding: 16px; /* Add more padding for better spacing */
+    text-align: left;
+    font-size: 1.6rem; /* Increase font size */
+    font-family: 'Libre Baskerville', serif; /* Use a more elegant font */
+    color: #2e7d32; /* Text color */
+}
+
+.history-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    color: #388e3c;
+}
+
+.history-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.history-table tr:hover {
+    background-color: rgba(56, 142, 60, 0.1); /* Subtle hover effect */
+    transform: scale(1.06); /* Slight scaling on hover */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.history-table td:first-child {
+    text-align: left ;/* Align values in the first column (Number of People) to the right */
+    padding-left: 40px; 
+}
+
+.history-table td:last-child {
+    border-right: none;
 }
 
 
-.history-data div {
-    background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
-    transition: background-color 0.4s ease, box-shadow 0.4s ease;
-}
 
-
-.fade-in {
-    background-color: #e3ffe5; 
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); 
-}
-
-.fade-out {
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-}
 
 
     </style>
-    
 </head>
 <body>
 
@@ -175,7 +198,7 @@
 
 <div class="history-container">
     <div class="history-section">
-        <h2>Current Order</h2>
+        <h2>History</h2>
         <div class="history-data">
 
         </div>
@@ -227,7 +250,7 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="request_history.js"></script>
+<script src="history.js"></script>
 <script src="recipient.js"></script>          
 <script src="../admin.js"></script> 
 <script src="../session.js"></script>         

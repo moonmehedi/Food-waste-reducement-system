@@ -13,7 +13,7 @@ SELECT
     DONOR.AUTHENTICITY 
 FROM 
     DONOR
-    where DONOR.VERIFIED='N'and DONOR.volunteer_id is not NULL and DONOR.AUTHENTICITY='pending'
+    where DONOR.VERIFIED='N'and DONOR.volunteer_id is not NULL 
 UNION ALL
 SELECT 
     RECIPIENT.RECIPIENT_ID,
@@ -27,7 +27,7 @@ SELECT
     RECIPIENT.AUTHENTICITY
 FROM 
     RECIPIENT
-    where RECIPIENT.VERIFIED='N' and RECIPIENT.volunteer_id is NOT NULL and RECIPIENT.AUTHENTICITY='pending';
+    where RECIPIENT.VERIFIED='N' and RECIPIENT.volunteer_id is NOT NULL;
 
 
 
@@ -57,60 +57,106 @@ WHERE
     F.donor_id=D.donor_id and
     F.VERIFIED = 'N' AND D.VERIFIED = 'Y' and
     F.volunteer_id is NOT NULL
-    and f.food_id not in (select food_id from receives)
-    AND F.AUTHENTICITY='pending'
     ; 
 
 
 SELECT * FROM DONOR_FOOD_DONATION_PENDING_REQUEST;
 
 
-
---query for accept button
 CREATE OR REPLACE PROCEDURE update_request_status(
-  id IN NUMBER,                
-  request_type IN VARCHAR2,
-  table_type IN VARCHAR,    
-  action IN VARCHAR2          
+  id IN NUMBER,                -- The ID of the record to update/delete
+  request_type IN VARCHAR2,     -- Type of request: Donor, Recipient, or Food
+  table_type IN VARCHAR2,       -- Table type: Donor, Recipient, Food
+  action IN VARCHAR2            -- The action to perform: Accept or Reject
 ) IS
+  v_volunteer_id NUMBER;
+  v_quantity NUMBER;
+  v_donor_id NUMBER;
 BEGIN
-  --action is 'Accept'
+  -- Action is 'Accept'
   IF action = 'Accept' THEN
-    --request type 
+    
+    -- For Donor requests
     IF request_type = 'Donor' THEN
       UPDATE DONOR
       SET verified = 'Y'
-      WHERE DONOR_ID = id;
+      WHERE DONOR_ID = id
+      RETURNING VOLUNTEER_ID INTO v_volunteer_id;
 
+      -- Reduce the volunteer's task count
+      UPDATE VOLUNTEER
+      SET TASK_COUNT = TASK_COUNT - 1
+      WHERE VOLUNTEER_ID = v_volunteer_id;
+
+    -- For Recipient requests
     ELSIF request_type = 'Recipient' THEN
       UPDATE RECIPIENT
       SET verified = 'Y'
-      WHERE RECIPIENT_ID = id;
+      WHERE RECIPIENT_ID = id
+      RETURNING VOLUNTEER_ID INTO v_volunteer_id;
 
+      -- Reduce the volunteer's task count
+      UPDATE VOLUNTEER
+      SET TASK_COUNT = TASK_COUNT - 1
+      WHERE VOLUNTEER_ID = v_volunteer_id;
+
+    -- For Food requests
     ELSIF table_type = 'food' THEN
+       -- Set the food as verified
       UPDATE FOOD
       SET verified = 'Y'
-      WHERE FOOD_ID = id;
+      WHERE FOOD_ID = id
+      RETURNING VOLUNTEER_ID, DONOR_ID, QUANTITY INTO v_volunteer_id, v_donor_id, v_quantity;
+
+      -- Reduce the volunteer's task count
+      UPDATE VOLUNTEER
+      SET TASK_COUNT = TASK_COUNT - 1
+      WHERE VOLUNTEER_ID = v_volunteer_id;
+
+      -- Award points to the donor based on quantity/10
+      UPDATE DONOR
+      SET POINTS = NVL(POINTS, 0) + (v_quantity / 10)
+      WHERE DONOR_ID = v_donor_id;
 
     ELSE
       -- Handle unexpected request types
       DBMS_OUTPUT.PUT_LINE('Invalid request type specified.');
     END IF;
 
-  --  action is 'Reject'
+  -- Action is 'Reject'
   ELSIF action = 'Reject' THEN
-    -- Check request type and delete from corresponding table
+    -- For Donor requests
     IF request_type = 'Donor' THEN
       DELETE FROM DONOR
-      WHERE DONOR_ID = id;
+      WHERE DONOR_ID = id
+      RETURNING VOLUNTEER_ID INTO v_volunteer_id;
 
+      -- Reduce the volunteer's task count
+      UPDATE VOLUNTEER
+      SET TASK_COUNT = TASK_COUNT - 1
+      WHERE VOLUNTEER_ID = v_volunteer_id;
+
+    -- For Recipient requests
     ELSIF request_type = 'Recipient' THEN
       DELETE FROM RECIPIENT
-      WHERE RECIPIENT_ID = id;
+      WHERE RECIPIENT_ID = id
+      RETURNING VOLUNTEER_ID INTO v_volunteer_id;
 
-    ELSIF request_type = 'food' THEN
+      -- Reduce the volunteer's task count
+      UPDATE VOLUNTEER
+      SET TASK_COUNT = TASK_COUNT - 1
+      WHERE VOLUNTEER_ID = v_volunteer_id;
+
+    -- For Food requests
+    ELSIF table_type = 'food' THEN
       DELETE FROM FOOD
-      WHERE FOOD_ID = id;
+      WHERE FOOD_ID = id
+      RETURNING VOLUNTEER_ID INTO v_volunteer_id;
+
+      -- Reduce the volunteer's task count
+      UPDATE VOLUNTEER
+      SET TASK_COUNT = TASK_COUNT - 1
+      WHERE VOLUNTEER_ID = v_volunteer_id;
 
     ELSE
       -- Handle unexpected request types
@@ -126,8 +172,6 @@ EXCEPTION
   WHEN OTHERS THEN
     DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
 END update_request_status;
-
-    
 
 
 
@@ -148,3 +192,6 @@ UPDATE DONOR set VERIFIED='N' where DONOR_ID=24;
 
 
 
+
+
+update RECIPIENT SET AUTHENTICITY='authentic' where RECIPIENT_ID=42;

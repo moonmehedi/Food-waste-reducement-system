@@ -1,0 +1,31 @@
+--running request queries
+--will come from view
+
+ SELECT
+              "numberOfPeople",
+              "date",
+              "status"
+          FROM
+              recipient_requests_today
+          WHERE
+              "email" = :email
+
+
+
+--history for previous request
+--will find the email
+   SELECT recipient_id
+            FROM "RECIPIENT"
+             where email=:email
+--find the assigned id's
+
+ SELECT
+               NUMBER_OF_PEOPLE,
+            TO_CHAR(DATE_RECEIVES, 'YYYY-MM-DD') 
+          FROM
+              RECEIVES
+          WHERE
+              recipient_id = :recipientId
+              AND FOOD_ID IS NOT NULL
+              AND MANAGER_ID IS NOT NULL
+

@@ -36,7 +36,7 @@ async function handleSubmit(event) {
         type: InstitutionType.value,
       },
       password: Password.value,
-      verified: null, // Example value for verified field
+      verified: 'N', // Example value for verified field
       points: 0, // Example value for points field
       volunteer_id: null, // Example value for volunteer_id field
     };

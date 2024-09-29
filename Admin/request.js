@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 `<td>${index + 1}</td>
                 <td>${request[1]}</td>
                 <td>${request[2]}</td>
-                <td><img src="Images/${request[3]}" alt="Food Image" width="50"></td>
+                <td><img src="data:image/jpeg;base64,${request[3]}" alt="${request[2]}" class="food-image" width="50"></td>
                 <td>${request[4]}</td>
                 <td>${new Date(request[5]).toLocaleDateString()}</td>
                 <td>${new Date(request[6]).toLocaleDateString()}</td>

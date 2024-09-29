@@ -51,11 +51,41 @@ SELECT
     F.EXP_DATE AS "Expiration Date",
     F.DATE_F AS "Date"
 FROM
-    DONOR D,FOOD F
+    DONOR D,FOOD F ,RECEIVES
 WHERE
     F.donor_id=D.donor_id and
     F.VERIFIED = 'Y' AND D.VERIFIED = 'Y'
-    and f.food_id not in (select food_id from receives); 
+    and F.food_id not in (RECEIVES.FOOD_ID); 
+
+
+
+
+CREATE OR REPLACE VIEW DONOR_FOOD_VIEW AS
+SELECT
+    D.INSTITUTION_NAME AS "Donor Name",
+    F.NAME AS "Food Name",
+    F.PHOTO AS "Food Image",
+    F.QUANTITY AS "Food Quantity",
+    F.EXP_DATE AS "Expiration Date",
+    F.DATE_F AS "Date",
+    F.FOOD_ID AS "ID"
+FROM
+    DONOR D,FOOD F
+WHERE
+    F.donor_id=D.donor_id and
+    F.VERIFIED = 'Y' AND D.VERIFIED = 'Y' and TRUNC(F.EXP_DATE)>=TRUNC(SYSDATE)
+    and F.QUANTITY >0
+    ORDER BY F.QUANTITY;
+
+
+
+
+
+
+
 
 
 SELECT * FROM DONOR_FOOD_VIEW
+DELETE FROM ACCOUNT
+WHERE
+    ACCOUNT_ID = NUMBER;

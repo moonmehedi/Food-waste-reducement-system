@@ -6,21 +6,21 @@ CREATE OR REPLACE VIEW TOTAL_REQUEST AS
             FROM
                 DONOR
             WHERE
-                VERIFIED = 'Y'
+                VERIFIED = 'N'
         ) + (
             SELECT
                 COUNT(*)
             FROM
                 RECIPIENT
             WHERE
-                VERIFIED = 'Y'
+                VERIFIED = 'N'
         ) + (
             SELECT
                 COUNT(*)
             FROM
                 FOOD
             WHERE
-                VERIFIED = 'Y'
+                VERIFIED = 'N'
         ) AS TOTAL_VERIFIED_COUNT
     FROM
         DUAL;
