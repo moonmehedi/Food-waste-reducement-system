@@ -906,15 +906,12 @@ app.post('/donor/donation', upload.single('food-image'), async (req, res) => {
 });
 
 
-
-//donation//sells
-
+//donor sell
 app.post('/sell/food', upload.single('food-photo'), async (req, res) => {
-  const { 'food-name': foodName, quantity, 'exp-date': expDate, 'original-price': originalPrice, 'discounted-price': discountedPrice } = req.body;
+  const { 'food-name': foodName, quantity, 'exp-date': expDate, 'original-price': originalPrice, 'discounted-price': discountedPrice, 'donor-id': donorId } = req.body;
   const photo = req.file.buffer;
   const verified = 'N';
   const volunteerId = null; // Adjust as needed
-  const donorId = 4; // Adjust as needed
   const dateF = new Date().toISOString().split('T')[0];
   const sellOrDonate = 'SELL';
   const nid = null; // Adjust as needed 
@@ -936,7 +933,7 @@ app.post('/sell/food', upload.single('food-photo'), async (req, res) => {
       photo: photo,
       verified: verified,
       volunteerId: volunteerId,
-      donorId: donorId,
+      donorId: parseInt(donorId, 10), // Use the donor ID from the request body
       dateF: dateF,
       sellOrDonate: sellOrDonate,
       nid: nid,
@@ -944,17 +941,16 @@ app.post('/sell/food', upload.single('food-photo'), async (req, res) => {
       discountedPrice: parseFloat(discountedPrice),
       dateS: dateS
   };
-  console.log(params);
 
   try {
       await run_query(query, params);
-      
       res.status(200).json({ message: 'Food sell recorded successfully!' });
   } catch (error) {
       console.error('Error:', error);
       res.status(500).json({ message: 'Failed to sell food.' });
   }
 });
+
 
 
 

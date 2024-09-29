@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('total-verified-donors').textContent = data[2];
       document.getElementById('total-verified-recipients').textContent = data[3];
       document.getElementById('number-of-available-foods').textContent = data[4];
+      document.getElementById('pending-requests').textContent = data[5];
       // Leaving pending requests as is, since you specified it's not required for now
     } catch (err) {
       console.error('Error fetching dashboard info:', err);
