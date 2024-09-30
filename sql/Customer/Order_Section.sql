@@ -10,8 +10,3 @@ SELECT
     f.QUANTITY AS "Food Quantity"
 FROM ORDERS o, FOOD f
 WHERE o.FOOD_ID = f.FOOD_ID;
-
-
-
-
-update CUSTOMER set PASSWORD=123 where NID=1
