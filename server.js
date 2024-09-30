@@ -867,36 +867,58 @@ const upload = multer({ storage: storage });
 //donor/donation
 // Endpoint to handle file upload and data insertion
 app.post('/donor/donation', upload.single('food-image'), async (req, res) => {
+  console.log('POST /donor/donation request received');
+  
+  // Log the received file and form data
+  if (req.file) {
+      console.log('Image file received:', req.file.originalname);
+  } else {
+      console.error('No image file received');
+  }
 
-  console.log('listing');
   const { originalname, buffer } = req.file;
-  const { 'food-name': foodName, quantity, 'exp-date': expDate } = req.body;
+  const { 'food-name': foodName, quantity, 'exp-date': expDate, 'donor-id': donorID } = req.body;
+
+  console.log('Form Data received:', {
+      'food-name': foodName,
+      quantity,
+      'exp-date': expDate,
+      'donor-id': donorID
+  });
 
   try {
       const query = `
           INSERT INTO FOOD (NAME, QUANTITY, EXP_DATE, PHOTO, VERIFIED, VOLUNTEER_ID, DONOR_ID, DATE_F, SELL_OR_DONATE)
-          VALUES (:name, :quantity, TO_DATE(:expDate, 'YYYY-MM-DD'), :photo, 'N', null, null, SYSDATE, 'DONATE')
+          VALUES (:name, :quantity, TO_DATE(:expDate, 'YYYY-MM-DD'), :photo, 'N', null, :donorID, SYSDATE, 'DONATE')
       `;
       const params = {
           name: foodName,
           quantity: parseInt(quantity, 10),
           expDate: expDate,
-          photo: buffer
+          photo: buffer,
+          donorID: parseInt(donorID, 10) // Ensure donorID is an integer
       };
+
+      console.log('Executing query with params:', params);
 
       await run_query(query, params);
 
+      console.log('Food donation inserted successfully!');
       res.status(200).json({ message: 'Food donation recorded successfully!' });
   } catch (error) {
-      console.error('Error:', error);
+      console.error('Error during query execution:', error);
       res.status(500).json({ message: 'Failed to donate food.' });
   }
 });
 
 
+
+
+
+
 //donation//sells
 
-app.post('/sell/food', upload.single('food-photo'), async (req, res) => {
+/*app.post('/sell/food', upload.single('food-photo'), async (req, res) => {
   const { 'food-name': foodName, quantity, 'exp-date': expDate, 'original-price': originalPrice, 'discounted-price': discountedPrice } = req.body;
   const photo = req.file.buffer;
   const verified = 'N';
@@ -941,9 +963,74 @@ app.post('/sell/food', upload.single('food-photo'), async (req, res) => {
       console.error('Error:', error);
       res.status(500).json({ message: 'Failed to sell food.' });
   }
+});*/
+
+app.post('/sell/food', upload.single('food-photo'), async (req, res) => {
+  console.log('POST /sell/food request received');
+
+  // Log the received file and form data
+  if (req.file) {
+      console.log('Food photo received:', req.file.originalname);
+  } else {
+      console.error('No food photo received');
+  }
+
+  const { originalname, buffer } = req.file;
+  const { 'food-name': foodName, quantity, 'exp-date': expDate, 'original-price': originalPrice, 'discounted-price': discountedPrice, 'donor-id': donorID } = req.body;
+
+  console.log('Form Data received:', {
+      'food-name': foodName,
+      quantity,
+      'exp-date': expDate,
+      'original-price': originalPrice,
+      'discounted-price': discountedPrice,
+      'donor-id': donorID
+  });
+
+  const verified = 'N'; // Not verified by default
+  const volunteerId = null; // Adjust as needed
+  const dateF = new Date().toISOString().split('T')[0]; // Current date for dateF
+  const sellOrDonate = 'SELL'; // Specify that this is a sell transaction
+  const nid = null; // Adjust if necessary
+  const dateS = new Date().toISOString().split('T')[0]; // Current date for dateS
+
+  const query = `
+      BEGIN
+          InsertFoodAndSell(
+              :name, :quantity, TO_DATE(:expDate, 'YYYY-MM-DD'), :photo, :verified, :volunteerId, :donorId, TO_DATE(:dateF, 'YYYY-MM-DD'), :sellOrDonate,
+              :nid, :originalPrice, :discountedPrice, TO_DATE(:dateS, 'YYYY-MM-DD')
+          );
+      END;
+  `;
+
+  const params = {
+      name: foodName,
+      quantity: parseInt(quantity, 10),
+      expDate: expDate,
+      photo: buffer,
+      verified: verified,
+      volunteerId: volunteerId,
+      donorId: parseInt(donorID, 10), // Ensure donorID is an integer
+      dateF: dateF,
+      sellOrDonate: sellOrDonate,
+      nid: nid,
+      originalPrice: parseFloat(originalPrice),
+      discountedPrice: parseFloat(discountedPrice),
+      dateS: dateS
+  };
+
+  console.log('Executing query with params:', params);
+
+  try {
+      await run_query(query, params);
+
+      console.log('Food sell recorded successfully!');
+      res.status(200).json({ message: 'Food sell recorded successfully!' });
+  } catch (error) {
+      console.error('Error during query execution:', error);
+      res.status(500).json({ message: 'Failed to sell food.' });
+  }
 });
-
-
 
 
 
@@ -1616,32 +1703,188 @@ app.post("/users/contact", async (req, res) => {
 
 //donation history part of donor user
 
-/*app.get('/api/donor/history', async (req, res) => {
+/*app.get('/donation-history/:donor_id', async (req, res) => {
+  let conn;
   try {
-      // Get the current logged-in donor ID (you already have this logic in frontend)
-      const donorId = req.query.donorId;
+      const donor_id = req.params.donor_id;
+      console.log('Fetching donation history for donor ID:', donor_id);
+      conn = await connection(); // Assuming you have a method to get DB connection
 
-      // Query the database using the view you created
       const query = `
-          SELECT food_name, food_photo, food_quantity, institution_name, 
-                 institution_type, date_r, city, division, district, streetno
-          FROM donor_donation_history
-          WHERE donor_id = $1`;
-      
-      const result = await pool.query(query, [donorId]);
+        SELECT "Food Name", quantity, "Donation Date", photo,
+        FROM DonationHistoryView
+        WHERE donor_id = :donor_id 
+        AND sell_or_donate = 'DONATE' 
+        AND "Verified Food" = 'Y'
+      `;
 
-      // Send the data back to the frontend
-      res.json(result.rows);
-  } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+      const result = await conn.execute(query, { donor_id });
+      console.log('Raw donation result:', result.rows);
+
+      // Process the result to handle BLOB (photo) conversion to Base64
+      const donations = await Promise.all(result.rows.map(async row => {
+          const foodImageBlob = row[3]; // photo field is the BLOB
+          let base64Image = null;
+
+          if (foodImageBlob) {
+              base64Image = await blobToBase64(foodImageBlob); // Assume blobToBase64 works
+          }
+
+          return {
+              foodName: row[0],           // "Food Name"
+              quantity: row[1],           // "Quantity"
+              donationDate: row[2],       // "Donation Date"
+              photo: base64Image          // Converted BLOB to Base64 Image
+          };
+      }));
+
+      console.log('Processed donations:', donations);
+      res.json(donations);
+
+  } catch (error) {
+      console.error('Error fetching donation history:', error);
+      res.status(500).send('Server error');
+  } finally {
+      if (conn) {
+          try {
+              await conn.close();
+          } catch (err) {
+              console.error('Failed to close connection:', err);
+          }
+      }
+  }
+});*/
+
+
+app.get('/donation-history/:donor_id', async (req, res) => {
+  let conn;
+  try {
+      const donor_id = req.params.donor_id;
+      console.log('Fetching donation history for donor ID:', donor_id);
+      conn = await connection(); // Assuming you have a method to get DB connection
+
+      // Update the query to fetch recipient information along with donation details
+      const query = `
+          SELECT 
+              "Food Name", 
+              quantity, 
+              "Donation Date", 
+              photo, 
+              institution_name, 
+              institution_type, 
+              city, 
+              district, 
+              division, 
+              streetno 
+          FROM DonationHistoryView
+          WHERE donor_id = :donor_id 
+            AND sell_or_donate = 'DONATE' 
+            AND "Verified Food" = 'Y'
+            AND "recipient verified" = 'Yes'
+      `;
+
+      const result = await conn.execute(query, { donor_id });
+      console.log('Raw donation result:', result.rows);
+
+      // Process the result to handle BLOB (photo) conversion to Base64
+      const donations = await Promise.all(result.rows.map(async row => {
+          const foodImageBlob = row[3]; // photo field is the BLOB
+          let base64Image = null;
+
+          if (foodImageBlob) {
+              base64Image = await blobToBase64(foodImageBlob); // Assume blobToBase64 works
+          }
+
+          // Return the extended donation object with recipient information
+          return {
+              foodName: row[0],             // "Food Name"
+              quantity: row[1],             // "Quantity"
+              donationDate: row[2],         // "Donation Date"
+              photo: base64Image,           // Converted BLOB to Base64 Image
+              institutionName: row[4],      // "institution_name"
+              institutionType: row[5],      // "institution_type"
+              city: row[6],                 // "city"
+              district: row[7],             // "district"
+              division: row[8],             // "division"
+              streetNo: row[9]              // "streetno"
+          };
+      }));
+
+      console.log('Processed donations with recipient info:', donations);
+      res.json(donations);
+
+  } catch (error) {
+      console.error('Error fetching donation history:', error);
+      res.status(500).send('Server error');
+  } finally {
+      if (conn) {
+          try {
+              await conn.close();
+          } catch (err) {
+              console.error('Failed to close connection:', err);
+          }
+      }
   }
 });
 
-// Assuming your app is using port 5000
-app.listen(5000, () => {
-  console.log('Server running on port 5000');
-});*/
+
+app.get('/sell-history/:donor_id', async (req, res) => {
+  let conn;
+  try {
+      const donor_id = req.params.donor_id;
+      console.log('Fetching sell history for donor ID:', donor_id);
+      conn = await connection(); // Assuming you have a method to get DB connection
+
+      const query = `
+        SELECT "Food Name", quantity, order_date, photo, name, city, district, division, streetno
+        FROM SellHistoryView
+        WHERE donor_id = :donor_id
+        AND sell_or_donate = 'SELL' 
+      `;
+
+      const result = await conn.execute(query, { donor_id });
+      console.log('Raw sell result:', result.rows);
+
+      // Process the result to handle BLOB (photo) conversion to Base64
+      const sellHistory = await Promise.all(result.rows.map(async row => {
+          const foodImageBlob = row[3]; // photo field is the BLOB
+          let base64Image = null;
+
+          if (foodImageBlob) {
+              base64Image = await blobToBase64(foodImageBlob); // Assume blobToBase64 works
+          }
+
+          return {
+              foodName: row[0],          // "Food Name"
+              quantity: row[1],          // "Quantity"
+              orderDate: row[2],         // "Order Date"
+              photo: base64Image,        // Converted BLOB to Base64 Image
+              customerName: row[4],      // "Customer Name"
+              city: row[5],              // "City"
+              district: row[6],          // "District"
+              division: row[7],          // "Division"
+              streetno: row[8]           // "Street No"
+          };
+      }));
+
+      console.log('Processed sell history:', sellHistory);
+      res.json(sellHistory);
+
+  } catch (error) {
+      console.error('Error fetching sell history:', error);
+      res.status(500).send('Server error');
+  } finally {
+      if (conn) {
+          try {
+              await conn.close();
+          } catch (err) {
+              console.error('Failed to close connection:', err);
+          }
+      }
+  }
+});
+
+
 
 
 
