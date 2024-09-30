@@ -163,7 +163,7 @@ app.post("/user/signup_cus", async (req, res) => {
 
   try {
     const query = `
-      INSERT INTO CUSTOMER (NID, NAME, DOB, CITY, DISTRICT, DIVISION, STREETNO, PHONE, PASSWORD)
+      INSERT INTO CUSTOMER (NID, NAME, DATE_OF_BIRTH, CITY, DISTRICT, DIVISION, STREETNO, PHONE, PASSWORD)
       VALUES (:nid, :name , TO_DATE(:dob, 'YYYY-MM-DD'), :city, :district, :division, :streetno, :phone, :password)
     `;
 
@@ -227,8 +227,8 @@ app.post('/user/login', async (req, res) => {
       console.log(table);
 
       // Fetch user data from the database
-      const query = `SELECT * FROM ${table} WHERE NID = :userid `;
-      const result = await run_query(query, [user.userid ]);
+      const query = `SELECT * FROM ${table} WHERE NID = :userid`;
+      const result = await run_query(query, [Number(user.userid)]);      
       console.log("Result: ", result);
 
       // Check if the user was found

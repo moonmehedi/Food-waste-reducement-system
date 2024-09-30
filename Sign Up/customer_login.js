@@ -11,7 +11,7 @@ async function handleLogin(event) {
 
     if (validateLoginForm()) {
         const loginData = {
-            userid: Userid.value, // Updated here
+            userid: Number(Userid.value),
             password: Password.value,
             role: Role.value,
         };
